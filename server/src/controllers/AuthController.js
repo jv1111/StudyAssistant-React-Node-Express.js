@@ -27,13 +27,16 @@ const login = (req, res, next) => {
             if (error) return res.status(400).json({ error: error.message });
             // login the user and create a session. this will use passport.serializeUser
             req.login(user, (error) => {
-                if (error) return res.status(500).json({error: error.message});
+                if (error) return res.status(500).json({ error: error.message });
                 res.status(200).json({
-                    id: user._id,
-                    email: user.email,
-                    username: user.username,
-                    emailVerified: user.emailVerified,
-                    createdAt: user.createdAt
+                    success: true,
+                    user: {
+                        id: user._id,
+                        email: user.email,
+                        username: user.username,
+                        emailVerified: user.emailVerified,
+                        createdAt: user.createdAt
+                    }
                 });
             });
         })(req, res, next);
@@ -43,7 +46,41 @@ const login = (req, res, next) => {
     }
 }
 
+const getSession = (req, res) => {
+    // if no user is logged in
+    if (!req.user) {
+        return res.status(401).json({
+            error: "There is no active session"
+        });
+    }
+    // get logged in user info
+    const { _id, email, username, emailVerified, createdAt } = req.user;
+    res.status(200).json({
+        success: true,
+        user: {
+            id: _id,
+            email: email,
+            username: username,
+            emailVerified: emailVerified,
+            createdAt: createdAt
+        }
+    });
+}
+
+const logout = (req, res) => {
+    try {
+        req.logout((error) => {
+            if (error) throw error;
+        });
+        res.status(200).json({ message: 'logged out successfully' })
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     register,
-    login
+    login,
+    getSession,
+    logout
 }
