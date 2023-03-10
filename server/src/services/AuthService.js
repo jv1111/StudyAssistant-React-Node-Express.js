@@ -15,6 +15,30 @@ const register = async (userData) => {
     return newUser;
 }
 
+const verifyCredentials = async (usernameOrEmail, password) => {
+
+    // find email using email or password
+    const user = await UserModel.findOne({
+        $or: [
+            { username: usernameOrEmail },
+            { email: usernameOrEmail }
+        ]
+    });
+
+    if (!user) return { error: 'user not found' }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) return { error: 'password not match' }
+    return user;
+}
+
+const getUserById = async (id) => {
+    const user = await UserModel.findById(id);
+    return user;
+}
+
 module.exports = {
-    register
+    register,
+    verifyCredentials,
+    getUserById
 }

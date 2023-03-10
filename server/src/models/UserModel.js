@@ -20,6 +20,10 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    createdAd:{
+        type: Date,
+        default: Date.now()
+    }
 });
 
 const User = mongoose.model('User', UserSchema);

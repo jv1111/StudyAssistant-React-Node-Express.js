@@ -2,11 +2,11 @@ import axios from 'axios';
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;//set base url for every request
 axios.defaults.withCredentials = true;// Enable passing credentials on cookies with every request. This is required for our server to save cookies on the client's browser.
 
-const loginAPI = async (emailOrUsername, password) => {
+const loginAPI = async (usernameOrEmail, password) => {
     try {
         const response = await axios.post('/auth/login', {
-            emailOrUsername,
-            password
+            usernameOrEmail: usernameOrEmail,
+            password: password
         });
         console.log(response.data);
         return response.data
