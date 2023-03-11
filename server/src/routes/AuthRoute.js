@@ -20,6 +20,6 @@ router.get(
 router.get(
     "/logout",
     AuthController.logout
-)
+);
 
 module.exports = router;

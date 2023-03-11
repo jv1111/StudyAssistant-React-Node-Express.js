@@ -1,7 +1,6 @@
 import React from "react";
 
 const Popup = (props) => {
-    console.log(props);
     if (!props.trigger) return null;
     return (
         <div className="popupBackground">

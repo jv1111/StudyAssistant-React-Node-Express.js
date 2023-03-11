@@ -17,7 +17,7 @@ const LoginForm = ({ setSignUpTrigger }) => {
                 setErrorMessage("");
             }, 5000);
         } else if (response.success) {
-            alert('logged in');
+            
         }
     }
 

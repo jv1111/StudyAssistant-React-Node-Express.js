@@ -29,7 +29,19 @@ const signUpAPI = async (userData) => {
     }
 }
 
+const getSessionAPI = async () => {
+    try {
+        const response = await axios.get("/auth/login");
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
     loginAPI,
-    signUpAPI
+    signUpAPI,
+    getSessionAPI
 }
