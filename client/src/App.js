@@ -7,12 +7,36 @@ function App() {
 
   const { isLoading, auth } = useSessionChecker();
 
+  if (isLoading) {
+    return <Page.LoadingPage />
+  }
+
   return (
     <div className="App">
+      {console.log(auth.loggedIn)}
       <Router>
         <Routes>
-          <Route path="/" element={<Page.HomePage />} />
-          <Route path="/auth" element={<Page.AuthPage />} />
+
+          {/* Logged in */}
+          <Route element={
+            <Page.ProtectedRoute
+              isAllowed={auth.loggedIn}
+              redirectPath={'/auth'}
+            />
+          } >
+            <Route path="/" element={<Page.HomePage />} />
+          </Route>
+
+          {/* Unauthorize */}
+          <Route element={
+            <Page.ProtectedRoute
+              isAllowed={!auth.loggedIn}
+              redirectPath={'/'}
+            />
+          } >
+            <Route path="/auth" element={<Page.AuthPage />} />
+          </Route>
+
         </Routes>
       </Router>
     </div>
