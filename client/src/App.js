@@ -1,6 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Page from "./pages";
+import Navbar from "./components/Navbar";
 import useSessionChecker from "./hooks/useSessionChecker";
 
 function App() {
@@ -13,10 +14,9 @@ function App() {
 
   return (
     <div className="App">
-      {console.log(auth.loggedIn)}
       <Router>
+        <Navbar />
         <Routes>
-
           {/* Logged in */}
           <Route element={
             <Page.ProtectedRoute

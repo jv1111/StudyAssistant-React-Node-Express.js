@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import FormTextField from "./FormTextField";
 import { loginAPI } from "../api/AuthApi";
+import { login } from "../redux/slice/authSlice";
+import { useDispatch } from "react-redux";
 
 const LoginForm = ({ setSignUpTrigger }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [usernameOrEmail, setusernameOrEmail] = useState("");
     const [password, setPassword] = useState('');
-
+    const dispatch = useDispatch();
+// todo navigation bar
     const submitHandler = async (e) => {
         e.preventDefault();
         const response = await loginAPI(usernameOrEmail, password);
@@ -17,7 +20,7 @@ const LoginForm = ({ setSignUpTrigger }) => {
                 setErrorMessage("");
             }, 5000);
         } else if (response.success) {
-            
+            dispatch(login(response.user));//set loggedIn state to true and set the user
         }
     }
 
