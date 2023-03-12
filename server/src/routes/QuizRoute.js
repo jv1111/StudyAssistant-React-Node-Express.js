@@ -1,0 +1,10 @@
+const express = require("express");
+const router = express.Router();
+const QuizController = require("../controllers/QuizController.js");
+
+router.post(
+    "/create",
+    QuizController.createQuiz
+)
+
+module.exports = router;
