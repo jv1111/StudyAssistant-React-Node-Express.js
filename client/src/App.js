@@ -15,7 +15,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar />
+        {auth.loggedIn ? <Navbar /> : ""}
         <Routes>
           {/* Logged in */}
           <Route element={
