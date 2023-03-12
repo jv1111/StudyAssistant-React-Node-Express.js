@@ -5,12 +5,30 @@ const createQuiz = async (userId, subject, quizName, items) => {
         userId: userId,
         subject: subject,
         quizName: quizName,
-        items: items
+        items: items,
+        numberOfItems: items.length
     });
     await Quiz.save();
     return Quiz;
 }
 
+const getSubjects = async (userId) => {
+    const subjects = await QuizModel.find({
+        userId: userId
+    }).select("subject");
+    return subjects;
+}
+
+const getQuizzes = async (userId, subject) => {
+    const quiz = await QuizModel.find({
+        userId: userId,
+        subject: subject
+    }).select("subject quizName numberOfItems");//select only subject and quizName
+    return quiz;
+}
+
 module.exports = {
-    createQuiz
+    createQuiz,
+    getSubjects,
+    getQuizzes
 }

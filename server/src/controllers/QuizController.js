@@ -5,7 +5,7 @@ const createQuiz = async (req, res) => {
         console.log(req.session.passport.user);
         const userId = req.session.passport.user;
         const { subject, quizName, items } = req.body;
-        const quiz = await service.createQuiz(userId, subject, quizName, items);//todo create the service function
+        const quiz = await service.createQuiz(userId, subject, quizName, items);
         res.status(201).json(quiz);
     } catch (error) {
         console.log(error);
@@ -13,6 +13,31 @@ const createQuiz = async (req, res) => {
     }
 }
 
+const getSubjects = async (req, res) => {
+    try {
+        const userId = req.session.passport.user;
+        const subjects = await service.getSubjects(userId);
+        res.status(200).json(subjects);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const getQuizzes = async (req, res) => {
+    try {
+        const userId = req.session.passport.user;
+        const subject = req.query.subject;
+        const quizzes = await service.getQuizzes(userId, subject);
+        res.status(200).json(quizzes);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
-    createQuiz
+    createQuiz,
+    getSubjects,
+    getQuizzes
 }

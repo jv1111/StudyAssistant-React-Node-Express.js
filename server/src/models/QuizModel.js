@@ -19,6 +19,10 @@ const QuizSchema = mongoose.Schema({
         require: true,
         minLenght: 3
     },
+    numberOfItems: {
+        type: Number,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now()
