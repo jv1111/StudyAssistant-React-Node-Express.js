@@ -25,6 +25,11 @@ function App() {
             />
           } >
             <Route path="/" element={<Page.HomePage />} />
+
+            <Route path="/quiz">
+              <Route path="create" element={<Page.CreateQuizPage />} />
+            </Route>
+
           </Route>
 
           {/* Unauthorize */}

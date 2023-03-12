@@ -4,6 +4,7 @@ import Popup from "./Popup";
 import Navbar from "./Navbar";
 import SubjectsList from "./SubjectsList";
 import ItemContainer from "./ItemContainer";
+import CreateQuizForm from "./CreateQuizForm";
 
 export {
     LoginForm,
@@ -11,5 +12,6 @@ export {
     Popup,
     Navbar,
     SubjectsList,
-    ItemContainer
+    ItemContainer,
+    CreateQuizForm
 }
