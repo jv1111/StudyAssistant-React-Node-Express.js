@@ -4,6 +4,7 @@ import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 import LoadingPage from "./Loading/LoadingPage";
 import CreateQuizPage from "./CreateQuizPage/CreateQuiz";
 import QuizzesPage from "./QuizzesPage/QuizzesPage";
+import QuizPage from "./QuizPage/QuizPage";
 
 export default {
     HomePage,
@@ -11,5 +12,6 @@ export default {
     ProtectedRoute,
     LoadingPage,
     CreateQuizPage,
-    QuizzesPage
+    QuizzesPage,
+    QuizPage
 }

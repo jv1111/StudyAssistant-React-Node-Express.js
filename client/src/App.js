@@ -28,23 +28,24 @@ function App() {
 
             <Route path="/quiz">
               <Route path="create" element={<Page.CreateQuizPage />} />
-              <Route path=":subject" element={<Page.QuizzesPage/>}/>
+              <Route path=":subject" element={<Page.QuizzesPage />} />
+              <Route path=":subject/:quizId" element={<Page.QuizPage />} />
+            </Route>
+
           </Route>
 
-        </Route>
+          {/* Unauthorize */}
+          <Route element={
+            <Page.ProtectedRoute
+              isAllowed={!auth.loggedIn}
+              redirectPath={'/'}
+            />
+          } >
+            <Route path="/auth" element={<Page.AuthPage />} />
+          </Route>
 
-        {/* Unauthorize */}
-        <Route element={
-          <Page.ProtectedRoute
-            isAllowed={!auth.loggedIn}
-            redirectPath={'/'}
-          />
-        } >
-          <Route path="/auth" element={<Page.AuthPage />} />
-        </Route>
-
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
     </div >
   );
 }

@@ -25,7 +25,7 @@ const QuizList = () => {
                     <div
                         className="itemBox"
                         key={index}
-                        onClick={() => navigate(`quiz/${quiz._id}`)}
+                        onClick={() => navigate(`${quiz._id}`)}
                     >
                         <li
                             className="itemName"
