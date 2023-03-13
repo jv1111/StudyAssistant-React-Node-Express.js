@@ -15,7 +15,7 @@ const createQuiz = async (userId, subject, quizName, items) => {
 const getSubjects = async (userId) => {
     const subjects = await QuizModel.find({
         userId: userId
-    }).select("subject");
+    }).distinct("subject");//
     return subjects;
 }
 

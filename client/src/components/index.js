@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import SubjectsList from "./SubjectsList";
 import ItemContainer from "./ItemContainer";
 import CreateQuizForm from "./CreateQuizForm";
+import QuizList from "./QuizList";
 
 export {
     LoginForm,
@@ -13,5 +14,6 @@ export {
     Navbar,
     SubjectsList,
     ItemContainer,
-    CreateQuizForm
+    CreateQuizForm,
+    QuizList
 }

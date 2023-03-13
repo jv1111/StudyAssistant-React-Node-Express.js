@@ -1,41 +1,42 @@
 import React from "react";
 import EmptyList from "./EmptyList";
-import useSubjectsFetcher from "../hooks/useSubjectsFetcher"
-import { useNavigate } from "react-router-dom";
+import useQuizzesFetcher from "../hooks/useQuizzesFetcher.jsx"
+import { useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../pages/Loading/LoadingPage";
 
-const SubjectList = () => {
+const QuizList = () => {
 
-    const { isLoading, subjects } = useSubjectsFetcher();
+    const { subject } = useParams();
+    const { isLoading, quizzes } = useQuizzesFetcher(subject);
     const navigate = useNavigate();
 
     if (isLoading) {
         return <LoadingPage />
     }
 
-    if (subjects.length === 0) {
+    if (quizzes.length === 0) {
         return <EmptyList />
     }
 
     return (
         <ul className="itemsList">
-            {subjects.map((subject, index) => {
+            {quizzes.map((quiz, index) => {
                 return (
                     <div
                         className="itemBox"
                         key={index}
-                        onClick={() => navigate(`quiz/${subject}`)}
+                        onClick={() => navigate(`quiz/${quiz._id}`)}
                     >
                         <li
                             className="itemName"
                             key={index}
                         >
-                            {subject}
+                            {quiz.quizName}
                         </li>
                         <div className="line"></div>
                         <div className="descriptionBox">
                             <label className="description">
-                                Description:
+                                Number of items: {quiz.numberOfItems}
                             </label>
                         </div>
                     </div>
@@ -45,19 +46,4 @@ const SubjectList = () => {
     );
 }
 
-// const subjects = [
-//     {
-//         name: "First",
-//         description: null
-//     },
-//     {
-//         name: "Second",
-//         description: null
-//     },
-//     {
-//         name: "Third",
-//         description: null
-//     }
-// ]
-
-export default SubjectList;
+export default QuizList;
