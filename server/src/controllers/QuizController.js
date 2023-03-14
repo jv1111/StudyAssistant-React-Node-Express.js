@@ -36,8 +36,21 @@ const getQuizzes = async (req, res) => {
     }
 }
 
+const startQuiz = async (req, res) => {
+    try {
+        const userId = req.session.passport.user;
+        const quizId = req.query.quizId;
+        const quizItem = await service.startQuiz(userId, quizId);
+        res.status(200).json(quizItem);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
-    getQuizzes
+    getQuizzes,
+    startQuiz
 }

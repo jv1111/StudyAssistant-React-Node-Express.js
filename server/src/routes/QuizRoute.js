@@ -15,6 +15,11 @@ router.get(
 router.get(
     "/quizList",
     QuizController.getQuizzes
-)
+);
+
+router.get(
+    "/startQuiz",
+    QuizController.startQuiz
+);
 
 module.exports = router;
