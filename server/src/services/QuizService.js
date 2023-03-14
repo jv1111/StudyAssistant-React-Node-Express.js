@@ -114,9 +114,29 @@ const generateRandomChoices = (correctAnswer, allItems) => {
     return choices;
 }
 
+const submitAnswer = async (questionId, answer) => {
+    let isCorrect;
+    const itemSession = await QuizSessionModel.findById(questionId);
+    // check if the answer matches in the database QuizSessionModel
+    if (itemSession.answer !== answer) {
+        isCorrect = false;
+    } else {
+        isCorrect = true;
+    }
+    const update = await QuizSessionModel.findByIdAndUpdate(questionId, {
+        answered: true,
+        correct: isCorrect
+    });
+    console.log(update);
+    return {
+        correct: isCorrect
+    }
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
     getQuizzes,
-    startQuiz
+    startQuiz,
+    submitAnswer
 }

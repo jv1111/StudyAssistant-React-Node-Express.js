@@ -1,12 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useQuestionFetcher from "../../hooks/useQuestionFetcher";
 import LoadingPage from "../Loading/LoadingPage";
+import { submitAnswer } from "../../api/QuizApi";
 
 const QuizPage = () => {
 
+    const [numAnswered, setNumAnswered] = useState(0);//used to trigger the useEffect in useQuestionFentcher
     const { quizId } = useParams();
-    const { isLoading, item } = useQuestionFetcher(quizId);
+    const { isLoading, item } = useQuestionFetcher(quizId, numAnswered);
+
+    const submitAnswerHandler = async (answer, questionId) => {
+        const response = await submitAnswer(questionId, answer);
+
+        if (response.error) return alert("error");
+
+        if (response.correct) {
+            alert("Correct");
+        } else {
+            alert("Incorrect");
+        }
+        setNumAnswered(numAnswered + 1);
+    }
 
     if (isLoading) {
         return <LoadingPage />
@@ -38,7 +53,13 @@ const QuizPage = () => {
                     </div>
                     <div className="selectionPanel d-grid gap-1 mt-1">
                         {item.choices.map((choice, index) => {
-                            return <button key={index} className="btn-primary">{choice}</button>
+                            return <button
+                                key={index}
+                                className="btn-primary"
+                                onClick={() => submitAnswerHandler(choice, item._id)}
+                            >
+                                {choice}
+                            </button>
                         })}
                     </div>
                 </div>

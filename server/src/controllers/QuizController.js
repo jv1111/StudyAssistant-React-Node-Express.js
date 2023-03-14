@@ -48,9 +48,21 @@ const startQuiz = async (req, res) => {
     }
 }
 
+const submitAnswer = async (req, res) => {
+    try {
+        const { questionId, answer } = req.body;
+        const response = await service.submitAnswer(questionId, answer);
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
     getQuizzes,
-    startQuiz
+    startQuiz,
+    submitAnswer
 }

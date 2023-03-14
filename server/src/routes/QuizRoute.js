@@ -22,4 +22,9 @@ router.get(
     QuizController.startQuiz
 );
 
+router.put(
+    "/submitAnswer",
+    QuizController.submitAnswer
+)
+
 module.exports = router;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getQuestion } from "../api/QuizApi";
 
-const useQuestionFetcher = (quizId) => {
+const useQuestionFetcher = (quizId, numAnswered) => {
     const [isLoading, setLoading] = useState(true);
     const [item, setItem] = useState({});
 
@@ -12,7 +12,7 @@ const useQuestionFetcher = (quizId) => {
             setLoading(false);
         }
         getQuizItem();
-    }, []);
+    }, [numAnswered]);
 
     return { isLoading, item }
 }

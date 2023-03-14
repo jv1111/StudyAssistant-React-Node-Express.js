@@ -42,8 +42,25 @@ const getQuestion = async (quizId) => {
     }
 }
 
+const submitAnswer = async (questionId, answer) => {
+    try {
+        const response = await axios.put("/quiz/submitAnswer",
+            {
+                questionId: questionId,
+                answer: answer
+            }
+        );
+        console.log(response.data);
+        return response.data
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
     getSubjects,
     getQuizzes,
-    getQuestion
+    getQuestion,
+    submitAnswer
 }
