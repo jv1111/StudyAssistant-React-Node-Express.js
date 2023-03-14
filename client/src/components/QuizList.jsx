@@ -1,6 +1,6 @@
 import React from "react";
 import EmptyList from "./EmptyList";
-import useQuizzesFetcher from "../hooks/useQuizzesFetcher.jsx"
+import useQuizzesFetcher from "../hooks/useQuizzesFetcher"
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../pages/Loading/LoadingPage";
 

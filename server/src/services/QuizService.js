@@ -44,6 +44,7 @@ const startQuiz = async (userId, quizId) => {
     const randomItem = getRandomItem(unansweredItems);// get random items from anunswered items
     const score = getScore(session);// count the score from the session
     const choices = generateRandomChoices(randomItem.answer, session);// return an array that has 3 random choices 1 of it is the correct answer from the randomItem
+    const questionNumber = (session.length - unansweredItems.length) + 1;
 
     return {
         _id: randomItem._id,
@@ -51,7 +52,9 @@ const startQuiz = async (userId, quizId) => {
         quizName: randomItem.quizName,
         question: randomItem.question,
         score: score,
-        choices: choices
+        choices: choices,
+        questionNumber: questionNumber,
+        numberOfItems: session.length
     }
 }
 
