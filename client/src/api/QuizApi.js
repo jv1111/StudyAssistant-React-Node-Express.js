@@ -58,9 +58,45 @@ const submitAnswer = async (questionId, answer) => {
     }
 }
 
+const saveQuizRecord = async (subject, quizName, score, numberOfItems) => {
+    console.log(subject);
+    try {
+        const response = await axios.put("/quiz/saveRecord",
+            {
+                subject: subject,
+                quizName: quizName,
+                score: score,
+                numberOfItems: numberOfItems
+            }
+        );
+        console.log(response.data);
+        return response.data
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
+const getRecords = async (userId) => {
+    try {
+        const response = await axios.get("/quiz/records", {
+            params: {
+                userId: userId
+            }
+        });
+        console.log(response.data);
+        return response.data
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
     getSubjects,
     getQuizzes,
     getQuestion,
-    submitAnswer
+    submitAnswer,
+    saveQuizRecord,
+    getRecords
 }

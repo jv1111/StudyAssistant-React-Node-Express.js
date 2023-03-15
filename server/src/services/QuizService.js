@@ -1,5 +1,7 @@
 const QuizModel = require("../models/QuizModel");
 const QuizSessionModel = require("../models/QuizSessionModel");
+const RecordsModel = require("../models/RecordsModel");
+const dateFormatter = require("../utils/dateFormatter");
 
 const createQuiz = async (userId, subject, quizName, items) => {
     const Quiz = new QuizModel({
@@ -133,10 +135,51 @@ const submitAnswer = async (questionId, answer) => {
     }
 }
 
+const saveRecordQuizResult = async (userId, subject, quizName, score, numberOfItems) => {
+    const newRecord = new RecordsModel({
+        userId: userId,
+        subject: subject,
+        quizName: quizName,
+        score: score,
+        numberOfItems: numberOfItems
+    });
+    await newRecord.save();
+    return newRecord;
+}
+
+// get all the records of the user
+const getRecords = async (userId) => {
+    const records = [];
+    const response = await RecordsModel.find({
+        userId: userId
+    });
+
+    response.forEach(record => {
+        records.push({
+            subject: record.subject,
+            quizName: record.quizName,
+            score: record.score,
+            numberOfItems: record.numberOfItems,
+            date: dateFormatter(record.createdAt)
+        });
+    });
+
+    return records;
+}
+
+const getRecord = async (recordId) => {
+    const record = await RecordsModel.findById(recordId);
+    return record;
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
     getQuizzes,
     startQuiz,
-    submitAnswer
+    submitAnswer,
+    getScore,
+    saveRecordQuizResult,
+    getRecords,
+    getRecord
 }

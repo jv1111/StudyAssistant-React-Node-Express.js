@@ -27,6 +27,18 @@ router.get(
 router.put(
     "/submitAnswer",
     QuizController.submitAnswer
-)
+);
+
+router.put(
+    "/saveRecord",
+    QuizController.saveQuizRecord
+);
+
+
+router.get(
+    "/records",
+    QuizController.getQuizRecords
+);
+// todo update the route url in react and create a get record route in the server
 
 module.exports = router;

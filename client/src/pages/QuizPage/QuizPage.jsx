@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import useQuestionFetcher from "../../hooks/useQuestionFetcher";
 import LoadingPage from "../Loading/LoadingPage";
 import { submitAnswer } from "../../api/QuizApi";
+import { saveQuizRecord } from "../../api/QuizApi";
 
 const QuizPage = () => {
 
@@ -24,7 +25,9 @@ const QuizPage = () => {
     }
 
     if (quizEnded) {
-        return <>END</>        
+        saveQuizRecord(item.subject, item.quizName, item.score, item.numberOfItems);
+        // todo create a quizRecord page and navigate to it automatically once the quiz is ended
+        return <>END</>
     }
 
     if (isLoading) {

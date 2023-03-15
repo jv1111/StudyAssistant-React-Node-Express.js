@@ -9,10 +9,9 @@ const useQuestionFetcher = (quizId, numAnswered) => {
     useEffect(() => {
         const getQuizItem = async () => {
             const quizItem = await getQuestion(quizId);
+            setItem(quizItem);
             if (quizItem.quizEnded) {
                 setQuizEnded(true);
-            } else {
-                setItem(quizItem);
             }
             setLoading(false);
         }

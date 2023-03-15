@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const QuizSchema = mongoose.Schema({
+const RecordsSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.ObjectId,
         ref: "User",
@@ -14,10 +14,9 @@ const QuizSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    items: {
-        type: Array,
-        require: true,
-        minLenght: 3
+    score: {
+        type: Number,
+        required: true
     },
     numberOfItems: {
         type: Number,
@@ -29,5 +28,5 @@ const QuizSchema = mongoose.Schema({
     }
 });
 
-const Quiz = mongoose.model('Quiz', QuizSchema);
-module.exports = Quiz;
+const Record = mongoose.model("Record", RecordsSchema);
+module.exports = Record;
