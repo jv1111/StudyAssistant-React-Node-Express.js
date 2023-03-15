@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const QuizController = require("../controllers/QuizController.js");
+const QuizMiddleware = require("../middlewares/QuizMiddlewares");
 
 router.post(
     "/create",
@@ -19,6 +20,7 @@ router.get(
 
 router.get(
     "/startQuiz",
+    QuizMiddleware.finishedQuizChecker,//return quizEnded: true if there is no unanswered item
     QuizController.startQuiz
 );
 

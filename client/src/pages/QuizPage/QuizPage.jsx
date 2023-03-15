@@ -8,7 +8,7 @@ const QuizPage = () => {
 
     const [numAnswered, setNumAnswered] = useState(0);//used to trigger the useEffect in useQuestionFentcher
     const { quizId } = useParams();
-    const { isLoading, item } = useQuestionFetcher(quizId, numAnswered);
+    const { isLoading, item, quizEnded } = useQuestionFetcher(quizId, numAnswered);
 
     const submitAnswerHandler = async (answer, questionId) => {
         const response = await submitAnswer(questionId, answer);
@@ -21,6 +21,10 @@ const QuizPage = () => {
             alert("Incorrect");
         }
         setNumAnswered(numAnswered + 1);
+    }
+
+    if (quizEnded) {
+        return <>END</>        
     }
 
     if (isLoading) {
