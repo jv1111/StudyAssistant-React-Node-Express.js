@@ -62,8 +62,8 @@ const submitAnswer = async (req, res) => {
 const saveQuizRecord = async (req, res) => {
     try {
         const userId = req.session.passport.user;
-        const { subject, quizName, score, numberOfItems } = req.body;
-        const record = await service.saveRecordQuizResult(userId, subject, quizName, score, numberOfItems);
+        const { quizId, subject, quizName, score, numberOfItems } = req.body;
+        const record = await service.saveRecordQuizResult(quizId, userId, subject, quizName, score, numberOfItems);
         res.status(201).json(record);
     } catch (error) {
         console.log(error);

@@ -58,11 +58,11 @@ const submitAnswer = async (questionId, answer) => {
     }
 }
 
-const saveQuizRecord = async (subject, quizName, score, numberOfItems) => {
-    console.log(subject);
+const saveQuizRecord = async (quizId, subject, quizName, score, numberOfItems) => {
     try {
         const response = await axios.put("/quiz/saveRecord",
             {
+                quizId: quizId,
                 subject: subject,
                 quizName: quizName,
                 score: score,

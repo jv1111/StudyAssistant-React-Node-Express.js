@@ -25,7 +25,13 @@ const QuizPage = () => {
     }
 
     if (quizEnded) {
-        saveQuizRecord(item.subject, item.quizName, item.score, item.numberOfItems);
+        saveQuizRecord(
+            quizId,
+            item.subject,
+            item.quizName,
+            item.score,
+            item.numberOfItems
+        );
         // todo create a quizRecord page and navigate to it automatically once the quiz is ended
         return <>END</>
     }

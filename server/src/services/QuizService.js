@@ -135,7 +135,7 @@ const submitAnswer = async (questionId, answer) => {
     }
 }
 
-const saveRecordQuizResult = async (userId, subject, quizName, score, numberOfItems) => {
+const saveRecordQuizResult = async (quizId, userId, subject, quizName, score, numberOfItems) => {
     const newRecord = new RecordsModel({
         userId: userId,
         subject: subject,
@@ -144,6 +144,9 @@ const saveRecordQuizResult = async (userId, subject, quizName, score, numberOfIt
         numberOfItems: numberOfItems
     });
     await newRecord.save();
+    await QuizSessionModel.deleteMany({
+        quizId: quizId
+    });
     return newRecord;
 }
 
