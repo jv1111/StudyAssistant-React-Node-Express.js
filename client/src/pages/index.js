@@ -6,6 +6,7 @@ import CreateQuizPage from "./CreateQuizPage/CreateQuiz";
 import QuizzesPage from "./QuizzesPage/QuizzesPage";
 import QuizPage from "./QuizPage/QuizPage";
 import RecordsPage from "./RecordsPage/RecordsPage";
+import RecordPage from "./RecordPage/RecordPage";
 
 export default {
     HomePage,
@@ -15,5 +16,6 @@ export default {
     CreateQuizPage,
     QuizzesPage,
     QuizPage,
-    RecordsPage
+    RecordsPage,
+    RecordPage
 }

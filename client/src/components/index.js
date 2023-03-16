@@ -6,7 +6,8 @@ import SubjectsList from "./SubjectsList";
 import ItemContainer from "./ItemContainer";
 import CreateQuizForm from "./CreateQuizForm";
 import QuizList from "./QuizList";
-import RecordsList from "./RecordsList.jsx"
+import RecordsList from "./RecordsList"
+import Pad from "./Pad"
 
 export {
     LoginForm,
@@ -17,5 +18,6 @@ export {
     ItemContainer,
     CreateQuizForm,
     QuizList,
-    RecordsList
+    RecordsList,
+    Pad
 }

@@ -1,0 +1,6 @@
+.pad {
+    border: 1px solid black;
+    width: 100%;
+    height: fit-content;
+    margin-top: 20px;
+}
