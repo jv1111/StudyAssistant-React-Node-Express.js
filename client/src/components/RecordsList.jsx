@@ -1,6 +1,6 @@
 import React from "react";
 import EmptyList from "./EmptyList";
-import useRecordsFetcher from "../hooks/useRecordsFetcher.jsx"
+import useRecordsFetcher from "../hooks/useRecordsFetcher"
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../pages/Loading/LoadingPage";
 
@@ -17,7 +17,7 @@ const RecordsList = () => {
     if (records.length === 0) {
         return <EmptyList />
     }
-
+    console.log(records);
     return (
         <ul className="itemsList">
             {records.map((record, index) => {

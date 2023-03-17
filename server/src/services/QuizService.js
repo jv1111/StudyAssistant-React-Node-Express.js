@@ -126,6 +126,7 @@ const submitAnswer = async (questionId, answer) => {
         isCorrect = true;
     }
     const update = await QuizSessionModel.findByIdAndUpdate(questionId, {
+        userAnswer: answer,
         answered: true,
         correct: isCorrect
     });
@@ -135,13 +136,22 @@ const submitAnswer = async (questionId, answer) => {
     }
 }
 
-const saveRecordQuizResult = async (quizId, userId, subject, quizName, score, numberOfItems) => {
+const saveRecordQuizResult = async (quizId, userId) => {
+
+    const quizSession = await QuizSessionModel.find({
+        quizId,
+        userId
+    });
+
+    const score = getScore(quizSession);
+
     const newRecord = new RecordsModel({
         userId: userId,
-        subject: subject,
-        quizName: quizName,
+        subject: quizSession[0].subject,
+        quizName: quizSession[0].quizName,
         score: score,
-        numberOfItems: numberOfItems
+        numberOfItems: quizSession.length,
+        items: quizSession
     });
     await newRecord.save();
     await QuizSessionModel.deleteMany({
@@ -159,6 +169,7 @@ const getRecords = async (userId) => {
 
     response.forEach(record => {
         records.push({
+            _id: record._id,
             subject: record.subject,
             quizName: record.quizName,
             score: record.score,
@@ -171,7 +182,25 @@ const getRecords = async (userId) => {
 }
 
 const getRecord = async (recordId) => {
-    const record = await RecordsModel.findById(recordId);
+    const response = await RecordsModel.findById(recordId);
+    const {
+        items,
+        numberOfItems,
+        quizName,
+        score,
+        subject,
+        createdAt,
+    } = response;
+
+    const record = {
+        items: items,
+        numberOfItems: numberOfItems,
+        quizName: quizName,
+        score: score,
+        subject: subject,
+        date: dateFormatter(createdAt)
+    }
+
     return record;
 }
 

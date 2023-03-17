@@ -22,6 +22,10 @@ const RecordsSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    items: {
+        type: Array,
+        require: true
+    },
     createdAt: {
         type: Date,
         default: Date.now

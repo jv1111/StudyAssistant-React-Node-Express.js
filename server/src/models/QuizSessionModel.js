@@ -27,6 +27,10 @@ const QuizSessionSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    userAnswer: {
+        type: String,
+        default: null
+    },
     correct: {
         type: Boolean,
         default: false

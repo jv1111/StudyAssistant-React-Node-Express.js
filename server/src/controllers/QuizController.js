@@ -62,8 +62,8 @@ const submitAnswer = async (req, res) => {
 const saveQuizRecord = async (req, res) => {
     try {
         const userId = req.session.passport.user;
-        const { quizId, subject, quizName, score, numberOfItems } = req.body;
-        const record = await service.saveRecordQuizResult(quizId, userId, subject, quizName, score, numberOfItems);
+        const quizId = req.body.quizId;
+        const record = await service.saveRecordQuizResult(quizId, userId);
         res.status(201).json(record);
     } catch (error) {
         console.log(error);
@@ -82,6 +82,19 @@ const getQuizRecords = async (req, res) => {
     }
 }
 
+const getQuizRecord = async (req, res) => {
+    try {
+        const recordId = req.query.recordId;
+        const record = await service.getRecord(recordId);
+        res.status(200).json(record);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
@@ -89,5 +102,6 @@ module.exports = {
     startQuiz,
     submitAnswer,
     saveQuizRecord,
-    getQuizRecords
+    getQuizRecords,
+    getQuizRecord
 }

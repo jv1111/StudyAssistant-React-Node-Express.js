@@ -39,6 +39,12 @@ router.get(
     "/records",
     QuizController.getQuizRecords
 );
+
+router.get(
+    "/record",
+    QuizController.getQuizRecord
+);
+
 // todo update the route url in react and create a get record route in the server
 
 module.exports = router;
