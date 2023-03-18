@@ -1,7 +1,17 @@
 import { Link } from "react-router-dom"
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { logoutAPI } from "../api/AuthApi";
+import { logout } from "../redux/slice/authSlice";
+import { useDispatch } from "react-redux";
 
 function Navigation() {
+
+    const dispatch = useDispatch();
+    const logoutHandler = () => {
+        logoutAPI();
+        dispatch(logout());
+    }
+
     return (
         <Navbar bg="light" expand="lg">
             <Container>
@@ -19,7 +29,7 @@ function Navigation() {
                         <NavDropdown title="Account" id="basic-nav-dropdown" align="end">
                             <NavDropdown.Item as={Link} to="#action/3.1">Profile</NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item as={Link} to="#action/3.4">
+                            <NavDropdown.Item onClick={logoutHandler} to="#action/3.4">
                                 Logout
                             </NavDropdown.Item>
                         </NavDropdown>

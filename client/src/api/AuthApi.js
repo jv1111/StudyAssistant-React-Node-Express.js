@@ -40,8 +40,21 @@ const getSessionAPI = async () => {
     }
 }
 
+const logoutAPI = async () => {
+    try {
+        const response = await axios.get("/auth/logout");
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+}
+// todo create an api for logout
+
 export {
     loginAPI,
     signUpAPI,
-    getSessionAPI
+    getSessionAPI,
+    logoutAPI
 }
