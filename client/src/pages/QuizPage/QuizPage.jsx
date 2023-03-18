@@ -29,6 +29,7 @@ const QuizPage = () => {
             // wait for some time to next the question
             setTimeout(() => {
                 choicesRef.current[index].classList.remove("bgCorrect");
+                choicesRef.current[index].classList.remove("text-white");
                 setNumAnswered(numAnswered + 1);//refresh the useQuestionFetcher/next the question
                 setDisableSubmittion(false);
                 setShowCorrectLbl(false);
