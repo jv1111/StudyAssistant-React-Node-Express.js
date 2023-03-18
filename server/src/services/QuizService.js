@@ -130,8 +130,9 @@ const submitAnswer = async (questionId, answer) => {
         answered: true,
         correct: isCorrect
     });
-    console.log(update);
+
     return {
+        correctAns: itemSession.answer,
         correct: isCorrect
     }
 }

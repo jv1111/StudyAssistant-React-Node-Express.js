@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import useQuestionFetcher from "../../hooks/useQuestionFetcher";
 import LoadingPage from "../Loading/LoadingPage";
@@ -10,18 +10,33 @@ const QuizPage = () => {
     const [numAnswered, setNumAnswered] = useState(0);//used to trigger the useEffect in useQuestionFentcher
     const { quizId } = useParams();
     const { isLoading, item, quizEnded } = useQuestionFetcher(quizId, numAnswered);
+    const [showCorrectAnsPopup, setShowCorrectAnsPopup] = useState(false);
+    const [showCorrectLbl, setShowCorrectLbl] = useState(false);
+    const [correctAns, setCorrectAns] = useState("");
+    const [disableSubmittion, setDisableSubmittion] = useState(false);
+    const choicesRef = useRef([]);
 
-    const submitAnswerHandler = async (answer, questionId) => {
+    const submitAnswerHandler = async (answer, questionId, index) => {
         const response = await submitAnswer(questionId, answer);
 
         if (response.error) return alert("error");
 
         if (response.correct) {
-            alert("Correct");
+            setDisableSubmittion(true);
+            choicesRef.current[index].classList.add("bgCorrect");
+            choicesRef.current[index].classList.add("text-white");
+            setShowCorrectLbl(true);
+            // wait for some time to next the question
+            setTimeout(() => {
+                choicesRef.current[index].classList.remove("bgCorrect");
+                setNumAnswered(numAnswered + 1);//refresh the useQuestionFetcher/next the question
+                setDisableSubmittion(false);
+                setShowCorrectLbl(false);
+            }, 1500);
         } else {
-            alert("Incorrect");
+            setCorrectAns(response.correctAns);
+            setShowCorrectAnsPopup(true);
         }
-        setNumAnswered(numAnswered + 1);
     }
 
     if (quizEnded) {
@@ -50,9 +65,19 @@ const QuizPage = () => {
                     </div>
                     <div className="line"></div>
                 </div>
-                <div className="itemPanel">
+                <div className="itemPanel position-relative">
+                    {showCorrectAnsPopup &&
+                        <CorrectAnsPopup
+                            correctAns={correctAns}
+                            setShowCorrectAnsPopup={setShowCorrectAnsPopup}
+                            setNumAnswered={setNumAnswered}
+                        />
+                    }
                     <div className="itemBox" style={{ height: "250px", overflow: "auto" }}>
-                        <label className="itemName">Question# {item.questionNumber} </label>
+                        <div className="d-flex justify-content-between">
+                            <label className="itemName">Question# {item.questionNumber} </label>
+                            {showCorrectLbl && <label className="lblCorrect fw-bold">Correct!</label>}
+                        </div>
                         <div className="line"></div>
                         <div className="p-2">
                             <p>{item.question}</p>
@@ -63,7 +88,9 @@ const QuizPage = () => {
                             return <button
                                 key={index}
                                 className="btn-primary"
-                                onClick={() => submitAnswerHandler(choice, item._id)}
+                                ref={(element) => { choicesRef.current[index] = element }}
+                                onClick={() => submitAnswerHandler(choice, item._id, index)}
+                                disabled={disableSubmittion}
                             >
                                 {choice}
                             </button>
@@ -72,6 +99,23 @@ const QuizPage = () => {
                 </div>
             </div>
         </div>
+    )
+}
+
+const CorrectAnsPopup = ({ correctAns, setShowCorrectAnsPopup, setNumAnswered }) => {
+    return (
+        <div className="popupBlocker">
+            <div className="correctAnsPopup">
+                <label className="fw-bold text-danger">Incorrect answer</label>
+                <div className="line"></div>
+                <label className="fw-bold">Correct Answer:</label>
+                <p className="lblCorrect">{correctAns}</p>
+                <button onClick={() => {
+                    setNumAnswered(prev => prev + 1)
+                    setShowCorrectAnsPopup(false)
+                }}>Ok</button>
+            </div>
+        </div >
     )
 }
 
