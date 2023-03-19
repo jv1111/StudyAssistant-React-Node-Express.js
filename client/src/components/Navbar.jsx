@@ -27,7 +27,7 @@ function Navigation() {
 
                     <Nav className="ms-auto">
                         <NavDropdown title="Account" id="basic-nav-dropdown" align="end">
-                            <NavDropdown.Item as={Link} to="#action/3.1">Profile</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item onClick={logoutHandler} to="#action/3.4">
                                 Logout

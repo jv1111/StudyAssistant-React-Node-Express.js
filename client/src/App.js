@@ -25,6 +25,7 @@ function App() {
             />
           } >
             <Route path="/" element={<Page.HomePage />} />
+            <Route path="/profile" element={<Page.ProfilePage />} />
 
             <Route path="/quiz">
               <Route path="create" element={<Page.CreateQuizPage />} />

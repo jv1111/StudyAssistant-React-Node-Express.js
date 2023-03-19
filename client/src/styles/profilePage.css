@@ -1,0 +1,26 @@
+.profilePage .top{
+    margin: 20px;
+    background-color: orange;
+}
+
+.profilePage .imgFrame{
+    background-color: white;
+    padding: 10px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profilePage img{
+    width: 250px;
+    height: 250px;
+}
+
+.profilePage .line{
+    height: 2px;
+    width: 100%;
+    background-color: black;
+    border-radius: 10px;
+}
+

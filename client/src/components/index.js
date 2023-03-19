@@ -9,6 +9,9 @@ import QuizList from "./QuizList";
 import RecordsList from "./RecordsList";
 import Pad from "./Pad";
 import RecordItems from "./RecordItems";
+import ProfileImage from "./ProfileImage";
+import ChangePassForm from "./ChangePassForm.jsx";
+import EmailForm from "./EmailForm.jsx"
 
 export {
     LoginForm,
@@ -21,5 +24,8 @@ export {
     QuizList,
     RecordsList,
     Pad,
-    RecordItems
+    RecordItems,
+    ProfileImage,
+    ChangePassForm,
+    EmailForm
 }

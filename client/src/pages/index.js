@@ -7,6 +7,7 @@ import QuizzesPage from "./QuizzesPage/QuizzesPage";
 import QuizPage from "./QuizPage/QuizPage";
 import RecordsPage from "./RecordsPage/RecordsPage";
 import RecordPage from "./RecordPage/RecordPage";
+import ProfilePage from "./ProfilePage/ProfilePage";
 
 export default {
     HomePage,
@@ -17,5 +18,6 @@ export default {
     QuizzesPage,
     QuizPage,
     RecordsPage,
-    RecordPage
+    RecordPage,
+    ProfilePage
 }
