@@ -15,6 +15,7 @@ app.use(express.json());//To be able to read json data from the request (e.g req
 app.use(require("./AppSession"));//use session
 app.use(passport.initialize());
 app.use(passport.session());//enables Passport.js to deserialize the user object from the session data. 
+app.use(express.static("public"));//to be able to access files in the public directory e.g (/img/image.img)
 
 // ----------ROUTES----------
 app.use("/auth", require("./routes/AuthRoute.js"));

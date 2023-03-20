@@ -1,4 +1,7 @@
 const UserModel = require("../models/UserModel");
+const fs = require("fs");
+const util = require("util");
+const unlinkFile = util.promisify(fs.unlink);
 const bcrypt = require("bcrypt");
 
 const changePass = async (userId, oldPassword, newPassword) => {
@@ -12,6 +15,33 @@ const changePass = async (userId, oldPassword, newPassword) => {
     return { success: true, }
 }
 
+const changeProfile = async (userId, filePath) => {
+    const imgUrl = filePath.replace("public/", process.env.BASE_URL);//updates the accessible path on web
+    await deleteLastProfileImg(userId);//remove the last profile image from the disk/server
+    await UserModel.findByIdAndUpdate(userId, {
+        profileImg: {
+            url: imgUrl,
+            filePath: filePath
+        }
+    });
+    return {
+        message: "profile picture updated",
+        success: true
+    }
+}
+
+const deleteLastProfileImg = async (userId) => {
+    const user = await UserModel.findById(userId);
+    const filePath = user.profileImg.filePath;
+    try {
+        if (filePath) await unlinkFile(filePath);
+        return { success: true }
+    } catch (error) {
+        return { error: error }
+    }
+}
+
 module.exports = {
-    changePass
+    changePass,
+    changeProfile
 }

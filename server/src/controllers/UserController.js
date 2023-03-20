@@ -17,6 +17,21 @@ const changePass = async (req, res) => {
     }
 }
 
+const changeProfile = async (req, res) => {
+    try {
+        const userId = req.session.passport.user;
+        const filePath = req.file.path;
+        const response = service.changeProfile(userId, filePath);
+        res.status(201).json(response)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
-    changePass
+    changePass,
+    changeProfile
 }

@@ -16,6 +16,23 @@ const changePass = async (newPasswordData) => {
     }
 }
 
+const changeProfile = async (formData) => {
+    try {
+        const response = await axios.post(
+            "user/changeProfileImg", formData, {
+            headers: {
+                "content-type": "multipart/form-data"
+            }
+        })
+        console.log(response.data);
+        return response.data
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
-    changePass
+    changePass,
+    changeProfile
 }

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { changeProfile } from "../api/UserApi";
 import empty_profile from "../assets/img/profile.png";
 
 const ProfileImage = () => {
@@ -11,6 +12,13 @@ const ProfileImage = () => {
             setImgSrc(e.target.result);
         };
         reader.readAsDataURL(file);
+        upload(file);
+    }
+
+    const upload = async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+        changeProfile(formData);
     }
 
     return (
@@ -28,6 +36,7 @@ const ProfileImage = () => {
                 id="imageInput"
                 type="file"
                 accept="image/*"
+                name="image"
                 style={{ display: "none" }}
                 onChange={handleImageChange}
             />

@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 require("mongoose-type-email");//type: mongoose.SchemaTypes.Email
 
 const UserSchema = mongoose.Schema({
+    profileImg: {
+        type: Object,
+        default: {
+            url: null,
+            filePath: null
+        }
+    },
     username: {
         type: String,
         minlength: 3,
@@ -16,7 +23,7 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    createdAt:{
+    createdAt: {
         type: Date,
         default: Date.now
     }
