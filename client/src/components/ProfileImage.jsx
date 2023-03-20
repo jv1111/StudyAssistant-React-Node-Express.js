@@ -1,9 +1,17 @@
-import React, { useState } from "react";
-import { changeProfile } from "../api/UserApi";
+import React, { useEffect, useState } from "react";
+import { changeProfile, fetchProfileImgAPI } from "../api/UserApi";
 import empty_profile from "../assets/img/profile.png";
 
 const ProfileImage = () => {
     const [imgSrc, setImgSrc] = useState();
+
+    useEffect(() => {
+        const getImage = async () => {
+            const response = await fetchProfileImgAPI();
+            setImgSrc(response.url);
+        }
+        getImage();
+    }, []);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];

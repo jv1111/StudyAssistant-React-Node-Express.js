@@ -21,8 +21,23 @@ const changeProfile = async (req, res) => {
     try {
         const userId = req.session.passport.user;
         const filePath = req.file.path;
-        const response = service.changeProfile(userId, filePath);
+        const response = await service.changeProfile(userId, filePath);
         res.status(201).json(response)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
+const getProfileImg = async (req, res) => {
+    try {
+        const userId = req.session.passport.user;
+        const response = await service.getProfileImg(userId);
+        res.status(200).json({
+            url: response.url
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -33,5 +48,6 @@ const changeProfile = async (req, res) => {
 
 module.exports = {
     changePass,
-    changeProfile
+    changeProfile,
+    getProfileImg
 }

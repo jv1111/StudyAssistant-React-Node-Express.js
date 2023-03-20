@@ -32,7 +32,21 @@ const changeProfile = async (formData) => {
     }
 }
 
+const fetchProfileImgAPI = async () => {
+    try {
+        const response = await axios.post(
+            "user/getProfileImg"
+        );
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
     changePass,
-    changeProfile
+    changeProfile,
+    fetchProfileImgAPI
 }

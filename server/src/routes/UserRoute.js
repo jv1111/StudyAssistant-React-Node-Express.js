@@ -14,4 +14,9 @@ router.post(
     UserController.changeProfile
 );
 
+router.post(
+    "/getProfileImg",
+    UserController.getProfileImg
+);
+
 module.exports = router;

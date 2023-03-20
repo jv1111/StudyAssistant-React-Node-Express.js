@@ -16,7 +16,7 @@ const changePass = async (userId, oldPassword, newPassword) => {
 }
 
 const changeProfile = async (userId, filePath) => {
-    const imgUrl = filePath.replace("public/", process.env.BASE_URL);//updates the accessible path on web
+    const imgUrl = filePath.replace("public", process.env.BASE_URL);//updates the accessible path on web
     await deleteLastProfileImg(userId);//remove the last profile image from the disk/server
     await UserModel.findByIdAndUpdate(userId, {
         profileImg: {
@@ -41,7 +41,14 @@ const deleteLastProfileImg = async (userId) => {
     }
 }
 
+const getProfileImg = async (userId) => {
+    const user = await UserModel.findById(userId);
+    const profileImgUrl = user.profileImg.url;
+    return { url: profileImgUrl }
+}
+
 module.exports = {
     changePass,
-    changeProfile
+    changeProfile,
+    getProfileImg
 }
