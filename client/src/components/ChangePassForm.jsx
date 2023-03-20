@@ -12,17 +12,19 @@ const ChangePassForm = () => {
         confirmPassword: ""
     }
 
-    const submitHandler = async (data) => {
-        // const response = await changePass(data);
-        console.log(data);
+    const submitHandler = async (data, resetForm) => {
+        const response = await changePass(data);
+        if (response.error) return alert(response.error);
+        alert("password changed");
+        resetForm();
     }
 
     return (
         <Formik
             initialValues={initialValues}
             validationSchema={ChangePassValidationSchema}
-            onSubmit={async (data, { setSubmitting }) => {
-                await submitHandler(data);
+            onSubmit={async (data, { setSubmitting, resetForm }) => {
+                await submitHandler(data, resetForm);
                 setSubmitting(false);//Enable submit button
             }}
         >

@@ -8,10 +8,6 @@ const UserSchema = mongoose.Schema({
         unique: true,
         required: true
     },
-    email: {
-        type: mongoose.SchemaTypes.Email,
-        unique: true,
-    },
     verifiedEmail: {
         type: Boolean,
         default: false,

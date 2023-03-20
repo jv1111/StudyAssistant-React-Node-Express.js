@@ -19,6 +19,7 @@ app.use(passport.session());//enables Passport.js to deserialize the user object
 // ----------ROUTES----------
 app.use("/auth", require("./routes/AuthRoute.js"));
 app.use("/quiz", require("./routes/QuizRoute.js"));
+app.use("/user", require("./routes/UserRoute"));
 
 //start the server
 app.listen(process.env.PORT, () => {
