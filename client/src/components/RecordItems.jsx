@@ -1,4 +1,5 @@
 import React from "react";
+import { CheckCircle, XCircle } from "react-bootstrap-icons";
 
 const RecordItems = ({ record }) => {
 
@@ -9,6 +10,11 @@ const RecordItems = ({ record }) => {
                     // todo update css
                     return (
                         <li key={index}>
+                            {item.correct ?
+                                <CheckCircle className="correctIcon" />
+                                :
+                                <XCircle className="incorrectIcon"/>
+                            }
                             {index !== 0 && <div className="line bg-gray w-100 mt-3 mb-3" style={{ height: "2px" }}></div>}
                             <label className="fw-bold">Question# {index + 1}</label>
                             <p className="p-2">{item.question}</p>
@@ -18,7 +24,7 @@ const RecordItems = ({ record }) => {
                                 {item.userAnswer}
                             </label>
                             {!item.correct &&
-                                <label className="fw-bold">
+                                <label className="fw-bold correctAns">
                                     {item.answer}
                                 </label>
                             }

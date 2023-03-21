@@ -1,6 +1,41 @@
 .pad {
     border: 1px solid black;
     width: 100%;
+    max-width: 800px;
     height: fit-content;
     margin-top: 20px;
+}
+
+.item li {
+    position: relative;
+}
+
+.correctIcon {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: rgb(0, 165, 0);
+}
+
+.incorrectIcon {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: rgb(0, 165, 0);
+}
+
+.correctAns {
+    color: rgb(0, 165, 0);
+}
+
+.inCorrectAns {
+    color: red;
+}
+
+.incorrectIcon {
+    color: red;
+}
+
+.incorrectAns {
+    color: red
 }

@@ -18,8 +18,9 @@
 }
 
 .itemsList {
-    display: grid;
+    display: flex;
     gap: 5px;
+    flex-direction: column;
     padding: 0;
     overflow: auto;
     height: 500px;

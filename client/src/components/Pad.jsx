@@ -7,7 +7,7 @@ const Pad = ({ children, record }) => {
     const auth = useSelector(state => state.auth);
 
     return (
-        <div className="pad p-4">
+        <div className="pad p-5">
             <div className="d-flex justify-content-between">
                 <div className="d-grid">
                     <label className="fw-bold">Name:
@@ -34,7 +34,7 @@ const Pad = ({ children, record }) => {
                     </label>
                     <label className="fw-bold">Score:
                         <label className="fw-normal ms-1">
-                            Score
+                            {record.score}
                         </label>
                     </label>
                 </div>

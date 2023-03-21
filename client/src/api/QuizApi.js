@@ -1,6 +1,22 @@
 import axios from "axios";
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;//set base url for every request
 
+const createQuiz = async (subject, quizName, items) => {
+    try {
+        const response = await axios.put("/quiz/create",
+            {
+                subject: subject,
+                quizName: quizName,
+                items: items
+            });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data;
+    }
+}
+
 const getSubjects = async () => {
     try {
         const response = await axios.get("/quiz/subjectsList");
@@ -110,5 +126,6 @@ export {
     submitAnswer,
     saveQuizRecord,
     getRecords,
-    getRecord
+    getRecord,
+    createQuiz
 }

@@ -11,7 +11,7 @@ const ProfilePage = () => {
             <div className="top">
                 <div className="profile text-center">
                     <ProfileImage />
-                    <label className="fw-bold">Username</label>
+                    <label className="fw-bold">{user.username}</label>
                 </div>
                 <div className="line"></div>
             </div>

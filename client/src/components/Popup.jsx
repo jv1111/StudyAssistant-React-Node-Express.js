@@ -7,8 +7,9 @@ const Popup = (props) => {
             <div className="popupPanel">
                 {props.children}
                 <button
+                    className="btn-exit"
                     onClick={() => props.setTrigger(false)}
-                >Close</button>
+                >X</button>
             </div>
         </div>
     );

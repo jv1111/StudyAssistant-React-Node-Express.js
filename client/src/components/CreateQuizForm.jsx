@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import FormTextField from "./FormTextField";
 import ItemContainer from "./ItemContainer";
+import { createQuiz } from "../api/QuizApi";
+import { useNavigate } from "react-router-dom";
 
 const CreateQuizForm = () => {
 
@@ -8,6 +10,7 @@ const CreateQuizForm = () => {
     const [subject, setSubject] = useState("");
     const [quizName, setQuizName] = useState("");
     const itemBoxRef = useRef(null);
+    const navigate = useNavigate();
 
     const addQuestion = () => {
         // create a new emty question and answer object
@@ -40,26 +43,32 @@ const CreateQuizForm = () => {
         console.log(items);
         console.log(subject);
         console.log(quizName);
-        //todo create server function
+        const response = await createQuiz(subject, quizName, items);
+        if (response.error) {
+            alert(response.error);
+        }
+        navigate("/");//test this
     }
 
     return (
         <form autoComplete="off" onSubmit={submitHandler}>
-            <label>Create quiz</label>
-            <FormTextField
-                type="text"
-                label="Subject"
-                name="subject"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-            />
-            <FormTextField
-                type="text"
-                label="Quiz Name"
-                name="quizName"
-                value={quizName}
-                onChange={(e) => setQuizName(e.target.value)}
-            />
+            <label className="text-white mid-size-title">Create quiz</label>
+            <div style={{ width: "250px", color: "white" }}>
+                <FormTextField
+                    type="text"
+                    label="Subject"
+                    name="subject"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                />
+                <FormTextField
+                    type="text"
+                    label="Quiz Name"
+                    name="quizName"
+                    value={quizName}
+                    onChange={(e) => setQuizName(e.target.value)}
+                />
+            </div>
 
             <ItemContainer title={"Questions"} >
                 <div className="itemsList" ref={itemBoxRef}>
@@ -112,7 +121,8 @@ const CreateQuizForm = () => {
             </ItemContainer>
 
             <button
-                className="btn-primary"
+                className="btn-primary mt-1"
+                style={{ width: "200px" }}
             >
                 Submit
             </button>

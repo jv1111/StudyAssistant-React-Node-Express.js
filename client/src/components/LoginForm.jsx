@@ -9,7 +9,7 @@ const LoginForm = ({ setSignUpTrigger }) => {
     const [usernameOrEmail, setusernameOrEmail] = useState("");
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
-// todo navigation bar
+    // todo navigation bar
     const submitHandler = async (e) => {
         e.preventDefault();
         const response = await loginAPI(usernameOrEmail, password);
@@ -45,7 +45,7 @@ const LoginForm = ({ setSignUpTrigger }) => {
                 value={password}
             />
             <button
-                className="btnPrimary"
+                className="btn-primary"
                 type="submit"
             >
                 Login

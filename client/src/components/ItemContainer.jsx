@@ -4,7 +4,7 @@ const ItemContainer = ({ children, title }) => {
     return (
         <div className="itemContainer">
             <div className="topDescription">
-                <h2>{title}</h2>
+                <h2 className="text-fam-kavoon">{title}</h2>
                 <div className="line"></div>
             </div>
             <div className="itemPanel">
