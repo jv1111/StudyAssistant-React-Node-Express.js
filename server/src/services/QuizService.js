@@ -1,6 +1,7 @@
 const QuizModel = require("../models/QuizModel");
 const QuizSessionModel = require("../models/QuizSessionModel");
 const RecordsModel = require("../models/RecordsModel");
+const AutoSaveModel = require("../models/AutoSaveModel");
 const dateFormatter = require("../utils/dateFormatter");
 
 const createQuiz = async (userId, subject, quizName, items) => {
@@ -205,6 +206,37 @@ const getRecord = async (recordId) => {
     return record;
 }
 
+const saveData = async (userId, key, data) => {
+    const savedData = await getSaveData(userId, key);
+    console.log(savedData);
+    if (savedData) {
+        // update the data if there is an existing data
+        await AutoSaveModel.findOneAndUpdate({ userId: userId, key: key }, { data: data });
+    } else {
+        // create new data
+        const saveData = new AutoSaveModel({
+            userId: userId,
+            key: key,
+            data: data
+        });
+
+        await saveData.save();
+    }
+
+    return {
+        success: true,
+        message: "data saved"
+    }
+}
+
+const getSaveData = async (userId, key) => {
+    const savedData = await AutoSaveModel.findOne({
+        userId, userId,
+        key: key,
+    });
+    return savedData;
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
@@ -214,5 +246,7 @@ module.exports = {
     getScore,
     saveRecordQuizResult,
     getRecords,
-    getRecord
+    getRecord,
+    saveData,
+    getSaveData
 }

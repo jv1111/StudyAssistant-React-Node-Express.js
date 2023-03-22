@@ -45,4 +45,9 @@ router.get(
     QuizController.getQuizRecord
 );
 
+router.put(
+    "/saveData",
+    QuizController.saveData
+);
+
 module.exports = router;

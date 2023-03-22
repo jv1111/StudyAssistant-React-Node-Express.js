@@ -119,6 +119,20 @@ const getRecord = async (recordId) => {
     }
 }
 
+const saveData = async (key, data) => {
+    try {
+        const response = await axios.put("/quiz/saveData", {
+            key: key,
+            data: data
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+}
+
 export {
     getSubjects,
     getQuizzes,
@@ -127,5 +141,6 @@ export {
     saveQuizRecord,
     getRecords,
     getRecord,
-    createQuiz
+    createQuiz,
+    saveData
 }

@@ -3,10 +3,12 @@ import FormTextField from "./FormTextField";
 import ItemContainer from "./ItemContainer";
 import { createQuiz } from "../api/QuizApi";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import autoSave from "../helper/autoSave";
 
 const CreateQuizForm = () => {
 
-    const [items, setItems] = useState(temp);
+    const [items, setItems] = useState(onLoad_items);
     const [subject, setSubject] = useState("");
     const [quizName, setQuizName] = useState("");
     const itemBoxRef = useRef(null);
@@ -35,19 +37,18 @@ const CreateQuizForm = () => {
     const itemOnChangeHandler = (e, index) => {
         const newItems = [...items];
         newItems[index][e.target.name] = e.target.value;//change item value base on index and target name (question/answer)
+        autoSave("createQuiz", newItems);
         setItems(newItems);//update items value
     }
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        console.log(items);
-        console.log(subject);
-        console.log(quizName);
         const response = await createQuiz(subject, quizName, items);
         if (response.error) {
             alert(response.error);
         }
-        navigate("/");//test this
+        localStorage.removeItem("preSaveItems");
+        navigate("/");
     }
 
     return (
@@ -79,6 +80,7 @@ const CreateQuizForm = () => {
                                     id="deleteQuestion"
                                     type="button"
                                     onClick={() => deleteQuestion(index)}
+                                    disabled={items.length <= 3}
                                 >
                                     -
                                 </button>
@@ -131,8 +133,9 @@ const CreateQuizForm = () => {
     );
 }
 
-const temp = [
-    {
+const onLoad_items = () => {
+
+    return [{
         question: "",
         answer: ""
     },
@@ -144,6 +147,8 @@ const temp = [
         question: "",
         answer: ""
     }
-]
+    ]
+}
+
 
 export default CreateQuizForm;

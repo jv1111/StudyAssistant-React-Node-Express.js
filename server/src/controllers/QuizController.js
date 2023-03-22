@@ -95,6 +95,20 @@ const getQuizRecord = async (req, res) => {
     }
 }
 
+const saveData = async (req, res) => {
+    try {
+        const userId = req.session.passport.user;
+        const { key, data } = req.body;
+        const response = await service.saveData(userId, key, data);
+        res.status(201).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
@@ -103,5 +117,6 @@ module.exports = {
     submitAnswer,
     saveQuizRecord,
     getQuizRecords,
-    getQuizRecord
+    getQuizRecord,
+    saveData
 }
