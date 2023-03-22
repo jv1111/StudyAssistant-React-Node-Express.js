@@ -207,7 +207,7 @@ const getRecord = async (recordId) => {
 }
 
 const saveData = async (userId, key, data) => {
-    const savedData = await getSaveData(userId, key);
+    const savedData = await getSavedData(userId, key);
     console.log(savedData);
     if (savedData) {
         // update the data if there is an existing data
@@ -229,7 +229,9 @@ const saveData = async (userId, key, data) => {
     }
 }
 
-const getSaveData = async (userId, key) => {
+const getSavedData = async (userId, key) => {
+    console.log(userId);
+    console.log(key);
     const savedData = await AutoSaveModel.findOne({
         userId, userId,
         key: key,
@@ -248,5 +250,5 @@ module.exports = {
     getRecords,
     getRecord,
     saveData,
-    getSaveData
+    getSavedData
 }

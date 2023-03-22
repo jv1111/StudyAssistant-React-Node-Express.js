@@ -9,7 +9,7 @@ const autoSave = (key, data) => {
     const newTimeout = setTimeout(() => {
         // save function here
         saveData(key, data);
-    }, 2000);
+    }, 1000);
     timeoutId = newTimeout;
 
 }

@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import FormTextField from "./FormTextField";
 import ItemContainer from "./ItemContainer";
 import { createQuiz } from "../api/QuizApi";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import useSavedDataFetcher from "../hooks/useSavedDataFetcher";
 import autoSave from "../helper/autoSave";
 
 const CreateQuizForm = () => {
@@ -13,6 +13,8 @@ const CreateQuizForm = () => {
     const [quizName, setQuizName] = useState("");
     const itemBoxRef = useRef(null);
     const navigate = useNavigate();
+
+    useSavedDataFetcher("createQuiz", setItems, setSubject, setQuizName);
 
     const addQuestion = () => {
         // create a new emty question and answer object
@@ -37,8 +39,9 @@ const CreateQuizForm = () => {
     const itemOnChangeHandler = (e, index) => {
         const newItems = [...items];
         newItems[index][e.target.name] = e.target.value;//change item value base on index and target name (question/answer)
-        autoSave("createQuiz", newItems);
-        setItems(newItems);//update items value
+        setItems(newItems);
+        const data = { items: items, subject: subject, quizName: quizName }
+        autoSave("createQuiz", data);//save the pre-submitted automatically to the database
     }
 
     const submitHandler = async (e) => {
@@ -47,7 +50,7 @@ const CreateQuizForm = () => {
         if (response.error) {
             alert(response.error);
         }
-        localStorage.removeItem("preSaveItems");
+        
         navigate("/");
     }
 
@@ -60,14 +63,22 @@ const CreateQuizForm = () => {
                     label="Subject"
                     name="subject"
                     value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
+                    onChange={(e) => {
+                        setSubject(e.target.value)
+                        const data = { items: items, subject: e.target.value, quizName: quizName }
+                        autoSave("createQuiz", data);//save the pre-submitted automatically to the database
+                    }}
                 />
                 <FormTextField
                     type="text"
                     label="Quiz Name"
                     name="quizName"
                     value={quizName}
-                    onChange={(e) => setQuizName(e.target.value)}
+                    onChange={(e) => {
+                        setQuizName(e.target.value)
+                        const data = { items: items, subject: subject, quizName: e.target.value }
+                        autoSave("createQuiz", data);//save the pre-submitted automatically to the database
+                    }}
                 />
             </div>
 

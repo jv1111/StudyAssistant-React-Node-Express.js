@@ -133,6 +133,19 @@ const saveData = async (key, data) => {
     }
 }
 
+const getSavedData = async (key) => {
+    try {
+        const saveData = await axios.get("/quiz/savedData", {
+            params: { key: key }
+        });
+        console.log(saveData.data);
+        return saveData.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+}
+
 export {
     getSubjects,
     getQuizzes,
@@ -142,5 +155,6 @@ export {
     getRecords,
     getRecord,
     createQuiz,
-    saveData
+    saveData,
+    getSavedData
 }
