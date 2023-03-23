@@ -1,4 +1,5 @@
 const UserModel = require("../models/UserModel");
+const GoogleUserModel = require("../models/GoogleUserModel");
 const fs = require("fs");
 const util = require("util");
 const unlinkFile = util.promisify(fs.unlink);
@@ -43,8 +44,9 @@ const deleteLastProfileImg = async (userId) => {
 
 const getProfileImg = async (userId) => {
     const user = await UserModel.findById(userId);
-    const profileImgUrl = user.profileImg.url;
-    return { url: profileImgUrl }
+    if (user) return { url: user.profileImg.url }
+    const googleUser = await GoogleUserModel.findById(userId);
+    return { url: googleUser.profileImg.url };
 }
 
 module.exports = {

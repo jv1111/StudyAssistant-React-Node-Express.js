@@ -281,6 +281,8 @@ textarea{
   justify-content: center;
 }
 
+
+
 @media screen and (max-width: 800px) {
   .authPage {
     display: flex;

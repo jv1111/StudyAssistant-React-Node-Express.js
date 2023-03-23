@@ -1,5 +1,8 @@
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcrypt");
+const GoogleUserModel = require("../models/GoogleUserModel");
+const { generateUniqueUsername } = require("../utils/uniqueUsernameGenerator");
+const { generateUniqueObjectId } = require("../utils/uniqueUserIdGenerator");
 
 const register = async (userData) => {
 
@@ -11,6 +14,7 @@ const register = async (userData) => {
         username: username,
         password: hashedPassword
     });
+
     await newUser.save();//save the user to the database
     return newUser;
 }
@@ -34,11 +38,40 @@ const verifyCredentials = async (usernameOrEmail, password) => {
 
 const getUserById = async (id) => {
     const user = await UserModel.findById(id);
-    return user;
+    if (user) return user;
+    const googleUser = await GoogleUserModel.findById(id);
+    if (googleUser) return googleUser;
+}
+
+// google authentication
+const findOrCreate = async (userData) => {
+    const { given_name, picture, email } = userData;
+
+    // check if user exist
+    const user = await GoogleUserModel.findOne({ email: email });
+    if (user) return user;
+
+    // create new user if the user doesn't exist
+    const newUsername = await generateUniqueUsername(given_name, UserModel);
+
+    const newUser = new GoogleUserModel({
+        username: newUsername,
+        email: email,
+        profileImg: {
+            url: picture
+        },
+    });
+
+    const newId = await generateUniqueObjectId(newUser._id, UserModel);
+    newUser._id = newId;
+
+    await newUser.save();
+    return newUser;
 }
 
 module.exports = {
     register,
     verifyCredentials,
-    getUserById
+    getUserById,
+    findOrCreate
 }

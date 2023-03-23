@@ -33,7 +33,6 @@ const login = (req, res, next) => {
                         id: user._id,
                         email: user.email,
                         username: user.username,
-                        emailVerified: user.emailVerified,
                         createdAt: user.createdAt
                     }
                 });
@@ -44,6 +43,24 @@ const login = (req, res, next) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+const googleLogin = passport.authenticate(
+    "google",
+    {
+        scope: [
+            'https://www.googleapis.com/auth/userinfo.profile',
+            'https://www.googleapis.com/auth/userinfo.email'// to be able to get the email
+        ]
+    }
+);
+
+const googleCallback = passport.authenticate(
+    'google',
+    {
+        successRedirect: process.env.CLIENT_URL,
+        failureRedirect: "/login/failed",
+    }
+);
 
 const getSession = (req, res) => {
     // if no user is logged in
@@ -81,5 +98,7 @@ module.exports = {
     register,
     login,
     getSession,
-    logout
+    logout,
+    googleLogin,
+    googleCallback,
 }

@@ -49,5 +49,5 @@ const getProfileImg = async (req, res) => {
 module.exports = {
     changePass,
     changeProfile,
-    getProfileImg
+    getProfileImg,
 }

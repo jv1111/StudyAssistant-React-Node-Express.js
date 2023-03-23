@@ -3,12 +3,15 @@ import FormTextField from "./FormTextField";
 import { loginAPI } from "../api/AuthApi";
 import { login } from "../redux/slice/authSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({ setSignUpTrigger }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [usernameOrEmail, setusernameOrEmail] = useState("");
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     // todo navigation bar
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -57,11 +60,7 @@ const LoginForm = ({ setSignUpTrigger }) => {
             >
                 Sign up
             </button>
-            <button
-                className="btnOAuth"
-            >
-                Login with google
-            </button>
+            <a href={`${process.env.REACT_APP_API_URL}/auth/googleLogin`}>Login with google</a>
             <label className="errorMessage">{errorMessage}</label>
         </form>
     )

@@ -22,4 +22,14 @@ router.get(
     AuthController.logout
 );
 
+router.get(
+    "/googleLogin",
+    AuthController.googleLogin
+);
+
+router.get(
+    "/google/callback",
+    AuthController.googleCallback,
+);
+
 module.exports = router;
