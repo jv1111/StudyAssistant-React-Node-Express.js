@@ -5,10 +5,12 @@ const useSavedDataFetcher = (key, setItems, setSubject, setQuizName) => {
     useEffect(() => {
         const dataFetcher = async () => {
             const savedData = await getSavedData(key);
-            const { items, subject, quizName } = savedData.data;
-            setItems(items);
-            setSubject(subject);
-            setQuizName(quizName)
+            if (savedData) {
+                const { items, subject, quizName } = savedData.data;
+                setItems(items);
+                setSubject(subject);
+                setQuizName(quizName)
+            }
         }
         dataFetcher();
     }, []);
