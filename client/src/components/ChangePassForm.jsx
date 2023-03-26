@@ -47,7 +47,7 @@ const ChangePassForm = () => {
                         label='Confirm password'
                     />
                     <button
-                        className="btn-primary"
+                        className="btn-primary mt-2"
                         type="submit"
                         disabled={isSubmitting}//disable the button when submitting
                     >

@@ -1,9 +1,12 @@
-.profilePage .top{
-    margin: 20px;
-    background-color: orange;
+.profilePage {
+    color: white;
 }
 
-.profilePage .imgFrame{
+.profilePage .top {
+    margin: 20px;
+}
+
+.profilePage .imgFrame {
     background-color: white;
     padding: 10px;
     border-radius: 50%;
@@ -13,16 +16,14 @@
     overflow: hidden;
 }
 
-.profilePage img{
-    width: 250px;
-    height: 250px;
+.profilePage img {
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
 }
 
-.profilePage .line{
+.profilePage .line {
     height: 2px;
     width: 100%;
-    background-color: black;
     border-radius: 10px;
 }
-

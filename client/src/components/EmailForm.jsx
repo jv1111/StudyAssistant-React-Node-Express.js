@@ -8,6 +8,11 @@ const EmailForm = ({ email }) => {
         return (
             <form className="EmailForm">
                 <label className="formTitle fw-bold">Email</label>
+                <FormTextField
+                    type="email"
+                    placeholder={email}
+                />
+                <button className="btn-primary mt-2">Change email</button>
             </form>
         )
     }
@@ -19,7 +24,7 @@ const EmailForm = ({ email }) => {
                 type="email"
                 label="Email"
             />
-            <button>Add new email</button>
+            <button className="btn-primary">Add new email</button>
         </form>
     )
 }
