@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Search } from "react-bootstrap-icons";
+import autoSearch from "../helper/autoSearch";
 
-const ItemContainer = ({ children, search, title }) => {
-    const [searchVal, setSearchVal] = useState();
+const ItemContainer = ({ children, search, title, setSearchVal }) => {
+
+    const searchHandler = (e) => {
+        autoSearch(setSearchVal, e.target.value);
+    }
+
     return (
         <div className="itemContainer">
             <div className="topDescription">
@@ -11,7 +16,12 @@ const ItemContainer = ({ children, search, title }) => {
                 {search && (
                     <div className="searchBox">
                         <Search className="searchIcon" />
-                        <input type="text" name="search" placeholder="search" />
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="search"
+                            onChange={searchHandler}
+                        />
                     </div>
                 )}
             </div>

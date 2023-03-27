@@ -18,19 +18,27 @@ const createQuiz = async (userId, subject, quizName, items) => {
 
 const getSubjects = async (userId, searchQuery) => {
     let filter = { userId: userId }//return all subjects with userId:userId
+
+    // generate new filter if there is a search query
     if (searchQuery) filter = {
         userId: userId,
         subject: { $regex: new RegExp(searchQuery, "i") }
-    }//return that contains the searchQuery
+    }
+
     const subjects = await QuizModel.find(filter).distinct("subject");
     return subjects;
 }
 
-const getQuizzes = async (userId, subject) => {
-    const quiz = await QuizModel.find({
+const getQuizzes = async (userId, subject, searchQuery) => {
+    let filter = { userId: userId, subject: subject }
+
+    if (searchQuery) filter = {
         userId: userId,
-        subject: subject
-    }).select("subject quizName numberOfItems");//select only subject and quizName
+        subject: subject,
+        quizName: { $regex: new RegExp(searchQuery, "i") }
+    }
+
+    const quiz = await QuizModel.find(filter).select("subject quizName numberOfItems");//select only subject and quizName
     return quiz;
 }
 
@@ -166,11 +174,11 @@ const saveRecordQuizResult = async (quizId, userId) => {
 }
 
 // get all the records of the user
-const getRecords = async (userId) => {
+const getRecords = async (userId, searchQuery) => {
     const records = [];
-    const response = await RecordsModel.find({
-        userId: userId
-    });
+    const filter = { userId: userId }
+    if (searchQuery) filter.quizName = { $regex: new RegExp(searchQuery, "i") };
+    const response = await RecordsModel.find(filter);
 
     response.forEach(record => {
         records.push({

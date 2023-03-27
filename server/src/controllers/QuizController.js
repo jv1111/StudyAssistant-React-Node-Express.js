@@ -16,7 +16,7 @@ const createQuiz = async (req, res) => {
 const getSubjects = async (req, res) => {
     try {
         const userId = req.session.passport.user;
-        const searchQuery = req.query.searchVal;
+        const searchQuery = req.query.searchQuery;
         const subjects = await service.getSubjects(userId, searchQuery);
         res.status(200).json(subjects);
     } catch (error) {
@@ -29,7 +29,8 @@ const getQuizzes = async (req, res) => {
     try {
         const userId = req.session.passport.user;
         const subject = req.query.subject;
-        const quizzes = await service.getQuizzes(userId, subject);
+        const searchQuery = req.query.searchQuery;
+        const quizzes = await service.getQuizzes(userId, subject, searchQuery);
         res.status(200).json(quizzes);
     } catch (error) {
         console.log(error);
@@ -75,7 +76,9 @@ const saveQuizRecord = async (req, res) => {
 const getQuizRecords = async (req, res) => {
     try {
         const userId = req.session.passport.user;
-        const records = await service.getRecords(userId);
+        const searchQuery = req.query.searchQuery;
+        console.log(searchQuery);
+        const records = await service.getRecords(userId, searchQuery);
         res.status(200).json(records);
     } catch (error) {
         console.log(error);

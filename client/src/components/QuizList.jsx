@@ -4,10 +4,10 @@ import useQuizzesFetcher from "../hooks/useQuizzesFetcher"
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../pages/Loading/LoadingPage";
 
-const QuizList = () => {
+const QuizList = ({ searchVal }) => {
 
     const { subject } = useParams();
-    const { isLoading, quizzes } = useQuizzesFetcher(subject);
+    const { isLoading, quizzes } = useQuizzesFetcher(subject, searchVal);
     const navigate = useNavigate();
 
     if (isLoading) {

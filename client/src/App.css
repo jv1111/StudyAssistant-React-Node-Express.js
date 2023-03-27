@@ -282,6 +282,7 @@ textarea {
 }
 
 .searchBox {
+  position: relative;
   display: flex;
   gap: 5px;
   justify-content: center;
@@ -298,6 +299,12 @@ textarea {
   background-color: transparent;
   outline: none;
   width: 200px;
+}
+
+.searchBox .searchSpinner{
+  position: absolute;
+  right: -30px;
+  scale: .6;
 }
 
 @media screen and (max-width: 800px) {

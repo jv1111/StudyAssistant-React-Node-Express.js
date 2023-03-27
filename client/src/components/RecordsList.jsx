@@ -4,10 +4,10 @@ import useRecordsFetcher from "../hooks/useRecordsFetcher"
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../pages/Loading/LoadingPage";
 
-const RecordsList = () => {
+const RecordsList = ({ searchVal }) => {
 
     const { userId } = useParams();
-    const { isLoading, records } = useRecordsFetcher(userId);
+    const { isLoading, records } = useRecordsFetcher(userId, searchVal);
     const navigate = useNavigate();
 
     if (isLoading) {

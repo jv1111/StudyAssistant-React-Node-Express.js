@@ -4,9 +4,9 @@ import useSubjectsFetcher from "../hooks/useSubjectsFetcher"
 import { useNavigate } from "react-router-dom";
 import LoadingPage from "../pages/Loading/LoadingPage";
 
-const SubjectList = () => {
+const SubjectList = ({ searchVal }) => {
 
-    const { isLoading, subjects } = useSubjectsFetcher();
+    const { isLoading, subjects } = useSubjectsFetcher(searchVal);
     const navigate = useNavigate();
 
     if (isLoading) {

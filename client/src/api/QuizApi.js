@@ -17,9 +17,11 @@ const createQuiz = async (subject, quizName, items) => {
     }
 }
 
-const getSubjects = async () => {
+const getSubjects = async (searchVal) => {
     try {
-        const response = await axios.get("/quiz/subjectsList");
+        const response = await axios.get("/quiz/subjectsList", {
+            params: { searchQuery: searchVal }
+        });
         console.log(response.data);
         return response.data
     } catch (error) {
@@ -28,11 +30,12 @@ const getSubjects = async () => {
     }
 }
 
-const getQuizzes = async (subject) => {
+const getQuizzes = async (subject, searchVal) => {
     try {
         const response = await axios.get("/quiz/quizList", {
             params: {
-                subject: subject
+                subject: subject,
+                searchQuery: searchVal
             }
         });
         console.log(response.data);
@@ -89,11 +92,12 @@ const saveQuizRecord = async (quizId) => {
     }
 }
 
-const getRecords = async (userId) => {
+const getRecords = async (userId, searchVal) => {
     try {
         const response = await axios.get("/quiz/records", {
             params: {
-                userId: userId
+                userId: userId,
+                searchQuery: searchVal
             }
         });
         console.log(response.data);

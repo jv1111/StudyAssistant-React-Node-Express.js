@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { getRecords } from "../api/QuizApi";
 
-const useRecordsFetcher = (subject) => {
+const useRecordsFetcher = (subject, searchVal) => {
     const [isLoading, setLoading] = useState(true);
     const [records, setRecords] = useState([]);
 
     useEffect(() => {
         const getUserRecords = async () => {
-            const response = await getRecords(subject);
+            const response = await getRecords(subject, searchVal);
             setRecords(response);
             setLoading(false);
         }
         getUserRecords();
-    }, []);
+    }, [searchVal]);
 
     return { isLoading, records }
 }
