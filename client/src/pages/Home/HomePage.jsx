@@ -5,7 +5,7 @@ import "../../styles/items.css";
 const HomePage = () => {
     return (
         <div className="home-page container">
-            <ItemContainer title={"Subjects"}>
+            <ItemContainer search={true} title={"Subjects"}>
                 <SubjectsList />
             </ItemContainer>
         </div>

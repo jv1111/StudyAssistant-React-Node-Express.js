@@ -53,6 +53,10 @@ router.put(
 router.get(
     "/savedData",
     QuizController.getSavedData
-)
+);
+
+router.delete(
+    "/savedData",QuizController.deleteSavedData
+);
 
 module.exports = router;

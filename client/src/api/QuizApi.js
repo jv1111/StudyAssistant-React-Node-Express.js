@@ -146,6 +146,19 @@ const getSavedData = async (key) => {
     }
 }
 
+const deleteSavedData = async (key) => {
+    try {
+        const response = await axios.delete("/quiz/savedData", {
+            params: { key: key }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+}
+
 export {
     getSubjects,
     getQuizzes,
@@ -156,5 +169,6 @@ export {
     getRecord,
     createQuiz,
     saveData,
-    getSavedData
+    getSavedData,
+    deleteSavedData
 }

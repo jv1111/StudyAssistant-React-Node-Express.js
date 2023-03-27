@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import FormTextField from "./FormTextField";
 import ItemContainer from "./ItemContainer";
-import { createQuiz } from "../api/QuizApi";
+import { createQuiz, deleteSavedData } from "../api/QuizApi";
 import { useNavigate } from "react-router-dom";
 import useSavedDataFetcher from "../hooks/useSavedDataFetcher";
 import autoSave from "../helper/autoSave";
@@ -33,6 +33,8 @@ const CreateQuizForm = () => {
         const newItems = [...items];
         newItems.splice(index, 1);// Remove one element from the 'newItems' array starting at the specified index
         setItems(newItems);//update items value
+        const data = { items: newItems, subject: subject, quizName: quizName }
+        autoSave("createQuiz", data);
     }
 
     // update items value (e.g new questions and answers value)
@@ -50,7 +52,7 @@ const CreateQuizForm = () => {
         if (response.error) {
             alert(response.error);
         }
-        
+        await deleteSavedData("createQuiz");
         navigate("/");
     }
 
@@ -82,7 +84,7 @@ const CreateQuizForm = () => {
                 />
             </div>
 
-            <ItemContainer title={"Questions"} >
+            <ItemContainer search={false} title={"Questions"} >
                 <div className="itemsList" ref={itemBoxRef}>
                     {items.map((item, index) => {
                         return (

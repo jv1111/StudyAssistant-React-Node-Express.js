@@ -230,13 +230,22 @@ const saveData = async (userId, key, data) => {
 }
 
 const getSavedData = async (userId, key) => {
-    console.log(userId);
-    console.log(key);
     const savedData = await AutoSaveModel.findOne({
         userId, userId,
         key: key,
     });
     return savedData;
+}
+
+const deleteSavedData = async (userId, key) => {
+    await AutoSaveModel.findOneAndDelete({
+        userId, userId,
+        key: key,
+    });
+    return {
+        success: true,
+        message: "Saved data is successfully deleted"
+    };
 }
 
 module.exports = {
@@ -250,5 +259,6 @@ module.exports = {
     getRecords,
     getRecord,
     saveData,
-    getSavedData
+    getSavedData,
+    deleteSavedData
 }

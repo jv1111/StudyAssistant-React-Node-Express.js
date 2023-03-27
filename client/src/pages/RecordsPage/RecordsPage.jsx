@@ -5,7 +5,7 @@ import "../../styles/items.css";
 const RecordsPage = () => {
     return (
         <div className="recordsPage container">
-            <ItemContainer title={"Records"}>
+            <ItemContainer search={true} title={"Records"}>
                 <RecordsList />
             </ItemContainer>
         </div>
