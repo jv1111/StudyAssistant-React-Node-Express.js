@@ -256,23 +256,23 @@ button:hover:enabled {
   overflow-y: auto;
 }
 
-.text-fam-kavoon{
+.text-fam-kavoon {
   font-family: "kavoon";
 }
 
-input{
+input {
   border-radius: 5px;
 }
 
-textarea{
+textarea {
   border-radius: 5px;
 }
 
-.recordPage .pad{
+.recordPage .pad {
   background-color: white;
 }
 
-.pad .line{
+.pad .line {
   background-color: black;
 }
 
@@ -281,7 +281,24 @@ textarea{
   justify-content: center;
 }
 
+.searchBox {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  border: 1px solid gray;
+  border-radius: 10px;
+  width: 250px;
+  padding: 2px 10px 2px 10px;
+}
 
+.searchBox input {
+  border: none;
+  background-color: transparent;
+  outline: none;
+  width: 200px;
+}
 
 @media screen and (max-width: 800px) {
   .authPage {
