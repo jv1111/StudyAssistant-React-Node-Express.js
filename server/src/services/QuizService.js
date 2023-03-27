@@ -115,12 +115,15 @@ const generateRandomChoices = (correctAnswer, allItems) => {
         // push the correct answer base on the random index(correctAnsIndex)
         if (pushCount === correctAnsIndex) {
             choices.push(correctAnswer);
+            console.log(pushCount + " correct anse");
             pushCount++;
+            continue;
         }
         const randomIndexOfAllItems = Math.floor(Math.random() * allItems.length);
         const incorrectAnsToAdd = allItems[randomIndexOfAllItems].answer;
         // push incorrect answers and prevent duplicate
         if (incorrectAnsToAdd !== correctAnswer && !choices.includes(incorrectAnsToAdd)) {
+            console.log(pushCount + " incorrect ans pushed");
             choices.push(allItems[randomIndexOfAllItems].answer);
             pushCount++;
         }
