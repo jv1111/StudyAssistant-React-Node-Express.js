@@ -16,10 +16,13 @@ const createQuiz = async (userId, subject, quizName, items) => {
     return Quiz;
 }
 
-const getSubjects = async (userId) => {
-    const subjects = await QuizModel.find({
-        userId: userId
-    }).distinct("subject");//
+const getSubjects = async (userId, searchQuery) => {
+    let filter = { userId: userId }//return all subjects with userId:userId
+    if (searchQuery) filter = {
+        userId: userId,
+        subject: { $regex: new RegExp(searchQuery, "i") }
+    }//return that contains the searchQuery
+    const subjects = await QuizModel.find(filter).distinct("subject");
     return subjects;
 }
 

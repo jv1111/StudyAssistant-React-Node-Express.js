@@ -16,7 +16,8 @@ const createQuiz = async (req, res) => {
 const getSubjects = async (req, res) => {
     try {
         const userId = req.session.passport.user;
-        const subjects = await service.getSubjects(userId);
+        const searchQuery = req.query.searchVal;
+        const subjects = await service.getSubjects(userId, searchQuery);
         res.status(200).json(subjects);
     } catch (error) {
         console.log(error);
