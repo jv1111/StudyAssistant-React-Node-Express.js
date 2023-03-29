@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const QuizModel = require("../models/QuizModel");
 const QuizSessionModel = require("../models/QuizSessionModel");
 const RecordsModel = require("../models/RecordsModel");
@@ -16,16 +17,21 @@ const createQuiz = async (userId, subject, quizName, items) => {
     return Quiz;
 }
 
-const getSubjects = async (userId, searchQuery) => {
-    let filter = { userId: userId }//return all subjects with userId:userId
+const getSubjects = async (userId, searchQuery, skipCount) => {
+    let filter = { userId: new mongoose.Types.ObjectId(userId) }//return all subjects with userId:userId
 
     // generate new filter if there is a search query
-    if (searchQuery) filter = {
-        userId: userId,
-        subject: { $regex: new RegExp(searchQuery, "i") }
-    }
+    if (searchQuery) filter.subject = { $regex: new RegExp(searchQuery, "i") }
 
-    const subjects = await QuizModel.find(filter).distinct("subject");
+    if (!skipCount) skipCount = 0;
+
+    const subjects = await QuizModel.aggregate()
+        .match(filter)
+        .group({ _id: "$subject" })
+        .sort({ _id: 1 })//sort accending
+        .skip(parseInt(skipCount))// number of items to skip starting from index 0
+        .limit(10)//number of data to get
+    // todo add scroll
     return subjects;
 }
 

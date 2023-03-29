@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import EmptyList from "./EmptyList";
-import useSubjectsFetcher from "../hooks/useSubjectsFetcher"
+import useDataFetcher from "../hooks/useDataFetcher"
 import { useNavigate } from "react-router-dom";
+import { getSubjects } from "../api/QuizApi";
+import infinitScroller from "../helper/infinitScroller";
 import LoadingPage from "../pages/Loading/LoadingPage";
 
 const SubjectList = ({ searchVal }) => {
 
-    const { isLoading, subjects } = useSubjectsFetcher(searchVal);
+    const [skipCount, setSkipCount] = useState(0);
+    const [subjects, setSubjects] = useState([]);
+    const { isLoading } = useDataFetcher(searchVal, skipCount, subjects, setSubjects, getSubjects);
     const navigate = useNavigate();
 
     if (isLoading) {
@@ -18,19 +22,19 @@ const SubjectList = ({ searchVal }) => {
     }
 
     return (
-        <ul className="itemsList">
+        <ul className="itemsList" onScroll={(e) => infinitScroller(e, subjects, setSkipCount)}>
             {subjects.map((subject, index) => {
                 return (
                     <div
                         className="itemBox"
                         key={index}
-                        onClick={() => navigate(`quiz/${subject}`)}
+                        onClick={() => navigate(`quiz/${subject._id}`)}
                     >
                         <li
                             className="itemName"
                             key={index}
                         >
-                            {subject}
+                            {subject._id}
                         </li>
                         <div className="line"></div>
                         <div className="descriptionBox">

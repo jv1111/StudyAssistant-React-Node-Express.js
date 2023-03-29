@@ -17,10 +17,13 @@ const createQuiz = async (subject, quizName, items) => {
     }
 }
 
-const getSubjects = async (searchVal) => {
+const getSubjects = async (searchVal, skipCount) => {
     try {
         const response = await axios.get("/quiz/subjectsList", {
-            params: { searchQuery: searchVal }
+            params: {
+                searchQuery: searchVal,
+                skipCount: skipCount
+            }
         });
         console.log(response.data);
         return response.data

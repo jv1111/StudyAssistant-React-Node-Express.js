@@ -21,6 +21,7 @@ app.use(express.static("public"));//to be able to access files in the public dir
 app.use("/auth", require("./routes/AuthRoute.js"));
 app.use("/quiz", require("./routes/QuizRoute.js"));
 app.use("/user", require("./routes/UserRoute"));
+app.use("/test", require("../test/tempRoute"));
 
 //start the server
 app.listen(process.env.PORT, () => {

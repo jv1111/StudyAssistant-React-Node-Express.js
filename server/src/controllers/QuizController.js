@@ -17,7 +17,8 @@ const getSubjects = async (req, res) => {
     try {
         const userId = req.session.passport.user;
         const searchQuery = req.query.searchQuery;
-        const subjects = await service.getSubjects(userId, searchQuery);
+        const skipCount = req.query.skipCount;
+        const subjects = await service.getSubjects(userId, searchQuery, skipCount);
         res.status(200).json(subjects);
     } catch (error) {
         console.log(error);
