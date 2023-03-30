@@ -8,13 +8,7 @@ const HomePage = () => {
 
     return (
         <div className="home-page container">
-            <ItemContainer
-                search={true}
-                title={"Quizzes"}
-                setSearchVal={setSearchVal}
-            >
-                <QuizList searchVal={searchVal} />
-            </ItemContainer>
+            <QuizList searchVal={searchVal} />
         </div>
     );
 }

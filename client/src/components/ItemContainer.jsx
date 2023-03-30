@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Search } from "react-bootstrap-icons";
-import autoSearch from "../helper/autoSearch";
+import searchDelay from "../helper/searchDelay";
 
 const ItemContainer = ({ children, search, title, setSearchVal }) => {
 
     const searchHandler = (e) => {
-        autoSearch(setSearchVal, e.target.value);
+        searchDelay(setSearchVal, e.target.value);
     }
 
     return (

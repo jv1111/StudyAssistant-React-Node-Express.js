@@ -35,16 +35,27 @@ const getSubjects = async (userId, searchQuery, skipCount) => {
     return subjects;
 }
 
-const getQuizzes = async (userId, subject, searchQuery) => {
-    let filter = { userId: userId, subject: subject }
-
-    if (searchQuery) filter = {
-        userId: userId,
-        subject: subject,
-        quizName: { $regex: new RegExp(searchQuery, "i") }
+const getQuizzes = async (userId, subject, searchQuery, skipCount) => {
+    let filter = {
+        userId: new mongoose.Types.ObjectId(userId),
+        subject: subject
     }
 
-    const quiz = await QuizModel.find(filter).select("subject quizName numberOfItems");//select only subject and quizName
+    if (!skipCount) skipCount = 0;
+
+    if (searchQuery) filter.quizName = { $regex: new RegExp(searchQuery, "i") }
+
+    // const quiz = await QuizModel.find(filter).select("subject quizName numberOfItems");//select only subject and quizName
+    const quiz = await QuizModel.aggregate()
+        .match(filter)
+        .project({ subject: 1, quizName: 1, numberOfItems: 1 })//get only specific field
+        .sort({ _id: 1 })//sort accending
+        .skip(parseInt(skipCount))// number of items to skip starting from index 0
+        .limit(10)//number of data to get
+    console.log(quiz);
+
+    //todo create a test for quizzes then proceed
+
     return quiz;
 }
 

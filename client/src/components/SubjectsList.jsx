@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import EmptyList from "./EmptyList";
-import useDataFetcher from "../hooks/useDataFetcher"
+import useSubjectsFetcher from "../hooks/useSubjectsFetcher"
 import { useNavigate } from "react-router-dom";
-import { getSubjects } from "../api/QuizApi";
+import { Search } from "react-bootstrap-icons";
+import searchDelay from "../helper/searchDelay";
 import infinitScroller from "../helper/infinitScroller";
 import LoadingPage from "../pages/Loading/LoadingPage";
 
-const SubjectList = ({ searchVal }) => {
+const SubjectList = () => {
 
-    const [skipCount, setSkipCount] = useState(0);
     const [subjects, setSubjects] = useState([]);
-    const { isLoading } = useDataFetcher(searchVal, skipCount, subjects, setSubjects, getSubjects);
+    const [searchVal, setSearchVal] = useState("");
+    const { isLoading, setSearching, setSkipCount } = useSubjectsFetcher(subjects, setSubjects, searchVal);
     const navigate = useNavigate();
 
     if (isLoading) {
@@ -22,46 +23,57 @@ const SubjectList = ({ searchVal }) => {
     }
 
     return (
-        <ul className="itemsList" onScroll={(e) => infinitScroller(e, subjects, setSkipCount)}>
-            {subjects.map((subject, index) => {
-                return (
-                    <div
-                        className="itemBox"
-                        key={index}
-                        onClick={() => navigate(`quiz/${subject._id}`)}
-                    >
-                        <li
-                            className="itemName"
-                            key={index}
-                        >
-                            {subject._id}
-                        </li>
-                        <div className="line"></div>
-                        <div className="descriptionBox">
-                            <label className="description">
-                                Description:
-                            </label>
-                        </div>
-                    </div>
-                )
-            })}
-        </ul>
+        <div className="itemContainer">
+            <div className="topDescription">
+                <h2 className="text-fam-kavoon">
+                    Subjects
+                </h2>
+                <div className="line"></div>
+                <div className="searchBox">
+                    <Search className="searchIcon" />
+                    <input
+                        onChange={(e) => {
+                            setSkipCount(0);
+                            setSearching(true);
+                            searchDelay(setSearchVal, e.target.value);
+                        }}
+                        type="text"
+                        name="search"
+                        placeholder="search"
+                    />
+                </div>
+            </div>
+
+            <div className="itemPanel">
+                <ul className="itemsList" onScroll={(e) => infinitScroller(e, subjects, setSkipCount)}>
+                    {subjects.map((subject, index) => {
+                        return (
+                            <div
+                                className="itemBox"
+                                key={index}
+                                onClick={() => navigate(`quiz/${subject._id}`)}
+                            >
+                                <li
+                                    className="itemName"
+                                    key={index}
+                                >
+                                    {subject._id}
+                                </li>
+                                <div className="line"></div>
+                                <div className="descriptionBox">
+                                    <label className="description">
+                                        Description:
+                                    </label>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </ul>
+            </div>
+
+        </div>
+
     );
 }
-
-// const subjects = [
-//     {
-//         name: "First",
-//         description: null
-//     },
-//     {
-//         name: "Second",
-//         description: null
-//     },
-//     {
-//         name: "Third",
-//         description: null
-//     }
-// ]
 
 export default SubjectList;
