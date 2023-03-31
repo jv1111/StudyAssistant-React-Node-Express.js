@@ -7,6 +7,9 @@ const TokenSchema = mongoose.Schema({
         ref: "User",
         required: true
     },
+    data: {
+        type: Object,
+    },
     verificationToken: {
         type: String,
         unique: true,

@@ -54,15 +54,11 @@ const getProfileImg = async (userId) => {
 }
 
 const addOrUpdateEmail = async (userId, newEmail) => {
-    await UserModel.findByIdAndUpdate(userId,
-        {
-            email: newEmail,
-            verifiedEmail: false
-        }
-    );
 
     const token = generateToken(userId, "addOrUpdateEmail");
-    await insertTokenToDatabase(userId, token, "addOrUpdateEmail");
+    const data = { email: newEmail }
+    await insertTokenToDatabase(userId, data, token, "addOrUpdateEmail");
+
     const url = `${process.env.CLIENT_URL}/verification/verifyEmail/${userId}/${token}`;
     await sendEmail(
         process.env.MAILER_USER,
@@ -90,12 +86,12 @@ const verifyEmail = async (userId, token) => {
 
     // check if the token exist in the database
     const registeredToken = await TokenRequestModel.findOne(filter);
-
     if (!registeredToken) return { error: "invalid link" }
-    // delete the token
-    await UserModel.findByIdAndUpdate(userId, { verifiedEmail: true });
-    const deleted = await TokenRequestModel.findOneAndDelete(filter);
-    console.log(deleted);
+
+    // add the email to the user and delete the token if the link is valid
+    await UserModel.findByIdAndUpdate(userId, { email: registeredToken.data.email });
+    await TokenRequestModel.findOneAndDelete(filter);
+
     return { success: true, message: "Email has been verified" }
 }
 

@@ -6,8 +6,7 @@ const generateToken = () => {
     return token;
 }
 
-const insertTokenToDatabase = async (userId, token, type) => {
-    console.log("inserting token");
+const insertTokenToDatabase = async (userId, data, token, type) => {
     const filter = {
         userId: userId,
         type: type,
@@ -16,21 +15,21 @@ const insertTokenToDatabase = async (userId, token, type) => {
         userId: userId,
         type: type
     });
-    console.log(tokenExist);
+
     if (tokenExist) {
-        console.log("updating");
         await TokenRequestModel.updateOne(
             filter,
             {
                 verificationToken: token,
+                data: data,
                 createdAt: Date.now()
             }
         )
     } else {
-        console.log("inserting");
         const newToken = new TokenRequestModel({
             userId: userId,
             verificationToken: token,
+            data: data,
             type: type
         });
         await newToken.save();
