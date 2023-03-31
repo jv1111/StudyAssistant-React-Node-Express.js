@@ -19,4 +19,9 @@ router.post(
     UserController.getProfileImg
 );
 
+router.put(
+    "/addOrUpdateEmail",
+    UserController.addOrUpdateEmail
+);
+
 module.exports = router;

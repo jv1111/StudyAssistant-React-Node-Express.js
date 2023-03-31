@@ -4,6 +4,9 @@ const fs = require("fs");
 const util = require("util");
 const unlinkFile = util.promisify(fs.unlink);
 const bcrypt = require("bcrypt");
+const { generateToken, insertTokenToDatabase } = require("../utils/tokenGenerator");
+const sendEmail = require("../utils/sendEmail");
+const { VerifacationLinkBuilder } = require("../utils/htmlBuilder");
 
 const changePass = async (userId, oldPassword, newPassword) => {
     const user = await UserModel.findById(userId);
@@ -49,8 +52,38 @@ const getProfileImg = async (userId) => {
     return { url: googleUser.profileImg.url };
 }
 
+const addOrUpdateEmail = async (userId, newEmail) => {
+    await UserModel.findByIdAndUpdate(userId,
+        {
+            email: newEmail,
+            verifiedEmail: false
+        }
+    );
+
+    const token = generateToken(userId, "addOrUpdateEmail");
+    await insertTokenToDatabase(userId, token, "addOrUpdateEmail");
+    const url = `${process.env.BASE_URL}/verifyEmail/${userId}/${token}`;
+    await sendEmail(
+        process.env.MAILER_USER,
+        newEmail,
+        "Email Verification",//subject
+        url,
+        VerifacationLinkBuilder(
+            "Verify your email",
+            "Click the button below to verify your email",//message
+            url,
+            "Verify Email"//button name
+        )
+    );
+    // todo create a send email function to send the token
+    return {
+        success: true,
+    }
+}
+
 module.exports = {
     changePass,
     changeProfile,
-    getProfileImg
+    getProfileImg,
+    addOrUpdateEmail
 }

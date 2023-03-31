@@ -46,8 +46,23 @@ const getProfileImg = async (req, res) => {
     }
 }
 
+const addOrUpdateEmail = async (req, res) => {
+    try {
+        const userId = req.session.passport.user;
+        const newEmail = req.body.newEmail;
+        const response = await service.addOrUpdateEmail(userId, newEmail);
+        res.status(201).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     changePass,
     changeProfile,
     getProfileImg,
+    addOrUpdateEmail
 }

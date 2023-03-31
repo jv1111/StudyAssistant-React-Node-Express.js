@@ -45,8 +45,25 @@ const fetchProfileImgAPI = async () => {
     }
 }
 
+const addOrUpdateEmail = async (newEmail) => {
+    try {
+        const response = await axios.put(
+            "user/addOrUpdateEmail",
+            {
+                newEmail: newEmail,
+            }
+        );
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
     changePass,
     changeProfile,
-    fetchProfileImgAPI
+    fetchProfileImgAPI,
+    addOrUpdateEmail
 }
