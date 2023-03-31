@@ -79,7 +79,6 @@ const getQuizRecords = async (req, res) => {
     try {
         const userId = req.session.passport.user;
         const searchQuery = req.query.searchQuery;
-        console.log(searchQuery);
         const records = await service.getRecords(userId, searchQuery);
         res.status(200).json(records);
     } catch (error) {

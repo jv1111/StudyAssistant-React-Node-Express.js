@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import EmptyList from "./EmptyList";
-import useQuizzesFetcher from "../hooks/useQuizzesFetcher"
+import useItemFetcher from "../hooks/useItemFetcher"
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../pages/Loading/LoadingPage";
 import { Search } from "react-bootstrap-icons";
 import searchDelay from "../helper/searchDelay";
 import infinitScroller from "../helper/infinitScroller";
+import { getQuizzes } from "../api/QuizApi";
 
 const QuizList = () => {
 
     const { subject } = useParams();
-    const [skipCount, setSkipCount] = useState(0);
     const [searchVal, setSearchVal] = useState("");
     const [quizzes, setQuizzes] = useState([]);
-    const { isLoading } = useQuizzesFetcher(subject, searchVal, skipCount, quizzes, setQuizzes);
+    const { isLoading, setSearching, setSkipCount } = useItemFetcher(quizzes, setQuizzes, searchVal, getQuizzes, { subject: subject });//todo update the naming and remove unecessary file
     const navigate = useNavigate();
 
     if (isLoading) {
@@ -32,6 +32,7 @@ const QuizList = () => {
                     <input
                         onChange={(e) => {
                             setSkipCount(0);
+                            setSearching(true);
                             searchDelay(setSearchVal, e.target.value);
                         }}
                         type="text"

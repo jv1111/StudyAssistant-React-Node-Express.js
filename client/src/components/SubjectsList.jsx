@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import EmptyList from "./EmptyList";
-import useSubjectsFetcher from "../hooks/useSubjectsFetcher"
+import useItemFetcher from "../hooks/useItemFetcher"
 import { useNavigate } from "react-router-dom";
 import { Search } from "react-bootstrap-icons";
+import { getSubjects } from "../api/QuizApi";
 import searchDelay from "../helper/searchDelay";
 import infinitScroller from "../helper/infinitScroller";
 import LoadingPage from "../pages/Loading/LoadingPage";
@@ -11,15 +12,11 @@ const SubjectList = () => {
 
     const [subjects, setSubjects] = useState([]);
     const [searchVal, setSearchVal] = useState("");
-    const { isLoading, setSearching, setSkipCount } = useSubjectsFetcher(subjects, setSubjects, searchVal);
+    const { isLoading, setSearching, setSkipCount } = useItemFetcher(subjects, setSubjects, searchVal, getSubjects, {});
     const navigate = useNavigate();
 
     if (isLoading) {
         return <LoadingPage />
-    }
-
-    if (subjects.length === 0) {
-        return <EmptyList />
     }
 
     return (
@@ -45,30 +42,35 @@ const SubjectList = () => {
             </div>
 
             <div className="itemPanel">
-                <ul className="itemsList" onScroll={(e) => infinitScroller(e, subjects, setSkipCount)}>
-                    {subjects.map((subject, index) => {
-                        return (
-                            <div
-                                className="itemBox"
-                                key={index}
-                                onClick={() => navigate(`quiz/${subject._id}`)}
-                            >
-                                <li
-                                    className="itemName"
+                {subjects.length !== 0 ?
+                    <ul className="itemsList" onScroll={(e) => infinitScroller(e, subjects, setSkipCount)}>
+                        {subjects.map((subject, index) => {
+                            return (
+                                <div
+                                    className="itemBox"
                                     key={index}
+                                    onClick={() => navigate(`quiz/${subject._id}`)}
                                 >
-                                    {subject._id}
-                                </li>
-                                <div className="line"></div>
-                                <div className="descriptionBox">
-                                    <label className="description">
-                                        Description:
-                                    </label>
+                                    <li
+                                        className="itemName"
+                                        key={index}
+                                    >
+                                        {subject._id}
+                                    </li>
+                                    <div className="line"></div>
+                                    <div className="descriptionBox">
+                                        <label className="description">
+                                            Description:
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    })}
-                </ul>
+                            )
+                        })}
+                    </ul>
+                    :
+                    <EmptyList />
+                }
+
             </div>
 
         </div>

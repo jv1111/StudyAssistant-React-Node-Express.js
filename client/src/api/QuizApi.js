@@ -17,7 +17,8 @@ const createQuiz = async (subject, quizName, items) => {
     }
 }
 
-const getSubjects = async (searchVal, skipCount) => {
+const getSubjects = async (queryParams) => {
+    const { searchVal, skipCount } = queryParams;
     try {
         const response = await axios.get("/quiz/subjectsList", {
             params: {
@@ -33,7 +34,8 @@ const getSubjects = async (searchVal, skipCount) => {
     }
 }
 
-const getQuizzes = async (subject, searchVal, skipCount) => {
+const getQuizzes = async (queryParams) => {
+    const { subject, searchVal, skipCount } = queryParams;
     try {
         const response = await axios.get("/quiz/quizList", {
             params: {
@@ -96,11 +98,11 @@ const saveQuizRecord = async (quizId) => {
     }
 }
 
-const getRecords = async (userId, searchVal) => {
+const getRecords = async (queryParams) => {
+    const searchVal = queryParams.searchVal;
     try {
         const response = await axios.get("/quiz/records", {
             params: {
-                userId: userId,
                 searchQuery: searchVal
             }
         });
