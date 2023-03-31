@@ -78,10 +78,27 @@ const verifyEmailApi = async (userId, token) => {
     }
 }
 
+const resetPassRequestApi = async (email) => {
+    try {
+        const response = await axios.put(
+            "user/sendResetPassRequest",
+            {
+                email: email
+            }
+        );
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
     changePass,
     changeProfile,
     fetchProfileImgAPI,
     addOrUpdateEmail,
-    verifyEmailApi
+    verifyEmailApi,
+    resetPassRequestApi
 }

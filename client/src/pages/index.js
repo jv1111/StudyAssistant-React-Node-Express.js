@@ -9,6 +9,7 @@ import RecordsPage from "./RecordsPage/RecordsPage";
 import RecordPage from "./RecordPage/RecordPage";
 import ProfilePage from "./ProfilePage/ProfilePage";
 import VerifyEmailPage from "./VerifyEmailPage/VerifyEmailPage";
+import ForgotPassPage from "./ForgotPassPage/ForgotPassPage.jsx";
 
 export default {
     HomePage,
@@ -21,5 +22,6 @@ export default {
     RecordsPage,
     RecordPage,
     ProfilePage,
-    VerifyEmailPage
+    VerifyEmailPage,
+    ForgotPassPage
 }

@@ -27,6 +27,11 @@ router.put(
 router.put(
     "/verifyEmail",
     UserController.verifyEmail
-)
+);
+
+router.put(
+    "/sendResetPassRequest",
+    UserController.sendResetPassRequest
+);
 
 module.exports = router;

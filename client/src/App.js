@@ -49,6 +49,7 @@ function App() {
             />
           } >
             <Route path="/auth" element={<Page.AuthPage />} />
+            <Route path="/auth/forgotPass" element={<Page.ForgotPassPage/>}/>
           </Route>
 
         </Routes>

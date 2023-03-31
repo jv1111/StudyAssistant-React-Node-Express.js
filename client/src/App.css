@@ -320,7 +320,22 @@ textarea {
   font-family: "kavoon";
 }
 
+.forgot-pass-page {
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.forgot-pass-page form{
+  background-color: black;
+  max-width: 250px;
+  border: white 1px solid;
+  border-radius: 10px;
+  padding: 20px;
+}
 
 @media screen and (max-width: 800px) {
   .authPage {

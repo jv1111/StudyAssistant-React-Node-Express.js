@@ -73,10 +73,25 @@ const verifyEmail = async (req, res) => {
     }
 }
 
+const sendResetPassRequest = async (req, res) => {
+    try {
+        const email = req.body.email;
+        const response = await service.sendResetPassRequest(email);
+        if (response.error) return res.status(401).json(response);
+        res.status(201).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     changePass,
     changeProfile,
     getProfileImg,
     addOrUpdateEmail,
-    verifyEmail
+    verifyEmail,
+    sendResetPassRequest
 }

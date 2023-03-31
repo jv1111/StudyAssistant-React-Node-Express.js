@@ -11,7 +11,8 @@ import Pad from "./Pad";
 import RecordItems from "./RecordItems";
 import ProfileImage from "./ProfileImage";
 import ChangePassForm from "./ChangePassForm.jsx";
-import EmailForm from "./EmailForm.jsx"
+import EmailForm from "./EmailForm.jsx";
+import FormTextField from "./FormTextField";
 
 export {
     LoginForm,
@@ -27,5 +28,6 @@ export {
     RecordItems,
     ProfileImage,
     ChangePassForm,
-    EmailForm
+    EmailForm,
+    FormTextField
 }

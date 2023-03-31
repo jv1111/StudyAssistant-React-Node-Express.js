@@ -78,6 +78,31 @@ const addOrUpdateEmail = async (userId, newEmail) => {
     }
 }
 
+const sendResetPassRequest = async (email) => {
+    const token = generateToken();
+    const user = await UserModel.findOne({ email: email });
+    const data = { email: email }
+    console.log(user);
+
+    if (!user) return { error: "this email is not registered" }
+    await insertTokenToDatabase(user._id, data, token, "reset_pass");
+
+    const url = `${process.env.CLIENT_URL}/verification/resetPassword/${user._id}/${token}`;
+    await sendEmail(
+        process.env.MAILER_USER,
+        email,
+        "Reset Password",//subject
+        url,
+        VerifacationLinkBuilder(
+            "Reset your password",
+            "Click the button below to reset your password",//message
+            url,
+            "Reset your password"//button name
+        )
+    );
+    return { success: true }
+}
+
 const verifyEmail = async (userId, token) => {
     const filter = {
         userId: userId,
@@ -95,10 +120,13 @@ const verifyEmail = async (userId, token) => {
     return { success: true, message: "Email has been verified" }
 }
 
+
+
 module.exports = {
     changePass,
     changeProfile,
     getProfileImg,
     addOrUpdateEmail,
-    verifyEmail
+    verifyEmail,
+    sendResetPassRequest
 }
