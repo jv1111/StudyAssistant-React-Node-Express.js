@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const { generateToken, insertTokenToDatabase } = require("../utils/tokenGenerator");
 const sendEmail = require("../utils/sendEmail");
 const { VerifacationLinkBuilder } = require("../utils/htmlBuilder");
+const TokenRequestModel = require("../models/TokenRequestModel");
 
 const changePass = async (userId, oldPassword, newPassword) => {
     const user = await UserModel.findById(userId);
@@ -62,7 +63,7 @@ const addOrUpdateEmail = async (userId, newEmail) => {
 
     const token = generateToken(userId, "addOrUpdateEmail");
     await insertTokenToDatabase(userId, token, "addOrUpdateEmail");
-    const url = `${process.env.BASE_URL}/verifyEmail/${userId}/${token}`;
+    const url = `${process.env.CLIENT_URL}/verification/verifyEmail/${userId}/${token}`;
     await sendEmail(
         process.env.MAILER_USER,
         newEmail,
@@ -81,9 +82,27 @@ const addOrUpdateEmail = async (userId, newEmail) => {
     }
 }
 
+const verifyEmail = async (userId, token) => {
+    const filter = {
+        userId: userId,
+        token: token
+    }
+
+    // check if the token exist in the database
+    const registeredToken = await TokenRequestModel.findOne(filter);
+
+    if (!registeredToken) return { error: "invalid link" }
+    // delete the token
+    await UserModel.findByIdAndUpdate(userId, { verifiedEmail: true });
+    const deleted = await TokenRequestModel.findOneAndDelete(filter);
+    console.log(deleted);
+    return { success: true, message: "Email has been verified" }
+}
+
 module.exports = {
     changePass,
     changeProfile,
     getProfileImg,
-    addOrUpdateEmail
+    addOrUpdateEmail,
+    verifyEmail
 }

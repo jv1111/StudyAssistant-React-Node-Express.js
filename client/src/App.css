@@ -301,11 +301,26 @@ textarea {
   width: 200px;
 }
 
-.searchBox .searchSpinner{
+.searchBox .searchSpinner {
   position: absolute;
   right: -30px;
   scale: .6;
 }
+
+.validation-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.validation-page h1 {
+  font-family: "kavoon";
+}
+
+
 
 @media screen and (max-width: 800px) {
   .authPage {

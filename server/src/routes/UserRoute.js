@@ -24,4 +24,9 @@ router.put(
     UserController.addOrUpdateEmail
 );
 
+router.put(
+    "/verifyEmail",
+    UserController.verifyEmail
+)
+
 module.exports = router;

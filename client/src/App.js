@@ -35,6 +35,10 @@ function App() {
               <Route path=":subject/:quizId" element={<Page.QuizPage />} />
             </Route>
 
+            <Route path="/verification">
+              <Route path="verifyEmail/:userId/:token" element={<Page.VerifyEmailPage />} />
+            </Route>
+
           </Route>
 
           {/* Unauthorize */}

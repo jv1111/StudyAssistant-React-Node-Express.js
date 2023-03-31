@@ -61,9 +61,27 @@ const addOrUpdateEmail = async (newEmail) => {
     }
 }
 
+const verifyEmailApi = async (userId, token) => {
+    try {
+        const response = await axios.put(
+            "user/verifyEmail",
+            {
+                userId: userId,
+                token: token
+            }
+        );
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
     changePass,
     changeProfile,
     fetchProfileImgAPI,
-    addOrUpdateEmail
+    addOrUpdateEmail,
+    verifyEmailApi
 }

@@ -60,9 +60,23 @@ const addOrUpdateEmail = async (req, res) => {
     }
 }
 
+const verifyEmail = async (req, res) => {
+    try {
+        const { userId, token } = req.body;
+        const response = await service.verifyEmail(userId, token);
+        res.status(201).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     changePass,
     changeProfile,
     getProfileImg,
-    addOrUpdateEmail
+    addOrUpdateEmail,
+    verifyEmail
 }
