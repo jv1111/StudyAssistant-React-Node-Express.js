@@ -127,6 +127,7 @@ const verifyToken = async (userId, token, type) => {
         type: type
     }
     const registeredToken = await TokenRequestModel.findOne(filter);
+    await TokenRequestModel.findOneAndDelete(filter);
     if (!registeredToken) return { error: "invalid link" }
     return { success: true, message: "Token is valid" }
 }
