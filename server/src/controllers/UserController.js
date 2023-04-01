@@ -62,8 +62,21 @@ const addOrUpdateEmail = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
     try {
-        const { userId, token } = req.body;
-        const response = await service.verifyEmail(userId, token);
+        const { userId, token, type } = req.body;
+        const response = await service.verifyEmail(userId, token, type);
+        res.status(201).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
+const verifyToken = async (req, res) => {
+    try {
+        const { userId, token, type } = req.body;
+        const response = await service.verifyToken(userId, token, type);
         res.status(201).json(response);
     } catch (error) {
         console.log(error);
@@ -77,6 +90,19 @@ const sendResetPassRequest = async (req, res) => {
     try {
         const email = req.body.email;
         const response = await service.sendResetPassRequest(email);
+        res.status(201).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
+const resetPass = async (req, res) => {
+    try {
+        const { userId, newPassword } = req.body;
+        const response = await service.resetPass(userId, newPassword);
         if (response.error) return res.status(401).json(response);
         res.status(201).json(response);
     } catch (error) {
@@ -93,5 +119,7 @@ module.exports = {
     getProfileImg,
     addOrUpdateEmail,
     verifyEmail,
-    sendResetPassRequest
+    sendResetPassRequest,
+    resetPass,
+    verifyToken
 }

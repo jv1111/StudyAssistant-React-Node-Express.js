@@ -94,11 +94,52 @@ const resetPassRequestApi = async (email) => {
     }
 }
 
+const verifyTokenRequest = async (userId, token, type) => {
+    console.log(userId)
+    console.log(token);
+    console.log(type);
+    try {
+        const response = await axios.put(
+            "user/verifyToken",
+            {
+                userId: userId,
+                token: token,
+                type: type
+            }
+        );
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
+const resetPass = async (userData) => {
+    const { userId, newPassword } = userData;
+    try {
+        const response = await axios.put(
+            "user/resetPass",
+            {
+                userId: userId,
+                newPassword: newPassword,
+            }
+        );
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.log(error.response.data);
+        return error.response.data
+    }
+}
+
 export {
     changePass,
     changeProfile,
     fetchProfileImgAPI,
     addOrUpdateEmail,
     verifyEmailApi,
-    resetPassRequestApi
+    resetPassRequestApi,
+    verifyTokenRequest,
+    resetPass
 }

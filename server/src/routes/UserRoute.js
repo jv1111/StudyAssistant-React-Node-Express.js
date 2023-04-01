@@ -30,8 +30,18 @@ router.put(
 );
 
 router.put(
+    "/verifyToken",
+    UserController.verifyToken
+);
+
+router.put(
     "/sendResetPassRequest",
     UserController.sendResetPassRequest
 );
+
+router.put(
+    "/resetPass",
+    UserController.resetPass
+)
 
 module.exports = router;

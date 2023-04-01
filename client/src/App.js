@@ -48,8 +48,11 @@ function App() {
               redirectPath={'/'}
             />
           } >
+
             <Route path="/auth" element={<Page.AuthPage />} />
-            <Route path="/auth/forgotPass" element={<Page.ForgotPassPage/>}/>
+            <Route path="/auth/forgotPass" element={<Page.ForgotPassPage />} />
+            <Route path="verification/resetPassword/:userId/:token" element={<Page.ResetPassPage />} />
+
           </Route>
 
         </Routes>

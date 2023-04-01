@@ -85,7 +85,7 @@ const sendResetPassRequest = async (email) => {
     console.log(user);
 
     if (!user) return { error: "this email is not registered" }
-    await insertTokenToDatabase(user._id, data, token, "reset_pass");
+    await insertTokenToDatabase(user._id, data, token, "resetPass");
 
     const url = `${process.env.CLIENT_URL}/verification/resetPassword/${user._id}/${token}`;
     await sendEmail(
@@ -120,7 +120,29 @@ const verifyEmail = async (userId, token) => {
     return { success: true, message: "Email has been verified" }
 }
 
+const verifyToken = async (userId, token, type) => {
+    const filter = {
+        userId: userId,
+        token: token,
+        type: type
+    }
+    const registeredToken = await TokenRequestModel.findOne(filter);
+    if (!registeredToken) return { error: "invalid link" }
+    return { success: true, message: "Token is valid" }
+}
 
+const resetPass = async (userId, newPassword) => {
+    console.log(newPassword);
+    console.log(userId);
+    const newHashedPassword = await bcrypt.hash(newPassword, 10);
+    await UserModel.findByIdAndUpdate(userId, {
+        password: newHashedPassword
+    });
+    return {
+        success: true,
+        message: "Password changed"
+    }
+}
 
 module.exports = {
     changePass,
@@ -128,5 +150,7 @@ module.exports = {
     getProfileImg,
     addOrUpdateEmail,
     verifyEmail,
-    sendResetPassRequest
+    sendResetPassRequest,
+    resetPass,
+    verifyToken
 }
