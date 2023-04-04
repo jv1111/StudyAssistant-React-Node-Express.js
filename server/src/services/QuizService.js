@@ -151,13 +151,20 @@ const generateRandomChoices = (correctAnswer, allItems) => {
 const submitAnswer = async (questionId, answer) => {
     let isCorrect;
     const itemSession = await QuizSessionModel.findById(questionId);
-    // check if the answer matches in the database QuizSessionModel
-    if (itemSession.answer !== answer) {
+
+    // convert both strings to lowercase before comparison
+    const correctAns = itemSession.answer.toLowerCase();
+    const userAns = answer.toLowerCase();
+
+    // check the answer
+    if (correctAns !== userAns) {
         isCorrect = false;
     } else {
         isCorrect = true;
     }
-    const update = await QuizSessionModel.findByIdAndUpdate(questionId, {
+
+    // update the QuizSessionModel item
+    await QuizSessionModel.findByIdAndUpdate(questionId, {
         userAnswer: answer,
         answered: true,
         correct: isCorrect

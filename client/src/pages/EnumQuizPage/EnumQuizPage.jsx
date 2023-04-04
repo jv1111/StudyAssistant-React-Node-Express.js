@@ -6,7 +6,7 @@ import { submitAnswer } from "../../api/QuizApi";
 import { saveQuizRecord } from "../../api/QuizApi";
 
 const EnumQuizPage = () => {
-
+    // todo make keys insensitive in the server in answer submittion e.g b === B
     const [numAnswered, setNumAnswered] = useState(0);//used to trigger the useEffect in useQuestionFentcher
     const { quizId } = useParams();
     const { isLoading, item, quizEnded } = useQuestionFetcher(quizId, numAnswered);
