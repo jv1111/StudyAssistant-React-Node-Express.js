@@ -33,30 +33,31 @@ function App() {
               <Route path="records/:recordId" element={<Page.RecordPage />} />
               <Route path=":subject" element={<Page.QuizzesPage />} />
               <Route path=":subject/:quizId" element={<Page.QuizPage />} />
-            </Route>
-
+              <Route path=":subject/enum/:quizId" element={<Page.EnumQuizPage/>}/>
           </Route>
 
-          <Route path="/verification">
-            <Route path="verifyEmail/:userId/:token" element={<Page.VerifyEmailPage />} />
-          </Route>
+        </Route>
 
-          {/* Unauthorize */}
-          <Route element={
-            <Page.ProtectedRoute
-              isAllowed={!auth.loggedIn}
-              redirectPath={'/'}
-            />
-          } >
+        <Route path="/verification">
+          <Route path="verifyEmail/:userId/:token" element={<Page.VerifyEmailPage />} />
+        </Route>
 
-            <Route path="/auth" element={<Page.AuthPage />} />
-            <Route path="/auth/forgotPass" element={<Page.ForgotPassPage />} />
-            <Route path="verification/resetPassword/:userId/:token" element={<Page.ResetPassPage />} />
+        {/* Unauthorize */}
+        <Route element={
+          <Page.ProtectedRoute
+            isAllowed={!auth.loggedIn}
+            redirectPath={'/'}
+          />
+        } >
 
-          </Route>
+          <Route path="/auth" element={<Page.AuthPage />} />
+          <Route path="/auth/forgotPass" element={<Page.ForgotPassPage />} />
+          <Route path="verification/resetPassword/:userId/:token" element={<Page.ResetPassPage />} />
 
-        </Routes>
-      </Router>
+        </Route>
+
+      </Routes>
+    </Router>
     </div >
   );
 }

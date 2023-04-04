@@ -10,7 +10,8 @@ import RecordPage from "./RecordPage/RecordPage";
 import ProfilePage from "./ProfilePage/ProfilePage";
 import VerifyEmailPage from "./VerifyEmailPage/VerifyEmailPage";
 import ForgotPassPage from "./ForgotPassPage/ForgotPassPage.jsx";
-import ResetPassPage from "./ResetPassPage/ResetPassPage.jsx"
+import ResetPassPage from "./ResetPassPage/ResetPassPage.jsx";
+import EnumQuizPage from "./EnumQuizPage/EnumQuizPage";
 
 export default {
     HomePage,
@@ -25,5 +26,6 @@ export default {
     ProfilePage,
     VerifyEmailPage,
     ForgotPassPage,
-    ResetPassPage
+    ResetPassPage,
+    EnumQuizPage
 }
