@@ -3,6 +3,7 @@ import FormTextField from "./FormTextField";
 import { loginAPI } from "../api/AuthApi";
 import { login } from "../redux/slice/authSlice";
 import { useDispatch } from "react-redux";
+import GoogleSignIn from "../assets/img/google-signin.png";
 
 const LoginForm = ({ setSignUpTrigger }) => {
     const [errorMessage, setErrorMessage] = useState("");
@@ -59,7 +60,9 @@ const LoginForm = ({ setSignUpTrigger }) => {
                 Sign up
             </button>
             <a href={`${process.env.REACT_APP_URL}/auth/forgotPass`}>Forgot password?</a>
-            <a href={`${process.env.REACT_APP_API_URL}/auth/googleLogin`} className="mt-1">Login with google</a>
+            <a href={`${process.env.REACT_APP_API_URL}/auth/googleLogin`} className="mt-1">
+                <img src={GoogleSignIn} alt="Google Sign in" />
+            </a>
             <label className="errorMessage">{errorMessage}</label>
         </form>
     )
