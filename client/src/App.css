@@ -57,7 +57,7 @@ body {
 
 .loginForm {
   width: 350px;
-  height: 330px;
+  height: 350px;
 }
 
 .lightBox {
@@ -65,6 +65,10 @@ body {
   background-color: white;
   overflow: hidden;
   border-radius: 10px;
+}
+
+.errorMessage {
+  color: red;
 }
 
 .lightBox::before {
@@ -238,6 +242,14 @@ button:hover:enabled {
   background-color: black;
 }
 
+.itemBox:hover {
+  cursor: pointer;
+}
+
+.description {
+  pointer-events: none;
+}
+
 .createQuizPage .itemBox {
   height: auto;
 }
@@ -369,6 +381,15 @@ textarea {
   position: absolute;
   top: -500%;
   opacity: 0;
+}
+
+.EmailForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.EmailForm button {
+  width: fit-content;
 }
 
 @media screen and (max-width: 800px) {

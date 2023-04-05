@@ -55,6 +55,15 @@ const getProfileImg = async (userId) => {
 
 const addOrUpdateEmail = async (userId, newEmail) => {
 
+    // check if the new email is not in use
+    const user = await UserModel.findOne({ email: newEmail });
+    const googleUser = await GoogleUserModel.findOne({ email: newEmail });
+    if (googleUser || user) return { error: "Email already exist" }
+
+    // check if user is not a signed up using google
+    const userTypeGoogle = await GoogleUserModel.findById(userId);
+    if (userTypeGoogle) return { error: "Cannot change email, This user is signed up using google" }
+
     const token = generateToken(userId, "addOrUpdateEmail");
     const data = { email: newEmail }
     await insertTokenToDatabase(userId, data, token, "addOrUpdateEmail");
