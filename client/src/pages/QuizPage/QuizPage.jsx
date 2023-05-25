@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useQuestionFetcher from "../../hooks/useQuestionFetcher";
 import LoadingPage from "../Loading/LoadingPage";
 import { submitAnswer } from "../../api/QuizApi";
@@ -15,6 +15,7 @@ const QuizPage = () => {
     const [correctAns, setCorrectAns] = useState("");
     const [disableSubmittion, setDisableSubmittion] = useState(false);
     const choicesRef = useRef([]);
+    const navigate = useNavigate();
 
     const submitAnswerHandler = async (answer, questionId, index) => {
         const response = await submitAnswer(questionId, answer);
@@ -41,9 +42,13 @@ const QuizPage = () => {
     }
 
     if (quizEnded) {
-        saveQuizRecord(quizId);
-        // todo create a quizRecord page and navigate to it automatically once the quiz is ended
-        return <>END</>
+        const saveRecord = async () => {
+            const record = await saveQuizRecord(quizId);
+            // todo create a quizRecord page and navigate to it automatically once the quiz is ended
+            await navigate(`/quiz/records/${record._id}`);
+        }
+        saveRecord();
+        return "";
     }
 
     if (isLoading) {
