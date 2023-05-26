@@ -29,6 +29,7 @@ function App() {
 
             <Route path="/quiz">
               <Route path="create" element={<Page.CreateQuizPage />} />
+              <Route path="update/:quizId" element={<Page.UpdateQuizPage />} />
               <Route path="records" element={<Page.RecordsPage />} />
               <Route path="records/:recordId" element={<Page.RecordPage />} />
               <Route path=":subject" element={<Page.QuizzesPage />} />

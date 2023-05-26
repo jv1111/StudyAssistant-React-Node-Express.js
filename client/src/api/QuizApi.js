@@ -129,11 +129,12 @@ const getRecord = async (recordId) => {
     }
 }
 
-const saveData = async (key, data) => {
+const saveData = async (key, data, quizId) => {
     try {
         const response = await axios.put("/quiz/saveData", {
             key: key,
-            data: data
+            data: data,
+            quizId: quizId
         });
         console.log(response.data);
         return response.data;
@@ -143,10 +144,10 @@ const saveData = async (key, data) => {
     }
 }
 
-const getSavedData = async (key) => {
+const getSavedData = async (key, quizId) => {
     try {
         const saveData = await axios.get("/quiz/savedData", {
-            params: { key: key }
+            params: { key: key, quizId: quizId }
         });
         console.log(saveData.data);
         return saveData.data;
@@ -169,6 +170,36 @@ const deleteSavedData = async (key) => {
     }
 }
 
+// todo create a new method in server to make this work
+const getItemsApi = async (quizId) => {
+    try {
+        const response = await axios.get("/quiz/getItems", {
+            params: { quizId: quizId }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+}
+
+const updateQuiz = async (quizId, subject, quizName, items) => {
+    try {
+        const response = await axios.put("/quiz/updateQuiz", {
+            subject: subject,
+            quizName: quizName,
+            items: items,
+            quizId: quizId
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+}
+
 export {
     getSubjects,
     getQuizzes,
@@ -180,5 +211,7 @@ export {
     createQuiz,
     saveData,
     getSavedData,
-    deleteSavedData
+    deleteSavedData,
+    getItemsApi,
+    updateQuiz
 }

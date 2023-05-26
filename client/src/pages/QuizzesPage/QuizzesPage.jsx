@@ -1,5 +1,5 @@
 import React from "react";
-import { QuizList, ItemContainer } from "../../components";
+import { QuizList } from "../../components";
 import "../../styles/items.css";
 
 const HomePage = () => {

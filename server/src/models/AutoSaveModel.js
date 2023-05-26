@@ -6,6 +6,11 @@ const AutoSaveSchema = mongoose.Schema({
         ref: "User",
         required: true
     },
+    quizId: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Quiz",
+        required: true
+    },
     key: {
         type: String,
         require: true

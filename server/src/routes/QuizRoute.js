@@ -72,4 +72,16 @@ router.delete(
     QuizController.deleteSavedData
 );
 
+router.get(
+    "/getItems",
+    VerifyAuth,
+    QuizController.getItems
+);
+
+router.put(
+    "/updateQuiz",
+    VerifyAuth,
+    QuizController.updateQuiz
+)
+
 module.exports = router;

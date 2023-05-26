@@ -71,6 +71,7 @@ const QuizList = () => {
                                             Number of items: {quiz.numberOfItems}
                                         </label>
                                     </div>
+                                    <button className="btnUpdateQuiz" onClick={() => { navigate(`/quiz/update/${quiz._id}`) }}>Update</button>
                                 </div>
                             )
                         })}

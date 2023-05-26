@@ -12,6 +12,7 @@ import VerifyEmailPage from "./VerifyEmailPage/VerifyEmailPage";
 import ForgotPassPage from "./ForgotPassPage/ForgotPassPage.jsx";
 import ResetPassPage from "./ResetPassPage/ResetPassPage.jsx";
 import EnumQuizPage from "./EnumQuizPage/EnumQuizPage";
+import UpdateQuizPage from "./UpdateQuizPage/UpdateQuizPage";
 
 export default {
     HomePage,
@@ -27,5 +28,6 @@ export default {
     VerifyEmailPage,
     ForgotPassPage,
     ResetPassPage,
-    EnumQuizPage
+    EnumQuizPage,
+    UpdateQuizPage
 }

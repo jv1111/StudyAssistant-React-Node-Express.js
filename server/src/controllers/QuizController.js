@@ -103,8 +103,8 @@ const getQuizRecord = async (req, res) => {
 const saveData = async (req, res) => {
     try {
         const userId = req.session.passport.user;
-        const { key, data } = req.body;
-        const response = await service.saveData(userId, key, data);
+        const { key, data, quizId } = req.body;
+        const response = await service.saveData(userId, key, data, quizId);
         res.status(201).json(response);
     } catch (error) {
         console.log(error);
@@ -117,8 +117,8 @@ const saveData = async (req, res) => {
 const getSavedData = async (req, res) => {
     try {
         const userId = req.session.passport.user;
-        const key = req.query.key;
-        const savedData = await service.getSavedData(userId, key);
+        const { key, quizId } = req.query;
+        const savedData = await service.getSavedData(userId, key, quizId);
         res.status(200).json(savedData);
     } catch (error) {
         console.log(error);
@@ -142,6 +142,35 @@ const deleteSavedData = async (req, res) => {
     }
 }
 
+const getItems = async (req, res) => {
+    try {
+        const quizId = req.query.quizId;
+        console.log(req.query);
+        console.log(quizId);
+        const response = await service.getItems(quizId);
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
+const updateQuiz = async (req, res) => {
+    try {
+        const { quizId, subject, quizName, items } = req.body;
+        console.log(req.body);
+        const response = await service.updateQuiz(quizId, subject, quizName, items);
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
@@ -153,5 +182,7 @@ module.exports = {
     getQuizRecord,
     saveData,
     getSavedData,
-    deleteSavedData
+    deleteSavedData,
+    getItems,
+    updateQuiz
 }

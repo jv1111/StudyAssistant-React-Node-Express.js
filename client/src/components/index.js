@@ -13,6 +13,7 @@ import ProfileImage from "./ProfileImage";
 import ChangePassForm from "./ChangePassForm.jsx";
 import EmailForm from "./EmailForm.jsx";
 import FormTextField from "./FormTextField";
+import UpdateQuizForm from "./UpdateQuizForm";
 
 export {
     LoginForm,
@@ -29,5 +30,6 @@ export {
     ProfileImage,
     ChangePassForm,
     EmailForm,
-    FormTextField
+    FormTextField,
+    UpdateQuizForm
 }

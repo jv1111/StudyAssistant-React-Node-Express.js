@@ -1,20 +1,26 @@
 import React, { useState, useRef } from "react";
 import FormTextField from "./FormTextField";
-import ItemContainer from "./ItemContainer";
-import { createQuiz, deleteSavedData } from "../api/QuizApi";
-import { useNavigate } from "react-router-dom";
-import useSavedDataFetcher from "../hooks/useSavedDataFetcher";
 import autoSave from "../helper/autoSave";
+import ItemContainer from "./ItemContainer";
+import { useParams } from "react-router-dom";
+import useItemsLoader from "../hooks/useItemsLoader";
+import useSavedDataFetcher from "../hooks/useSavedDataFetcher";
+import { updateQuiz, deleteSavedData } from "../api/QuizApi";
+import { useNavigate } from "react-router-dom";
 
-const CreateQuizForm = () => {
+const UpdateQuizForm = () => {
 
-    const [items, setItems] = useState(onLoad_items);
+    const { quizId } = useParams();
     const [subject, setSubject] = useState("");
     const [quizName, setQuizName] = useState("");
+    const [items, setItems] = useState([]);
+    useItemsLoader(quizId, setSubject, setQuizName, setItems);
     const itemBoxRef = useRef(null);
     const navigate = useNavigate();
 
-    useSavedDataFetcher("createQuiz", setItems, setSubject, setQuizName);
+    console.log(items);
+
+    useSavedDataFetcher("updateQuiz", setItems, setSubject, setQuizName, quizId);
 
     const addQuestion = () => {
         // create a new emty question and answer object
@@ -34,7 +40,7 @@ const CreateQuizForm = () => {
         newItems.splice(index, 1);// Remove one element from the 'newItems' array starting at the specified index
         setItems(newItems);//update items value
         const data = { items: newItems, subject: subject, quizName: quizName }
-        autoSave("createQuiz", data);
+        autoSave("updateQuiz", data, quizId);
     }
 
     // update items value (e.g new questions and answers value)
@@ -43,22 +49,23 @@ const CreateQuizForm = () => {
         newItems[index][e.target.name] = e.target.value;//change item value base on index and target name (question/answer)
         setItems(newItems);
         const data = { items: items, subject: subject, quizName: quizName }
-        autoSave("createQuiz", data);//save the pre-submitted automatically to the database
+        autoSave("updateQuiz", data, quizId);//save the pre-submitted automatically to the database
     }
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        const response = await createQuiz(subject, quizName, items);
-        if (response.error) {
-            alert(response.error);
-        }
-        await deleteSavedData("createQuiz");
-        navigate("/");
+        const response = await updateQuiz(quizId, subject, quizName, items);
+        // if (response.error) {
+        //     alert(response.error);
+        // }
+        // await deleteSavedData("updateQuiz", quizId);
+        // navigate("/");
     }
 
     return (
-        <form autoComplete="off" onSubmit={submitHandler}>
-            <label className="text-white mid-size-title">Create quiz</label>
+        <form autoComplete="off" onSubmit={(e) => submitHandler(e)}>
+            <label className="text-white mid-size-title">Update quiz</label>
+
             <div style={{ width: "250px", color: "white" }}>
                 <FormTextField
                     type="text"
@@ -68,7 +75,7 @@ const CreateQuizForm = () => {
                     onChange={(e) => {
                         setSubject(e.target.value)
                         const data = { items: items, subject: e.target.value, quizName: quizName }
-                        autoSave("createQuiz", data);//save the pre-submitted automatically to the database
+                        autoSave("updateQuiz", data, quizId);//save the pre-submitted automatically to the database
                     }}
                 />
                 <FormTextField
@@ -79,7 +86,7 @@ const CreateQuizForm = () => {
                     onChange={(e) => {
                         setQuizName(e.target.value)
                         const data = { items: items, subject: subject, quizName: e.target.value }
-                        autoSave("createQuiz", data);//save the pre-submitted automatically to the database
+                        autoSave("updateQuiz", data, quizId);//save the pre-submitted automatically to the database
                     }}
                 />
             </div>
@@ -139,29 +146,11 @@ const CreateQuizForm = () => {
                 className="btn-primary mt-1"
                 style={{ width: "200px" }}
             >
-                Submit
+                Update
             </button>
 
         </form>
-    );
+    )
 }
 
-const onLoad_items = () => {
-
-    return [{
-        question: "",
-        answer: ""
-    },
-    {
-        question: "",
-        answer: ""
-    },
-    {
-        question: "",
-        answer: ""
-    }
-    ]
-}
-
-
-export default CreateQuizForm;
+export default UpdateQuizForm;

@@ -244,18 +244,19 @@ const getRecord = async (recordId) => {
     return record;
 }
 
-const saveData = async (userId, key, data) => {
-    const savedData = await getSavedData(userId, key);
-    console.log(savedData);
+const saveData = async (userId, key, data, quizId) => {
+    const savedData = await getSavedData(userId, key, quizId);
+
     if (savedData) {
         // update the data if there is an existing data
-        await AutoSaveModel.findOneAndUpdate({ userId: userId, key: key }, { data: data });
+        await AutoSaveModel.findOneAndUpdate({ userId: userId, key: key, quizId: quizId }, { data: data });
     } else {
         // create new data
         const saveData = new AutoSaveModel({
             userId: userId,
             key: key,
-            data: data
+            data: data,
+            quizId: quizId
         });
 
         await saveData.save();
@@ -267,10 +268,11 @@ const saveData = async (userId, key, data) => {
     }
 }
 
-const getSavedData = async (userId, key) => {
+const getSavedData = async (userId, key, quizId) => {
     const savedData = await AutoSaveModel.findOne({
         userId, userId,
         key: key,
+        quizId: quizId,
     });
     return savedData;
 }
@@ -286,6 +288,21 @@ const deleteSavedData = async (userId, key) => {
     };
 }
 
+const getItems = async (quizId) => {
+    const quizItems = await QuizModel.findById(quizId);
+    if (!quizItems) return null;
+    return quizItems;
+}
+
+const updateQuiz = async (quizId, subject, quizName, items) => {
+    const updatedQuiz = await QuizModel.findByIdAndUpdate(quizId, {
+        subject: subject,
+        quizName: quizName,
+        items: items
+    });
+    return updatedQuiz;
+}
+
 module.exports = {
     createQuiz,
     getSubjects,
@@ -298,5 +315,7 @@ module.exports = {
     getRecord,
     saveData,
     getSavedData,
-    deleteSavedData
+    deleteSavedData,
+    getItems,
+    updateQuiz
 }
