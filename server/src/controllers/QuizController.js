@@ -1,4 +1,5 @@
 const service = require("../services/QuizService.js");
+const path = require("path");
 
 const createQuiz = async (req, res) => {
     try {
@@ -171,7 +172,35 @@ const updateQuiz = async (req, res) => {
     }
 }
 
+const createPdf = async (req, res) => {
+    try {
+        const quizId = req.body.quizId;
+        const response = await service.createPdf(quizId);
+        res.status(200).json(response);
+    } catch (error) {
+        // console.log(error);
+        res.status(500).json({
+            error: error.message
+        });
+    }
+}
+
+const getPdf = async (req, res) => {
+    try {
+        const pdfId = req.query.pdfId;
+        const projectRoot = path.resolve(__dirname, '../..');
+        const pdfDirectory = `${projectRoot}/public/pdf`;
+        const filePath = path.join(pdfDirectory, pdfId);
+        res.sendFile(filePath);
+    } catch (error) {
+        // console.log(error.message);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 module.exports = {
+    getPdf,
+    createPdf,
     createQuiz,
     getSubjects,
     getQuizzes,

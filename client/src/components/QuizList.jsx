@@ -6,7 +6,8 @@ import LoadingPage from "../pages/Loading/LoadingPage";
 import { Search } from "react-bootstrap-icons";
 import searchDelay from "../helper/searchDelay";
 import infinitScroller from "../helper/infinitScroller";
-import { getQuizzes } from "../api/QuizApi";
+import { getQuizzes, setPDFOnServer, getPdf } from "../api/QuizApi";
+import { saveAs } from "file-saver";
 
 const QuizList = () => {
 
@@ -21,6 +22,14 @@ const QuizList = () => {
     const quizSelectionHandler = (quizId) => {
         setSelectedQuiz(quizId);
         setSelectingType(true);
+    }
+
+    const DownloadPDFHanlder = async (event, quizId) => {
+        event.stopPropagation();
+        const pdfData = await setPDFOnServer(quizId);//set and save the pdf on server
+        const pdf = await getPdf(pdfData.pdfName);
+        saveAs(pdf, pdfData.pdfName);
+        // todo build the pdf file
     }
 
     if (isLoading) {
@@ -71,7 +80,10 @@ const QuizList = () => {
                                             Number of items: {quiz.numberOfItems}
                                         </label>
                                     </div>
-                                    <button className="btnUpdateQuiz" onClick={() => { navigate(`/quiz/update/${quiz._id}`) }}>Update</button>
+                                    <div className="quizzesButtons">
+                                        <button className="btnUpdateQuiz" onClick={() => { navigate(`/quiz/update/${quiz._id}`) }}>Update</button>
+                                        <button className="btnDownloadAsPdf" onClick={(e) => DownloadPDFHanlder(e, quiz._id)}>Download PDF</button>
+                                    </div>
                                 </div>
                             )
                         })}

@@ -4,6 +4,7 @@ const QuizSessionModel = require("../models/QuizSessionModel");
 const RecordsModel = require("../models/RecordsModel");
 const AutoSaveModel = require("../models/AutoSaveModel");
 const dateFormatter = require("../utils/dateFormatter");
+const { savePDF } = require("../utils/pdfHandler");
 
 const createQuiz = async (userId, subject, quizName, items) => {
     const Quiz = new QuizModel({
@@ -303,7 +304,14 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
     return updatedQuiz;
 }
 
+const createPdf = async (quizId, subject, quizName, items) => {
+    const quiz = await QuizModel.findById(quizId);
+    const pdf = savePDF(quiz);
+    return pdf;
+}
+
 module.exports = {
+    createPdf,
     createQuiz,
     getSubjects,
     getQuizzes,

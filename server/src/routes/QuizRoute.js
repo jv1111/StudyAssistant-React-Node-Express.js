@@ -82,6 +82,18 @@ router.put(
     "/updateQuiz",
     VerifyAuth,
     QuizController.updateQuiz
+);
+
+router.put(
+    "/createPdf",
+    VerifyAuth,
+    QuizController.createPdf
+);
+
+router.get(
+    "/getPdf",
+    VerifyAuth,
+    QuizController.getPdf
 )
 
 module.exports = router;

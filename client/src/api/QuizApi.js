@@ -200,6 +200,35 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
     }
 }
 
+const setPDFOnServer = async (quizId) => {
+    try {
+        const response = await axios.put("/quiz/createPdf", {
+            quizId: quizId
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+
+}
+
+
+const getPdf = async (pdfId) => {
+    try {
+        const response = await axios.get("/quiz/getPdf", {
+            params: { pdfId: pdfId },
+            responseType: "blob"
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+}
+
 export {
     getSubjects,
     getQuizzes,
@@ -213,5 +242,7 @@ export {
     getSavedData,
     deleteSavedData,
     getItemsApi,
-    updateQuiz
+    updateQuiz,
+    setPDFOnServer,
+    getPdf
 }
