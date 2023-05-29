@@ -18,6 +18,10 @@ module.exports = (data) => {
             border: 1px solid black;
         }
 
+        .answersPage{
+            padding: 2rem 1rem;
+        }
+
         .pageContent {
             padding: 50px 35px;
         }
@@ -66,9 +70,9 @@ module.exports = (data) => {
             display: grid;
             gap: 5px;
             padding: 0 20px;
+            margin-top: 10px;
+            margin-bottom: 30px;
         }
-
-        .answerPage {}
     </style>
 </head>
 
@@ -89,13 +93,15 @@ module.exports = (data) => {
         </div>
 
         <div class="pageBody">
-            <div class="questionsPage">
+            <div class="questionsPage >
                 ${questionsItems}
             </div>
-            <label class="description bold answersLabel">Answers</label>
 
-            <div class="answersPage">
-                ${correctAnswersItems}
+            <div class="answersPage" style="page-break-before: always"> 
+                <label class="description bold answersLabel" style="margin-bottom: 1rem">Answers</label>
+                <div style="margin-top: 1rem;">
+                    ${correctAnswersItems}
+                </div>
             </div>
 
         </div>
