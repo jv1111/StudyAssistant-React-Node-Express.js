@@ -133,7 +133,7 @@ const getSavedData = async (req, res) => {
 const deleteSavedData = async (req, res) => {
     try {
         const userId = req.session.passport.user;
-        const key = req.query.key;
+        const { key, quizId } = req.query;
         const response = await service.deleteSavedData(userId, key);
         res.status(200).json(response);
     } catch (error) {

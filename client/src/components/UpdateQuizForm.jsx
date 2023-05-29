@@ -55,11 +55,9 @@ const UpdateQuizForm = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         const response = await updateQuiz(quizId, subject, quizName, items);
-        // if (response.error) {
-        //     alert(response.error);
-        // }
-        // await deleteSavedData("updateQuiz", quizId);
-        // navigate("/");
+        if (response.error) return alert(response.error);
+        await deleteSavedData("updateQuiz", quizId);
+        navigate(`/quiz/${subject}`);
     }
 
     return (

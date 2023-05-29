@@ -157,10 +157,10 @@ const getSavedData = async (key, quizId) => {
     }
 }
 
-const deleteSavedData = async (key) => {
+const deleteSavedData = async (key, quizId) => {
     try {
         const response = await axios.delete("/quiz/savedData", {
-            params: { key: key }
+            params: { key: key, quizId: quizId }
         });
         console.log(response.data);
         return response.data;

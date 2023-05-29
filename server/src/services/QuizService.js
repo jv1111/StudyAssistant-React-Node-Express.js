@@ -275,11 +275,13 @@ const getSavedData = async (userId, key, quizId) => {
     return savedData;
 }
 
-const deleteSavedData = async (userId, key) => {
+const deleteSavedData = async (userId, key, quizId) => {
     await AutoSaveModel.findOneAndDelete({
         userId, userId,
         key: key,
+        quizId: quizId
     });
+    console.log("deleted");
     return {
         success: true,
         message: "Saved data is successfully deleted"
