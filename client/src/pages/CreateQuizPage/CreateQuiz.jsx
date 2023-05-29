@@ -3,7 +3,7 @@ import { CreateQuizForm } from "../../components";
 
 const CreateQuizPage = () => {
     return (
-        <div className="createQuizPage container pt-5">
+        <div className="createQuizPage container">
             <CreateQuizForm />
         </div>
     )

@@ -9,7 +9,7 @@
   overflow: auto;
 }
 
-.btnUpdateQuiz{
+.btnUpdateQuiz {
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -398,7 +398,102 @@ textarea {
   width: fit-content;
 }
 
+.createQuizPage {
+  padding-top: 2.5rem;
+}
+
+.updateQuizPage .itemBox {
+  height: auto;
+}
+
+.updateQuizPage .itemBox .question {
+  display: grid;
+  gap: 5px;
+}
+
+.updateQuizPage .itemBox .answer {
+  display: grid;
+}
+
 @media screen and (max-width: 800px) {
+
+  .createQuizPage {
+    padding-top: 0;
+  }
+
+  .App {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .App .quizzesButtons {
+    display: flex;
+    gap: 5px;
+  }
+
+  .App .quizzesButtons button {
+    position: relative;
+    bottom: 0;
+    left: 0;
+  }
+
+  .App .itemBox {
+    height: 100px;
+  }
+
+  .App .itemContainer {
+    margin-top: 1rem;
+    width: 95vw;
+    height: 90vh;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .itemContainer .topDescription h2 {
+    font-size: 12pt;
+  }
+
+  .App .itemPanel {
+    padding: 5px;
+    margin-top: 5px;
+    flex-grow: 1;
+  }
+
+  .App .updateQuizPage {
+    display: flex;
+    padding-top: 0;
+  }
+
+  .App .createQuizPage {
+    display: flex;
+    padding-top: 0;
+  }
+
+  .App .updateQuizPage .itemContainer {
+    height: auto;
+  }
+
+  .App .createQuizPage .itemContainer {
+    height: auto;
+  }
+
+  .App .createQuizPage .itemBox {
+    height: auto;
+  }
+
+  .App .updateQuizPage .itemBox {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .App .updateQuizPage .itemBox {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
   .authPage {
     display: flex;
     flex-direction: column;

@@ -3,7 +3,7 @@ import { UpdateQuizForm } from "../../components";
 
 const UpdateQuizPage = () => {
     return (
-        <div className="updateQuizPage container pt-5 ">
+        <div className="updateQuizPage container">
             <UpdateQuizForm />
         </div>
     );
