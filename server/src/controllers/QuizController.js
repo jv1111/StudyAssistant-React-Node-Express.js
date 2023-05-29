@@ -1,5 +1,6 @@
 const service = require("../services/QuizService.js");
 const path = require("path");
+const { fileDelete } = require("../utils/pdfHandler.js");
 
 const createQuiz = async (req, res) => {
     try {
@@ -178,7 +179,7 @@ const createPdf = async (req, res) => {
         const response = await service.createPdf(quizId);
         res.status(200).json(response);
     } catch (error) {
-        // console.log(error);
+        console.log(error.message);
         res.status(500).json({
             error: error.message
         });
@@ -193,12 +194,25 @@ const getPdf = async (req, res) => {
         const filePath = path.join(pdfDirectory, pdfId);
         res.sendFile(filePath);
     } catch (error) {
-        // console.log(error.message);
+        console.log(error.message);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const deleteFile = async (req, res) => {
+    try {
+        const filePath = req.query.filePath;
+        const response = fileDelete(filePath);
+        console.log(response);
+        res.status(200).json({ message: "deleted" });
+    } catch (error) {
+        console.log(error.message);
         res.status(500).json({ error: error.message });
     }
 }
 
 module.exports = {
+    deleteFile,
     getPdf,
     createPdf,
     createQuiz,

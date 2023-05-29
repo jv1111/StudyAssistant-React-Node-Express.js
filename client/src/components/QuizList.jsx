@@ -6,7 +6,7 @@ import LoadingPage from "../pages/Loading/LoadingPage";
 import { Search } from "react-bootstrap-icons";
 import searchDelay from "../helper/searchDelay";
 import infinitScroller from "../helper/infinitScroller";
-import { getQuizzes, setPDFOnServer, getPdf } from "../api/QuizApi";
+import { getQuizzes, setPDFOnServer, getPdf, deleteFile } from "../api/QuizApi";
 import { saveAs } from "file-saver";
 
 const QuizList = () => {
@@ -27,9 +27,11 @@ const QuizList = () => {
     const DownloadPDFHanlder = async (event, quizId) => {
         event.stopPropagation();
         const pdfData = await setPDFOnServer(quizId);//set and save the pdf on server
+        console.log(pdfData);
         const pdf = await getPdf(pdfData.pdfName);
         saveAs(pdf, pdfData.pdfName);
-        // todo build the pdf file
+        console.log(pdfData.path);
+        await deleteFile(pdfData.path);
     }
 
     if (isLoading) {

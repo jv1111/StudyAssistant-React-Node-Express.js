@@ -211,7 +211,6 @@ const setPDFOnServer = async (quizId) => {
         console.log(error);
         return error.response.data;
     }
-
 }
 
 
@@ -229,7 +228,21 @@ const getPdf = async (pdfId) => {
     }
 }
 
+const deleteFile = async (filePath) => {
+    try {
+        const response = await axios.delete("/quiz/deleteFile", {
+            params: { filePath: filePath }
+        });
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        return error.response.data;
+    }
+}
+
 export {
+    deleteFile,
     getSubjects,
     getQuizzes,
     getQuestion,

@@ -53,7 +53,6 @@ const getQuizzes = async (userId, subject, searchQuery, skipCount) => {
         .sort({ _id: 1 })//sort accending
         .skip(parseInt(skipCount))// number of items to skip starting from index 0
         .limit(10)//number of data to get
-    console.log(quiz);
 
     //todo create a test for quizzes then proceed
 
@@ -133,7 +132,6 @@ const generateRandomChoices = (correctAnswer, allItems) => {
         // push the correct answer base on the random index(correctAnsIndex)
         if (pushCount === correctAnsIndex) {
             choices.push(correctAnswer);
-            console.log(pushCount + " correct anse");
             pushCount++;
             continue;
         }
@@ -141,7 +139,6 @@ const generateRandomChoices = (correctAnswer, allItems) => {
         const incorrectAnsToAdd = allItems[randomIndexOfAllItems].answer;
         // push incorrect answers and prevent duplicate
         if (incorrectAnsToAdd !== correctAnswer && !choices.includes(incorrectAnsToAdd)) {
-            console.log(pushCount + " incorrect ans pushed");
             choices.push(allItems[randomIndexOfAllItems].answer);
             pushCount++;
         }
@@ -306,7 +303,22 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
 
 const createPdf = async (quizId, subject, quizName, items) => {
     const quiz = await QuizModel.findById(quizId);
-    const pdf = savePDF(quiz);
+    const quizItems = quiz.items;
+    let questions = [];
+    let data = {
+        _id: quizId,
+        subject: quiz.subject,
+        quizName: quiz.quizName,
+    };
+    for (let i = 0; i < quizItems.length; i++) {
+        const correctAns = quizItems[i].answer;
+        const question = quizItems[i].question;
+        const choices = generateRandomChoices(correctAns, quizItems);
+        const item = { question: question, choices: choices, correctAns: correctAns }
+        questions.push(item);
+    }
+    data.questions = questions;
+    const pdf = savePDF(data);
     return pdf;
 }
 

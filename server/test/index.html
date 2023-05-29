@@ -1,0 +1,165 @@
+<html lang="en">
+
+<head>
+    <title>NAME</title>
+    <style>
+        .page {
+            width: 816px;
+            margin: auto;
+            border: 1px solid black;
+        }
+
+        .pageContent {
+            padding: 50px 35px;
+        }
+
+        .answersLabel {
+            position: relative;
+            right: 35px;
+        }
+
+        .description {
+            font-size: 15pt;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .answer {
+            color: rgb(8, 104, 51);
+            font-weight: bold;
+        }
+
+        .question {
+            font-size: 12pt;
+        }
+
+        .pageBody {
+            margin-top: 3rem;
+            padding: 0 30px;
+            display: grid;
+            gap: 50px;
+        }
+
+        .questionsPage {
+            display: grid;
+            gap: 5px;
+        }
+
+        .item {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .choices {
+            display: grid;
+            gap: 5px;
+            padding: 0 20px;
+        }
+
+        .answerPage {}
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="pageContent">
+
+            <div class="topLabel">
+                <div class="left">
+                    <div class="subject">
+                        <label class="description bold">Subject: </label>
+                        <label class="description">subject</label>
+                    </div>
+                    <div class="quizName">
+                        <label class="description bold">Quiz name: </label>
+                        <label class="description">quiz name</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pageBody">
+                <div class="questionsPage" id="questionsPage">
+
+                </div>
+
+                <label class="description bold answersLabel">Answers</label>
+
+                <div class="answersPage">
+
+                    <div class="item">
+                        <label class="question">Question 1</label>
+                        <label class="answer">A</label>
+                    </div>
+
+                    <div class="item">
+                        <label class="question">Question 2</label>
+                        <label class="answer">B</label>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <script>
+        const data = {
+            item1: {
+                question: "question1",
+                choices: {
+                    A: "aaa",
+                    B: "bbb",
+                    C: "ccc"
+                }
+            },
+            item2: {
+                question: "question2",
+                choices: {
+                    A: "aaa",
+                    B: "bbb",
+                    C: "ccc"
+                }
+            }
+        };
+
+        function generateHTMLString(data) {
+            let htmlString = "";
+
+            for (const itemKey in data) {
+                const item = data[itemKey];
+                const question = item.question;
+                const choices = item.choices;
+
+                htmlString += `
+      <div class="item">
+        <label class="question">${question}</label>
+        <div class="choices">`;
+
+                for (const choiceKey in choices) {
+                    const choice = choices[choiceKey];
+
+                    htmlString += `
+        <div class="choice">
+          <label class="selection bold">${choiceKey}: </label>
+          <label class="selection">${choice}</label>
+        </div>`;
+                }
+
+                htmlString += `
+        </div>
+      </div>`;
+            }
+
+            return htmlString;
+        }
+
+        const html = generateHTMLString(data);
+        const container = document.getElementById("questionsPage");
+        container.innerHTML = html;
+    </script>
+</body>
+
+</html>

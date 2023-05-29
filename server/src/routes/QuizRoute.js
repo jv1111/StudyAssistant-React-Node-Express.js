@@ -94,6 +94,12 @@ router.get(
     "/getPdf",
     VerifyAuth,
     QuizController.getPdf
+);
+
+router.delete(
+    "/deleteFile",
+    VerifyAuth,
+    QuizController.deleteFile
 )
 
 module.exports = router;
