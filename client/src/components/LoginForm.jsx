@@ -60,7 +60,7 @@ const LoginForm = ({ setSignUpTrigger }) => {
                 Sign up
             </button>
             <a href={`${process.env.REACT_APP_URL}/auth/forgotPass`}>Forgot password?</a>
-            <a href={`${process.env.REACT_APP_API_URL}/auth/googleLogin`} className="mt-1">
+            <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="mt-1">
                 <img src={GoogleSignIn} alt="Google Sign in" />
             </a>
             <label className="errorMessage">{errorMessage}</label>

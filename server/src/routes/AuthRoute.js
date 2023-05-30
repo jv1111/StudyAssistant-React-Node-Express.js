@@ -23,7 +23,7 @@ router.get(
 );
 
 router.get(
-    "/googleLogin",
+    "/google",
     AuthController.googleLogin
 );
 
