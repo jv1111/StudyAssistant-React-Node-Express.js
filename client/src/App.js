@@ -3,13 +3,29 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Page from "./pages";
 import Navbar from "./components/Navbar";
 import useSessionChecker from "./hooks/useSessionChecker";
+import { useEffect } from "react";
 
 function App() {
 
   const { isLoading, auth } = useSessionChecker();
 
+  const documentHeight = () => {
+    const doc = document.documentElement;
+    doc.style.setProperty('--doc-height', `${window.innerHeight}px`);
+    console.log(window.innerHeight);
+  }
+
+  useEffect(() => {
+    window.addEventListener(`resize`, documentHeight);
+    documentHeight()
+  }, []);
+
   if (isLoading) {
-    return <Page.LoadingPage />
+    return (
+      <div className="App">
+        <Page.LoadingPage />
+      </div>
+    )
   }
 
   return (
@@ -34,31 +50,31 @@ function App() {
               <Route path="records/:recordId" element={<Page.RecordPage />} />
               <Route path=":subject" element={<Page.QuizzesPage />} />
               <Route path=":subject/:quizId" element={<Page.QuizPage />} />
-              <Route path=":subject/enum/:quizId" element={<Page.EnumQuizPage/>}/>
+              <Route path=":subject/enum/:quizId" element={<Page.EnumQuizPage />} />
+            </Route>
+
           </Route>
 
-        </Route>
+          <Route path="/verification">
+            <Route path="verifyEmail/:userId/:token" element={<Page.VerifyEmailPage />} />
+          </Route>
 
-        <Route path="/verification">
-          <Route path="verifyEmail/:userId/:token" element={<Page.VerifyEmailPage />} />
-        </Route>
+          {/* Unauthorize */}
+          <Route element={
+            <Page.ProtectedRoute
+              isAllowed={!auth.loggedIn}
+              redirectPath={'/'}
+            />
+          } >
 
-        {/* Unauthorize */}
-        <Route element={
-          <Page.ProtectedRoute
-            isAllowed={!auth.loggedIn}
-            redirectPath={'/'}
-          />
-        } >
+            <Route path="/auth" element={<Page.AuthPage />} />
+            <Route path="/auth/forgotPass" element={<Page.ForgotPassPage />} />
+            <Route path="verification/resetPassword/:userId/:token" element={<Page.ResetPassPage />} />
 
-          <Route path="/auth" element={<Page.AuthPage />} />
-          <Route path="/auth/forgotPass" element={<Page.ForgotPassPage />} />
-          <Route path="verification/resetPassword/:userId/:token" element={<Page.ResetPassPage />} />
+          </Route>
 
-        </Route>
-
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
     </div >
   );
 }

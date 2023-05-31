@@ -90,7 +90,7 @@ const CreateQuizForm = () => {
                         return (
                             <div className="itemBox" key={index}>
                                 <button
-                                    id="deleteQuestion"
+                                    className="deleteQuestion"
                                     type="button"
                                     onClick={() => deleteQuestion(index)}
                                     disabled={items.length <= 3}

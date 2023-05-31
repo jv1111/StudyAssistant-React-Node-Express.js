@@ -5,7 +5,7 @@ import "../../styles/items.css";
 const HomePage = () => {
 
     return (
-        <div className="quizzes-page container">
+        <div className="quizzesPage page container">
             <QuizList />
         </div>
     );

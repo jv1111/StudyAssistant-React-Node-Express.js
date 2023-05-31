@@ -18,12 +18,12 @@ const QuizPage = () => {
     const navigate = useNavigate();
 
     const submitAnswerHandler = async (answer, questionId, index) => {
+        setDisableSubmittion(true);
         const response = await submitAnswer(questionId, answer);
 
         if (response.error) return alert("error");
 
         if (response.correct) {
-            setDisableSubmittion(true);
             choicesRef.current[index].classList.add("bgCorrect");
             choicesRef.current[index].classList.add("text-white");
             setShowCorrectLbl(true);
@@ -56,7 +56,7 @@ const QuizPage = () => {
     }
 
     return (
-        <div className="quizPage container">
+        <div className="quizPage page container">
             <div className="itemContainer">
                 <div className="topDescription ">
                     <div className="d-flex justify-content-between">
@@ -77,6 +77,7 @@ const QuizPage = () => {
                             correctAns={correctAns}
                             setShowCorrectAnsPopup={setShowCorrectAnsPopup}
                             setNumAnswered={setNumAnswered}
+                            setDisableSubmittion={setDisableSubmittion}
                         />
                     }
                     <div className="itemBox" style={{ height: "250px", overflow: "auto" }}>
@@ -108,7 +109,7 @@ const QuizPage = () => {
     )
 }
 
-const CorrectAnsPopup = ({ correctAns, setShowCorrectAnsPopup, setNumAnswered }) => {
+const CorrectAnsPopup = ({ correctAns, setShowCorrectAnsPopup, setNumAnswered, setDisableSubmittion }) => {
     return (
         <div className="popupBlocker">
             <div className="correctAnsPopup">
@@ -119,6 +120,7 @@ const CorrectAnsPopup = ({ correctAns, setShowCorrectAnsPopup, setNumAnswered })
                 <button onClick={() => {
                     setNumAnswered(prev => prev + 1)
                     setShowCorrectAnsPopup(false)
+                    setDisableSubmittion(false);
                 }}>Ok</button>
             </div>
         </div >

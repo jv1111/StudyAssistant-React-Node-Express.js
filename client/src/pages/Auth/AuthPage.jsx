@@ -6,7 +6,7 @@ const AuthPage = () => {
     const [signUptrigger, setSignUpTrigger] = useState(false);
 
     return (
-        <div className="page authPage container pt-5">
+        <div className="page authPage container">
             <div className="titleDiv">
                 <h1 className="title">Rev-bot</h1>
                 <div className="line"></div>
