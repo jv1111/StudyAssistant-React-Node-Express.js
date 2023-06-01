@@ -1,45 +1,39 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import "../styles/pad.css";
 
 const Pad = ({ children, record }) => {
 
     const auth = useSelector(state => state.auth);
+    const numberOfItems = record.items.length;
 
     return (
-        <div className="pad p-5">
-            <div className="d-flex justify-content-between">
-                <div className="d-grid">
-                    <label className="fw-bold">Name:
-                        <label className="fw-normal ms-1">
-                            {auth.user.username}
-                        </label>
-                    </label>
-                    <label className="fw-bold">Subject:
-                        <label className="fw-normal ms-1">
-                            {record.subject}
-                        </label>
-                    </label>
-                    <label className="fw-bold">Quiz name:
-                        <label className="fw-normal ms-1">
-                            {record.quizName}
-                        </label>
+        <div className="pad">
+
+            <div className="topDescription">
+                <div className="right">
+                    <label className="bold">Name: <label className="normal">{auth.user.username}</label></label>
+                    <label className="bold">subject:
+                        <label className="normal">{record.subject}</label>
                     </label>
                 </div>
-                <div className="d-flex flex-column">
-                    <label className="fw-bold">Date:
-                        <label className="fw-normal ms-1">
+
+                <div className="left">
+                    <label className="bold">
+                        Date:
+                        <label className="normal">
                             {record.date}
                         </label>
                     </label>
-                    <label className="fw-bold">Score:
-                        <label className="fw-normal ms-1">
+                    <label className="bold">
+                        Score: {numberOfItems}/
+                        <label className="normal">
                             {record.score}
                         </label>
                     </label>
                 </div>
             </div>
-            <div className="body d-grid gap-1 mt-4">
+
+            <div className="body">
                 {children}
             </div>
         </div>

@@ -5,7 +5,7 @@ import "../../styles/items.css";
 const RecordsPage = () => {
 
     return (
-        <div className="recordsPage container">
+        <div className="recordsPage page container">
             <RecordsList />
         </div>
     );

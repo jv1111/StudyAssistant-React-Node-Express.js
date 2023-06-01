@@ -4,7 +4,7 @@ import { CheckCircle, XCircle } from "react-bootstrap-icons";
 const RecordItems = ({ record }) => {
 
     return (
-        <div className="item mt-4">
+        <div className="recordItems">
             <ul>
                 {record.items.map((item, index) => {
                     // todo update css
@@ -15,19 +15,18 @@ const RecordItems = ({ record }) => {
                                 :
                                 <XCircle className="incorrectIcon"/>
                             }
-                            {index !== 0 && <div className="line bg-gray w-100 mt-3 mb-3" style={{ height: "2px" }}></div>}
-                            <label className="fw-bold">Question# {index + 1}</label>
+                            <label className="bold">Question# {index + 1}</label>
                             <p className="p-2">{item.question}</p>
-                            <label className={`fw-bold p-2 ${item.correct ? "correctAns" : "incorrectAns"}`}>Answer: </label>
-                            <br />
-                            <label className={`fw-normal p-2 ${item.correct ? "correctAns" : "incorrectAns"}`}>
+                            <label className={`bold ${item.correct ? "correctAns" : "incorrectAns"}`}>Answer: </label>
+                            <label className={`bold ${item.correct ? "correctAns" : "incorrectAns"}`}>
                                 {item.userAnswer}
                             </label>
                             {!item.correct &&
-                                <label className="fw-bold correctAns">
+                                <label className="bold correctAns">
                                     {item.answer}
                                 </label>
                             }
+                            <div className="line"></div>
                         </li>
                     )
                 })}

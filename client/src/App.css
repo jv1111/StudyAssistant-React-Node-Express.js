@@ -25,6 +25,16 @@ body {
   overflow: auto;
 }
 
+.App div {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.App p {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
 .page {
   padding-top: 3rem;
   flex-grow: 1;
@@ -244,6 +254,8 @@ button:hover:enabled {
 .itemsList {
   display: grid;
   gap: 5px;
+  max-height: 70vh;
+  overflow: auto;
   width: 100%;
 }
 
@@ -286,8 +298,8 @@ textarea {
   border-radius: 5px;
 }
 
-.itemsList {
-  max-height: 50vh;
+.quizPage .itemBox .p-2 {
+  max-height: 200px;
   overflow: auto;
 }
 
@@ -343,27 +355,89 @@ li {
   list-style: none;
 }
 
-.quizPage .itemPanel .popupBlocker{
+.quizPage .itemPanel .popupBlocker {
   width: 100%;
   height: 100%;
   border-radius: 5px;
 }
 
-.quizPage .itemPanel .correctAnsPopup{
+.quizPage .itemPanel .correctAnsPopup {
   background-color: black;
-  width: 200px;
+  min-width: 200px;
+  max-width: 350px;
+  word-wrap: break-word;
   display: grid;
   color: white;
   padding: 10px;
   z-index: 1;
 }
 
-.pad{
+.quizPage .itemPanel .correctAnsPopup p {
+  max-height: 270px;
+  border: white solid 1px;
+  padding: 5px;
+  overflow: auto;
+}
+
+.pad {
   background-color: white;
   color: black;
+  padding: 30px 20px;
+}
+
+.pad .topDescription {
+  display: flex;
+  gap: 5px;
+}
+
+.pad .left {
+  width: 2000px;
+}
+
+.pad .right {}
+
+.pad .body {
+  margin-top: 10px;
+}
+
+.pad .recordItems ul {
+  display: grid;
+  gap: 5px;
+}
+
+.pad .recordItems ul li {
+  position: relative;
+}
+
+.pad .recordItems svg {
+  position: absolute;
+  right: 10px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.correctIcon {
+  color: rgb(75, 124, 0);
+}
+
+.incorrectIcon {
+  color: red;
+}
+
+.itemName {
+  max-height: 50px;
+  overflow: auto;
 }
 
 .quizPage .itemPanel {
   flex-direction: column;
   min-height: auto;
+}
+
+
+
+.quizPage .right{
+  min-width: 150px;
 }

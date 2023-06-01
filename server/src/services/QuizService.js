@@ -128,6 +128,9 @@ const generateRandomChoices = (correctAnswer, allItems) => {
     let choices = [];
     let correctAnsIndex = Math.floor(Math.random() * 3);
     let pushCount = 0;
+    // todo - generate a max loop handler
+    const maxLoopPerChoice = 500;
+    let loopCountPerChoice = 0;//loop count per choice
     while (pushCount < 3) {
         // push the correct answer base on the random index(correctAnsIndex)
         if (pushCount === correctAnsIndex) {
@@ -139,9 +142,14 @@ const generateRandomChoices = (correctAnswer, allItems) => {
         const incorrectAnsToAdd = allItems[randomIndexOfAllItems].answer;
         // push incorrect answers and prevent duplicate
         if (incorrectAnsToAdd !== correctAnswer && !choices.includes(incorrectAnsToAdd)) {
-            choices.push(allItems[randomIndexOfAllItems].answer);
+            choices.push(incorrectAnsToAdd);
             pushCount++;
+        } else if (maxLoopPerChoice === loopCountPerChoice) {
+            choices.push(null);
+            pushCount++;
+            loopCountPerChoice = 0;
         }
+        loopCountPerChoice++;
     }
     return choices;
 }
@@ -276,12 +284,13 @@ const getSavedData = async (userId, key, quizId) => {
 }
 
 const deleteSavedData = async (userId, key, quizId) => {
+
     await AutoSaveModel.findOneAndDelete({
         userId, userId,
         key: key,
         quizId: quizId
     });
-    console.log("deleted");
+
     return {
         success: true,
         message: "Saved data is successfully deleted"

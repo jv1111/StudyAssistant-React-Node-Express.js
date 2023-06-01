@@ -92,15 +92,17 @@ const QuizPage = () => {
                     </div>
                     <div className="selectionPanel d-grid gap-1 mt-1">
                         {item.choices.map((choice, index) => {
-                            return <button
-                                key={index}
-                                className="btn-primary"
-                                ref={(element) => { choicesRef.current[index] = element }}
-                                onClick={() => submitAnswerHandler(choice, item._id, index)}
-                                disabled={disableSubmittion}
-                            >
-                                {choice}
-                            </button>
+                            if (choice) {
+                                return <button
+                                    key={index}
+                                    className="btn-primary"
+                                    ref={(element) => { choicesRef.current[index] = element }}
+                                    onClick={() => submitAnswerHandler(choice, item._id, index)}
+                                    disabled={disableSubmittion}
+                                >
+                                    {choice}
+                                </button>
+                            }
                         })}
                     </div>
                 </div>

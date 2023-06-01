@@ -11,7 +11,7 @@ const RecordPage = () => {
     if (isLoading) return <LoadingPage />
 
     return (
-        <div className="recordPage container">
+        <div className="recordPage page container">
             <Pad record={record}>
                 <RecordItems record={record} />
             </Pad>
