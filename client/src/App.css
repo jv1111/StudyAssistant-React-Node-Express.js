@@ -252,7 +252,8 @@ button:hover:enabled {
 }
 
 .itemsList {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 5px;
   max-height: 70vh;
   overflow: auto;
@@ -266,6 +267,7 @@ button:hover:enabled {
   padding: 5px;
   padding-top: 10px;
   height: 150px;
+  min-height: 150px;
 }
 
 .createQuizPage .itemBox {
@@ -436,8 +438,35 @@ li {
   min-height: auto;
 }
 
+.bgCorrect {
+  background-color: rgb(75, 124, 0);
+}
 
+.lblCorrect {
+  color: rgb(75, 124, 0);
+}
 
-.quizPage .right{
+.quizPage .right {
   min-width: 150px;
+}
+
+.updateQuizPage .itemBox {
+  padding-top: 20px;
+  height: 220px;
+}
+
+.updateQuizPage .itemBox .deleteQuestion {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.updateQuizPage .itemBox .question {
+  display: grid;
+  padding: 5px;
+}
+
+.updateQuizPage .answer {
+  display: grid;
+  padding: 0 5px;
 }

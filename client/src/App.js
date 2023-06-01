@@ -54,7 +54,7 @@ function App() {
             </Route>
 
           </Route>
-
+          
           <Route path="/verification">
             <Route path="verifyEmail/:userId/:token" element={<Page.VerifyEmailPage />} />
           </Route>
