@@ -267,6 +267,9 @@ button:hover:enabled {
   padding: 5px;
   padding-top: 10px;
   height: 150px;
+}
+
+.selectionPage .itemBox{
   min-height: 150px;
 }
 
