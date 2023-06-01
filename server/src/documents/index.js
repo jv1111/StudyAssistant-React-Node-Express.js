@@ -12,6 +12,12 @@ module.exports = (data) => {
 <head>
     <title>NAME</title>
     <style>
+
+        .pageContent div{
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+
         .page {
             width: 816px;
             margin: auto;
