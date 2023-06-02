@@ -3,10 +3,13 @@ import { Formik, Form } from "formik";
 import UserValidationSchema from "../validation/UserValidationSchema";
 import FormikTextField from "./FormikTextField";
 import { signUpAPI } from "../api/AuthApi";
+import { login } from "../redux/slice/authSlice";
+import { useDispatch } from "react-redux";
 
 const SignUpForm = () => {
 
     const [errorMessage, setErrorMessage] = useState("");
+    const dispatch = useDispatch();
 
     const initialValues = {
         username: "",
@@ -23,7 +26,7 @@ const SignUpForm = () => {
                 setErrorMessage("");
             }, 5000);
         } else if (response.success) {
-            alert('logged in');
+            dispatch(login(response.user));
         }
     }
 

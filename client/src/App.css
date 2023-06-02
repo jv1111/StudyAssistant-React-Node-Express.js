@@ -269,7 +269,7 @@ button:hover:enabled {
   height: 150px;
 }
 
-.selectionPage .itemBox{
+.selectionPage .itemBox {
   min-height: 150px;
 }
 
@@ -472,4 +472,67 @@ li {
 .updateQuizPage .answer {
   display: grid;
   padding: 0 5px;
+}
+
+.popupBackground{
+  position: absolute;
+  background-color: rgba(0, 0, 0, .7);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popupPanel{
+  position: relative;
+  width: fit-content;
+}
+
+.empty-list{
+  width: fit-content;
+}
+
+.signUpForm{
+  width: 450px;
+  height: 250px;
+  z-index: 1;
+}
+
+.hide{
+  opacity: 0;
+}
+
+.line{
+  background-color: white;
+}
+
+.popupPanel .btn-exit{
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+}
+
+@media screen and (max-width: 850px) {
+  .authPage{
+    display: flex;
+    flex-direction: column;
+  }
+  .authPage .loginDiv{
+    top: 0;
+    margin: auto;
+  }
+  .titleDiv{
+    text-align: center;
+  }
+  .titleDiv .line{
+    min-width: 100%;
+  }
+  .itemPanel{
+    min-height: 65vh;
+    max-height: 65vh;
+  }
 }

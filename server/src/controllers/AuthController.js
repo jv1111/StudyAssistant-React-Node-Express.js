@@ -5,12 +5,17 @@ const register = async (req, res) => {
     try {
         const userData = req.body;
         const user = await service.register(userData);
-        res.status(201).json({
-            success: true,
-            user: {
-                id: user._id,
-                username: user.username,
-            }
+        req.login(user, (error) => {
+            if (error) return res.status(500).json({ error: error.message });
+            res.status(200).json({
+                success: true,
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    username: user.username,
+                    createdAt: user.createdAt
+                }
+            });
         });
     } catch (error) {
         console.log(error);
