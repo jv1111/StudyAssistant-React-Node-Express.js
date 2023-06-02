@@ -9,12 +9,15 @@ const LoginForm = ({ setSignUpTrigger }) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [usernameOrEmail, setusernameOrEmail] = useState("");
     const [password, setPassword] = useState('');
+    const [loggingIn, setLogginIn] = useState(false);
     const dispatch = useDispatch();
 
     // todo navigation bar
     const submitHandler = async (e) => {
         e.preventDefault();
+        setLogginIn(true);
         const response = await loginAPI(usernameOrEmail, password);
+        setLogginIn(false);
         if (response.error) {
             setErrorMessage(response.error);
             // remove error massage after 5 seconds
@@ -55,6 +58,7 @@ const LoginForm = ({ setSignUpTrigger }) => {
             <button
                 className="btn-secondary"
                 type="button"
+                disabled={loggingIn}
                 onClick={() => setSignUpTrigger(true)}//Display signup using popup component
             >
                 Sign up
