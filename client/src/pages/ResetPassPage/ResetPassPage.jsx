@@ -27,7 +27,7 @@ const ResetPassPage = () => {
     }
 
     return (
-        <div className="reset-pass-page container">
+        <div className="resetPassPage page container">
             {valid ?
                 <ResetPassForm />
                 :

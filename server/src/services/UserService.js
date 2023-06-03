@@ -88,10 +88,10 @@ const addOrUpdateEmail = async (userId, newEmail) => {
 }
 
 const sendResetPassRequest = async (email) => {
+    console.log(email);
     const token = generateToken();
     const user = await UserModel.findOne({ email: email });
     const data = { email: email }
-    console.log(user);
 
     if (!user) return { error: "this email is not registered" }
     await insertTokenToDatabase(user._id, data, token, "resetPass");

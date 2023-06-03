@@ -52,6 +52,7 @@ const LoginForm = ({ setSignUpTrigger }) => {
             <button
                 className="btn-primary"
                 type="submit"
+                disabled={loggingIn}
             >
                 Login
             </button>

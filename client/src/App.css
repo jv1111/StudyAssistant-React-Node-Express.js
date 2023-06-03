@@ -516,12 +516,12 @@ li {
   right: 10px;
 }
 
-.profilePage{
+.profilePage {
   display: grid;
   gap: 3rem;
 }
 
-.profilePage .top{
+.profilePage .top {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -529,13 +529,55 @@ li {
   text-align: center;
 }
 
-.profilePage .bottom{
+.profilePage .bottom {
   display: grid;
   gap: 10px;
 }
 
-.profilePage .emailForm .formTitle{
+.profilePage .emailForm .formTitle {
   display: grid;
+}
+
+.forgotPassPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.forgotPassForm {
+  width: 270px;
+  background-color: black;
+  border: white 1px solid;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.forgotPassForm .description {
+  font-weight: bold;
+}
+
+.resetPassPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.resetPassPage .resetPassform {
+  width: 270px;
+  background-color: black;
+  border: white 1px solid;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  display: grid;
+  gap: 5px;
+}
+
+.inputBox input .errorMessage {
+  color: red;
 }
 
 @media screen and (max-width: 370px) {
