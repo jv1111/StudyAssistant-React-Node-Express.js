@@ -27,8 +27,11 @@ const EmailForm = ({ email }) => {
     // change email form
     if (email) {
         return (
-            <form className="EmailForm" onSubmit={submitHandler}>
-                <label className="formTitle fw-bold">Email</label>
+            <form className="emailForm" onSubmit={submitHandler}>
+                <div className="formTitle">
+                    <label className="formTitle fw-bold">Email</label>
+                    <label className="errorMessage">{emailError}</label>
+                </div>
                 <FormTextField
                     type="email"
                     onChange={e => setNewEmail(e.target.value)}
@@ -48,8 +51,11 @@ const EmailForm = ({ email }) => {
     }
 
     return (
-        <form className="EmailForm" onSubmit={submitHandler}>
-            <label className="formTitle fw-bold">Email</label>
+        <form className="emailForm" onSubmit={submitHandler}>
+            <div className="formTitle">
+                <label className="formTitle fw-bold">Email</label>
+                <label className="errorMessage">{emailError}</label>
+            </div>
             <FormTextField
                 type="email"
                 label="Email"

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { ProfileImage, ChangePassForm, EmailForm } from "../../components";
-import "../../styles/profilePage.css";
 
 const ProfilePage = () => {
 
@@ -9,9 +8,9 @@ const ProfilePage = () => {
     return (
         <div className="profilePage container">
             <div className="top">
-                <div className="profile text-center">
+                <div className="profile">
                     <ProfileImage />
-                    <label className="fw-bold">{user.username}</label>
+                    <label className="bold">{user.username}</label>
                 </div>
                 <div className="line"></div>
             </div>

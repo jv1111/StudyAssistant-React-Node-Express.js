@@ -516,6 +516,28 @@ li {
   right: 10px;
 }
 
+.profilePage{
+  display: grid;
+  gap: 3rem;
+}
+
+.profilePage .top{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.profilePage .bottom{
+  display: grid;
+  gap: 10px;
+}
+
+.profilePage .emailForm .formTitle{
+  display: grid;
+}
+
 @media screen and (max-width: 370px) {
   .loginForm {
     width: 100vw;
