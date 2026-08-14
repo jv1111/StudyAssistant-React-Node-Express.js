@@ -1,130 +1,89 @@
 import React, { useState } from "react";
-import EmptyList from "./EmptyList";
-import useItemFetcher from "../hooks/useItemFetcher"
-import { useNavigate, useParams } from "react-router-dom";
-import LoadingPage from "../pages/Loading/LoadingPage";
-import { Search } from "react-bootstrap-icons";
-import searchDelay from "../helper/searchDelay";
-import infinitScroller from "../helper/infinitScroller";
-import { getQuizzes, setPDFOnServer, getPdf, deleteFile } from "../api/QuizApi";
 import { saveAs } from "file-saver";
 
+import EmptyList from "./EmptyList";
+import QuizCard from "./QuizCard";
+import QuizOptionBox from "./QuizOptionBox";
+import SearchInput from "./SearchInput";
+
+import useQuizzes from "../hooks/useQuizzes";
+
+import { deleteFile, getPdf, setPDFOnServer } from "../api/QuizApi";
+
+import LoadingPage from "../pages/Loading/LoadingPage";
+
 const QuizList = () => {
+  const { quizzes, isLoading, searchInput, handleSearch, handleScroll } =
+    useQuizzes();
 
-    const { subject } = useParams();
-    const [searchVal, setSearchVal] = useState("");
-    const [quizzes, setQuizzes] = useState([]);
-    const [selectedQuiz, setSelectedQuiz] = useState(null);
-    const [selectingType, setSelectingType] = useState(false);//determine if the user is on selection of quiz types (multiple choices/ enumeration)
-    const { isLoading, setSearching, setSkipCount } = useItemFetcher(quizzes, setQuizzes, searchVal, getQuizzes, { subject: subject });//todo update the naming and remove unecessary file
-    const navigate = useNavigate();
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
 
-    const quizSelectionHandler = (quizId) => {
-        setSelectedQuiz(quizId);
-        setSelectingType(true);
-    }
+  const handleQuizSelect = (quizId) => {
+    setSelectedQuiz(quizId);
+  };
 
-    const DownloadPDFHanlder = async (event, quizId) => {
-        event.stopPropagation();
-        const pdfData = await setPDFOnServer(quizId);//set and save the pdf on server
-        const pdf = await getPdf(pdfData.pdfName);
-        saveAs(pdf, pdfData.pdfName);
-        await deleteFile(pdfData.path);
-    }
+  const handleQuizOptionClose = () => {
+    setSelectedQuiz(null);
+  };
 
-    if (isLoading) {
-        return <LoadingPage />
-    }
+  const handleDownloadPdf = async (event, quizId) => {
+    event.stopPropagation();
 
-    return (
-        <div className="itemContainer">
-            <div className="topDescription">
-                <h2 className="text-fam-kavoon">
-                    Quizzes
-                </h2>
-                <div className="line"></div>
-                <div className="searchBox">
-                    <Search className="searchIcon" />
-                    <input
-                        onChange={(e) => {
-                            setSkipCount(0);
-                            setSearching(true);
-                            searchDelay(setSearchVal, e.target.value);
-                        }}
-                        type="text"
-                        name="search"
-                        placeholder="search"
-                    />
+    const pdfData = await setPDFOnServer(quizId);
+    const pdf = await getPdf(pdfData.pdfName);
+
+    saveAs(pdf, pdfData.pdfName);
+
+    await deleteFile(pdfData.path);
+  };
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
+  return (
+    <section className="quizzesSection py-4">
+      <header className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+          <h2 className="text-white text-fam-kavoon mb-1">Quizzes</h2>
+
+          <p className="text-secondary mb-0">Choose a quiz to get started</p>
+        </div>
+
+        <SearchInput
+          value={searchInput}
+          onChange={handleSearch}
+          placeholder="Search quizzes..."
+        />
+      </header>
+
+      <div className="card bg-dark border-secondary shadow-sm">
+        <div className="card-body p-3 p-md-4">
+          {quizzes.length > 0 ? (
+            <div className="row g-3" onScroll={handleScroll}>
+              {quizzes.map((quiz) => (
+                <div className="col-12 col-md-6 col-lg-4" key={quiz._id}>
+                  <QuizCard
+                    quiz={quiz}
+                    onSelect={handleQuizSelect}
+                    onDownload={handleDownloadPdf}
+                  />
                 </div>
+              ))}
             </div>
-
-            <div className="itemPanel">
-                {quizzes.length !== 0 ?
-                    <ul className="itemsList" onScroll={(e) => infinitScroller(e, quizzes, setSkipCount)}>
-                        {quizzes.map((quiz, index) => {
-                            return (
-                                <div
-                                    className="itemBox"
-                                    key={index}
-                                    onClick={() => quizSelectionHandler(quiz._id)}
-                                >
-                                    <li
-                                        className="itemName"
-                                        key={index}
-                                    >
-                                        {quiz.quizName}
-                                    </li>
-                                    <div className="line"></div>
-                                    <div className="descriptionBox">
-                                        <label className="description">
-                                            Number of items: {quiz.numberOfItems}
-                                        </label>
-                                    </div>
-                                    <div className="quizzesButtons">
-                                        <button className="btnUpdateQuiz" onClick={() => { navigate(`/quiz/update/${quiz._id}`) }}>Update</button>
-                                        <button className="btnDownloadAsPdf" onClick={(e) => DownloadPDFHanlder(e, quiz._id)}>Download PDF</button>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </ul>
-                    :
-                    <EmptyList />
-                }
-
-            </div>
-            <QuizOptionBox selectingType={selectingType} quizId={selectedQuiz} />
+          ) : (
+            <EmptyList />
+          )}
         </div>
-    );
-}
+      </div>
 
-const QuizOptionBox = ({ selectingType, quizId }) => {
-    const navigate = useNavigate();
-
-    const selectHandler = (type) => {
-        if (type === "multipleChoice") navigate(quizId);
-        if (type === "enumeration") navigate(`enum/${quizId}`);
-    }
-
-    return (
-        <div className={`popupBlocker ${selectingType ? "" : "hidden"}`}>
-            <div className={`selection`}>
-                <h3 className="text-fam-kavoon">Select quiz type</h3>
-                <button
-                    className="btn-primary"
-                    onClick={() => selectHandler("multipleChoice")}
-                >
-                    Multiple choices
-                </button>
-                <button
-                    onClick={() => selectHandler("enumeration")}
-                    className="btn-primary"
-                >
-                    Enumeration
-                </button>
-            </div>
-        </div>
-    )
-}
+      <QuizOptionBox
+        selectingType={selectedQuiz !== null}
+        quizId={selectedQuiz}
+        onClose={handleQuizOptionClose}
+      />
+    </section>
+  );
+};
 
 export default QuizList;
