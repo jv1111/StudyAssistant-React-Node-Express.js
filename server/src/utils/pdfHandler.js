@@ -1,50 +1,70 @@
-const pdf = require("html-pdf");
+const puppeteer = require("puppeteer");
 const pdfTemplate = require("../documents");
 const path = require("path");
-const fs = require('fs');
+const fs = require("fs/promises");
 
-const savePDF = (data) => {
-    const projectRoot = path.resolve(__dirname, '../..');
-    const pdfDirectory = `${projectRoot}/public/pdf`;
-    const pdfFileName = `pdf${Date.now()}${data._id}.pdf`;
-    const pdfFilePath = path.join(pdfDirectory, pdfFileName);
-    console.log(data);
-    return new Promise((resolve, reject) => {
-        pdf.create(pdfTemplate(data), {
-            childProcessOptions: {
-                env: {
-                    OPENSSL_CONF: "/dev/null"
-                }
-            }
-        }).toFile(pdfFilePath, (error) => {
-            if (error) {
-                console.log("error here");
-                reject(error);
-            }
-            resolve({
-                success: true,
-                pdfName: pdfFileName,
-                path: pdfFilePath,
-                message: "PDF saved to server"
-            })
-        });
-    })
-}
+const savePDF = async (data) => {
+  const projectRoot = path.resolve(__dirname, "../..");
+  const pdfDirectory = path.join(projectRoot, "public", "pdf");
+
+  await fs.mkdir(pdfDirectory, {
+    recursive: true,
+  });
+
+  const pdfFileName = `pdf${Date.now()}${data._id}.pdf`;
+  const pdfFilePath = path.join(pdfDirectory, pdfFileName);
+
+  const browser = await puppeteer.launch({
+    headless: true,
+  });
+
+  try {
+    const page = await browser.newPage();
+
+    await page.setContent(pdfTemplate(data), {
+      waitUntil: "networkidle0",
+    });
+
+    await page.pdf({
+      path: pdfFilePath,
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "10mm",
+        right: "10mm",
+        bottom: "10mm",
+        left: "10mm",
+      },
+    });
+
+    return {
+      success: true,
+      pdfName: pdfFileName,
+      path: pdfFilePath,
+      message: "PDF saved to server",
+    };
+  } finally {
+    await browser.close();
+  }
+};
 
 const fileDelete = async (filePath) => {
-    fs.unlink(filePath, (error) => {
-        if (error) {
-            console.log('Error deleting file', error);
-            return;
-        }
-        console.log('File deleted');
-    });
-}
-// todo create a get pdf method and a download method in react
+  try {
+    await fs.unlink(filePath);
 
+    console.log("File deleted");
 
+    return {
+      success: true,
+      message: "File deleted",
+    };
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    throw error;
+  }
+};
 
 module.exports = {
-    savePDF,
-    fileDelete
+  savePDF,
+  fileDelete,
 };
