@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 
-const useItemFetcher = (setItems, searchVal, getDataApi, queryParams = {}) => {
+const EMPTY_QUERY_PARAMS = {};
+
+const useItemFetcher = (
+  setItems,
+  searchVal,
+  getDataApi,
+  queryParams = EMPTY_QUERY_PARAMS,
+) => {
   const [isLoading, setLoading] = useState(true);
   const [skipCount, setSkipCount] = useState(0);
 
