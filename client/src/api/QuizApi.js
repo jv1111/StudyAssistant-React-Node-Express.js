@@ -1,261 +1,174 @@
-import axios from "axios";
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;//set base url for every request
+import api from "./axios";
 
 const createQuiz = async (subject, quizName, items) => {
-    try {
-        const response = await axios.put("/quiz/create",
-            {
-                subject: subject,
-                quizName: quizName,
-                items: items
-            });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data;
-    }
-}
+  const response = await api.put("/quiz/create", {
+    subject,
+    quizName,
+    items,
+  });
 
-const getSubjects = async (queryParams) => {
-    const { searchVal, skipCount } = queryParams;
-    try {
-        const response = await axios.get("/quiz/subjectsList", {
-            params: {
-                searchQuery: searchVal,
-                skipCount: skipCount
-            }
-        });
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  return response.data;
+};
 
-const getQuizzes = async (queryParams) => {
-    const { subject, searchVal, skipCount } = queryParams;
-    try {
-        const response = await axios.get("/quiz/quizList", {
-            params: {
-                subject: subject,
-                searchQuery: searchVal,
-                skipCount: skipCount
-            }
-        });
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+const getSubjects = async ({ searchVal, skipCount }) => {
+  const response = await api.get("/quiz/subjectsList", {
+    params: {
+      searchQuery: searchVal,
+      skipCount,
+    },
+  });
+
+  return response.data;
+};
+
+const getQuizzes = async ({ subject, searchVal, skipCount }) => {
+  const response = await api.get("/quiz/quizList", {
+    params: {
+      subject,
+      searchQuery: searchVal,
+      skipCount,
+    },
+  });
+
+  return response.data;
+};
 
 const getQuestion = async (quizId) => {
-    try {
-        const response = await axios.get("/quiz/startQuiz", {
-            params: {
-                quizId: quizId
-            }
-        });
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.get("/quiz/startQuiz", {
+    params: { quizId },
+  });
+
+  return response.data;
+};
 
 const submitAnswer = async (questionId, answer) => {
-    try {
-        const response = await axios.put("/quiz/submitAnswer",
-            {
-                questionId: questionId,
-                answer: answer
-            }
-        );
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.put("/quiz/submitAnswer", {
+    questionId,
+    answer,
+  });
+
+  return response.data;
+};
 
 const saveQuizRecord = async (quizId) => {
-    try {
-        const response = await axios.put("/quiz/saveRecord",
-            {
-                quizId: quizId,
-            }
-        );
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.put("/quiz/saveRecord", {
+    quizId,
+  });
 
-const getRecords = async (queryParams) => {
-    const searchVal = queryParams.searchVal;
-    try {
-        const response = await axios.get("/quiz/records", {
-            params: {
-                searchQuery: searchVal
-            }
-        });
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  return response.data;
+};
+
+const getRecords = async ({ searchVal, skipCount }) => {
+  const response = await api.get("/quiz/records", {
+    params: {
+      searchQuery: searchVal,
+      skipCount,
+    },
+  });
+
+  return response.data;
+};
 
 const getRecord = async (recordId) => {
-    try {
-        const response = await axios.get("/quiz/record", {
-            params: {
-                recordId: recordId
-            }
-        });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.get("/quiz/record", {
+    params: { recordId },
+  });
+
+  return response.data;
+};
 
 const saveData = async (key, data, quizId) => {
-    try {
-        const response = await axios.put("/quiz/saveData", {
-            key: key,
-            data: data,
-            quizId: quizId
-        });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.put("/quiz/saveData", {
+    key,
+    data,
+    quizId,
+  });
+
+  return response.data;
+};
 
 const getSavedData = async (key, quizId) => {
-    try {
-        const saveData = await axios.get("/quiz/savedData", {
-            params: { key: key, quizId: quizId }
-        });
-        console.log(saveData.data);
-        return saveData.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.get("/quiz/savedData", {
+    params: {
+      key,
+      quizId,
+    },
+  });
+
+  return response.data;
+};
 
 const deleteSavedData = async (key, quizId) => {
-    try {
-        const response = await axios.delete("/quiz/savedData", {
-            params: { key: key, quizId: quizId }
-        });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.delete("/quiz/savedData", {
+    params: {
+      key,
+      quizId,
+    },
+  });
 
-// todo create a new method in server to make this work
+  return response.data;
+};
+
+// TODO: Create a new server method to make this work.
 const getItemsApi = async (quizId) => {
-    try {
-        const response = await axios.get("/quiz/getItems", {
-            params: { quizId: quizId }
-        });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.get("/quiz/getItems", {
+    params: { quizId },
+  });
+
+  return response.data;
+};
 
 const updateQuiz = async (quizId, subject, quizName, items) => {
-    try {
-        const response = await axios.put("/quiz/updateQuiz", {
-            subject: subject,
-            quizName: quizName,
-            items: items,
-            quizId: quizId
-        });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.put("/quiz/updateQuiz", {
+    quizId,
+    subject,
+    quizName,
+    items,
+  });
+
+  return response.data;
+};
 
 const setPDFOnServer = async (quizId) => {
-    try {
-        const response = await axios.put("/quiz/createPdf", {
-            quizId: quizId
-        });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.put("/quiz/createPdf", {
+    quizId,
+  });
 
+  return response.data;
+};
 
 const getPdf = async (pdfId) => {
-    try {
-        const response = await axios.get("/quiz/getPdf", {
-            params: { pdfId: pdfId },
-            responseType: "blob"
-        });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.get("/quiz/getPdf", {
+    params: { pdfId },
+    responseType: "blob",
+  });
+
+  return response.data;
+};
 
 const deleteFile = async (filePath) => {
-    try {
-        const response = await axios.delete("/quiz/deleteFile", {
-            params: { filePath: filePath }
-        });
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
+  const response = await api.delete("/quiz/deleteFile", {
+    params: { filePath },
+  });
+
+  return response.data;
+};
 
 export {
-    deleteFile,
-    getSubjects,
-    getQuizzes,
-    getQuestion,
-    submitAnswer,
-    saveQuizRecord,
-    getRecords,
-    getRecord,
-    createQuiz,
-    saveData,
-    getSavedData,
-    deleteSavedData,
-    getItemsApi,
-    updateQuiz,
-    setPDFOnServer,
-    getPdf
-}
+  deleteFile,
+  getSubjects,
+  getQuizzes,
+  getQuestion,
+  submitAnswer,
+  saveQuizRecord,
+  getRecords,
+  getRecord,
+  createQuiz,
+  saveData,
+  getSavedData,
+  deleteSavedData,
+  getItemsApi,
+  updateQuiz,
+  setPDFOnServer,
+  getPdf,
+};

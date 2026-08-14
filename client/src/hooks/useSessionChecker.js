@@ -1,27 +1,36 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { login, logout } from "../redux/slice/authSlice";
-import { getSessionAPI } from '../api/AuthApi';
+import { getSessionAPI } from "../api/AuthApi";
 
 const useSessionChecker = () => {
-    const [isLoading, setLoading] = useState(true);
-    const dispatch = useDispatch();
-    const auth = useSelector(state => state.auth);
+  const [isLoading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function getSession() {
-            const response = await getSessionAPI();
-            if (response.success) {
-                dispatch(login(response.user));//set loggedIn state to true and set the user
-                setLoading(false);
-            } else {
-                dispatch(logout());//set loggedIn state to false and remove the user's data
-                setLoading(false);
-            }
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    const getSession = async () => {
+      try {
+        const response = await getSessionAPI();
+
+        if (response.success) {
+          dispatch(login(response.user));
+        } else {
+          dispatch(logout());
         }
-        getSession();
-    }, [dispatch]);
-    return { isLoading, auth }
-}
+      } catch (error) {
+        dispatch(logout());
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getSession();
+  }, [dispatch]);
+
+  return { isLoading, auth };
+};
 
 export default useSessionChecker;

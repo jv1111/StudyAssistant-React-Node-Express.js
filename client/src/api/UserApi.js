@@ -1,145 +1,78 @@
-import axios from 'axios';
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;//set base url for every request
-axios.defaults.withCredentials = true;// Enable passing credentials on cookies with every request. This is required for our server to save cookies on the client's browser.
+import api from "./axios";
 
 const changePass = async (newPasswordData) => {
-    try {
-        const response = await axios.post(
-            "user/changePass",
-            newPasswordData
-        );
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.post("/user/changePass", newPasswordData);
+
+  return response.data;
+};
 
 const changeProfile = async (formData) => {
-    try {
-        const response = await axios.post(
-            "user/changeProfileImg", formData, {
-            headers: {
-                "content-type": "multipart/form-data"
-            }
-        })
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.post("/user/changeProfileImg", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
 
 const fetchProfileImgAPI = async () => {
-    try {
-        const response = await axios.post(
-            "user/getProfileImg"
-        );
-        console.log(response);
-        return response.data;
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.post("/user/getProfileImg");
+
+  return response.data;
+};
 
 const addOrUpdateEmail = async (newEmail) => {
-    try {
-        const response = await axios.put(
-            "user/addOrUpdateEmail",
-            {
-                newEmail: newEmail,
-            }
-        );
-        console.log(response);
-        return response.data;
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.put("/user/addOrUpdateEmail", {
+    newEmail,
+  });
+
+  return response.data;
+};
 
 const verifyEmailApi = async (userId, token) => {
-    try {
-        const response = await axios.put(
-            "user/verifyEmail",
-            {
-                userId: userId,
-                token: token
-            }
-        );
-        console.log(response);
-        return response.data;
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.put("/user/verifyEmail", {
+    userId,
+    token,
+  });
+
+  return response.data;
+};
 
 const resetPassRequestApi = async (email) => {
-    try {
-        const response = await axios.put(
-            "user/sendResetPassRequest",
-            {
-                email: email
-            }
-        );
-        console.log(response);
-        return response.data;
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.put("/user/sendResetPassRequest", {
+    email,
+  });
+
+  return response.data;
+};
 
 const verifyTokenRequest = async (userId, token, type) => {
-    console.log(userId)
-    console.log(token);
-    console.log(type);
-    try {
-        const response = await axios.put(
-            "user/verifyToken",
-            {
-                userId: userId,
-                token: token,
-                type: type
-            }
-        );
-        console.log(response);
-        return response.data;
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.put("/user/verifyToken", {
+    userId,
+    token,
+    type,
+  });
 
-const resetPass = async (userData) => {
-    const { userId, newPassword } = userData;
-    try {
-        const response = await axios.put(
-            "user/resetPass",
-            {
-                userId: userId,
-                newPassword: newPassword,
-            }
-        );
-        console.log(response);
-        return response.data;
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  return response.data;
+};
+
+const resetPass = async ({ userId, newPassword }) => {
+  const response = await api.put("/user/resetPass", {
+    userId,
+    newPassword,
+  });
+
+  return response.data;
+};
 
 export {
-    changePass,
-    changeProfile,
-    fetchProfileImgAPI,
-    addOrUpdateEmail,
-    verifyEmailApi,
-    resetPassRequestApi,
-    verifyTokenRequest,
-    resetPass
-}
+  changePass,
+  changeProfile,
+  fetchProfileImgAPI,
+  addOrUpdateEmail,
+  verifyEmailApi,
+  resetPassRequestApi,
+  verifyTokenRequest,
+  resetPass,
+};

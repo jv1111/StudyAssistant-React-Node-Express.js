@@ -1,60 +1,30 @@
-import axios from 'axios';
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;//set base url for every request
-axios.defaults.withCredentials = true;// Enable passing credentials on cookies with every request. This is required for our server to save cookies on the client's browser.
+import api from "./axios";
 
 const loginAPI = async (usernameOrEmail, password) => {
-    try {
-        const response = await axios.post('/auth/login', {
-            usernameOrEmail: usernameOrEmail,
-            password: password
-        });
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.post("/auth/login", {
+    usernameOrEmail,
+    password,
+  });
+
+  return response.data;
+};
 
 const signUpAPI = async (userData) => {
-    try {
-        const response = await axios.post('/auth/register',
-            userData
-        );
-        console.log(response.data);
-        return response.data
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.post("/auth/register", userData);
+
+  return response.data;
+};
 
 const getSessionAPI = async () => {
-    try {
-        const response = await axios.get("/auth/login");
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error.response.data);
-        return error.response.data
-    }
-}
+  const response = await api.get("/auth/login");
+
+  return response.data;
+};
 
 const logoutAPI = async () => {
-    try {
-        const response = await axios.get("/auth/logout");
-        console.log(response.data);
-        return response.data;
-    } catch (error) {
-        console.log(error);
-        return error.response.data;
-    }
-}
-// todo create an api for logout
+  const response = await api.get("/auth/logout");
 
-export {
-    loginAPI,
-    signUpAPI,
-    getSessionAPI,
-    logoutAPI
-}
+  return response.data;
+};
+
+export { loginAPI, signUpAPI, getSessionAPI, logoutAPI };
