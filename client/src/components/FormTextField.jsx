@@ -1,16 +1,18 @@
 import React from "react";
 
-const FormTextField = (props) => {
+const FormTextField = ({ label, name, ...inputProps }) => {
+    const inputId = inputProps.id || name;
+
     return (
         <div className="inputBox">
             <input
-                required="required"
-                {...props}
+                id={inputId}
+                name={name}
+                placeholder=" "
+                required
+                {...inputProps}
             />
-            <label className="inputLabel">
-                {props.label}
-            </label>
-            <div className="line" />
+            <label className="inputLabel" htmlFor={inputId}>{label}</label>
         </div>
     );
 }

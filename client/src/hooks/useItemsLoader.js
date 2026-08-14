@@ -12,7 +12,7 @@ const useItemsLoader = (quizId, setSubject, setQuizName, setItems) => {
             setIsLoading(false);
         }
         getItems();
-    }, []);
+    }, [quizId, setItems, setQuizName, setSubject]);
     return { isLoading };
 }
 

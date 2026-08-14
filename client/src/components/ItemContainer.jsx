@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Search } from "react-bootstrap-icons";
 import searchDelay from "../helper/searchDelay";
 
@@ -17,6 +17,7 @@ const ItemContainer = ({ children, search, title, setSearchVal }) => {
                     <div className="searchBox">
                         <Search className="searchIcon" />
                         <input
+                            aria-label={`Search ${title}`}
                             type="text"
                             name="search"
                             placeholder="search"

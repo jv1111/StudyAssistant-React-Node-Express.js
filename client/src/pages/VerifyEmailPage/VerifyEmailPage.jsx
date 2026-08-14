@@ -17,7 +17,7 @@ const VerifyEmailPage = () => {
             setLoading(false);
         }
         verifyEmail();
-    }, []);
+    }, [token, userId]);
 
     if (isLoading) {
         return <LoadingPage />

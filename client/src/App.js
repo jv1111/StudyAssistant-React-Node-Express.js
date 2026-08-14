@@ -3,22 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Page from "./pages";
 import Navbar from "./components/Navbar";
 import useSessionChecker from "./hooks/useSessionChecker";
-import { useEffect } from "react";
 
 function App() {
 
   const { isLoading, auth } = useSessionChecker();
-
-  const documentHeight = () => {
-    const doc = document.documentElement;
-    doc.style.setProperty('--doc-height', `${window.innerHeight}px`);
-    console.log(window.innerHeight);
-  }
-
-  useEffect(() => {
-    window.addEventListener(`resize`, documentHeight);
-    documentHeight()
-  }, []);
 
   if (isLoading) {
     return (
@@ -31,7 +19,7 @@ function App() {
   return (
     <div className="App">
       <Router>
-        {auth.loggedIn ? <Navbar /> : ""}
+        {auth.loggedIn && <Navbar />}
         <Routes>
           {/* Logged in */}
           <Route element={

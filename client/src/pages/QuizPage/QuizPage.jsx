@@ -103,6 +103,7 @@ const QuizPage = () => {
                                     {choice}
                                 </button>
                             }
+                            return null;
                         })}
                     </div>
                 </div>

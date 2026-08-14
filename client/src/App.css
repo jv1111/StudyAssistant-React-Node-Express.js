@@ -1,617 +1,744 @@
-:root {
-  --doc-height: 100%;
+@font-face {
+  font-family: "Kavoon";
+  src: url("./assets/font/Kavoon/Kavoon-Regular.ttf") format("truetype");
+  font-display: swap;
 }
 
-@font-face {
-  font-family: "kavoon";
-  src: url("./assets/font/Kavoon/Kavoon-Regular.ttf") format("truetype");
+:root {
+  --surface: rgba(18, 26, 55, 0.58);
+  --surface-strong: rgba(11, 17, 40, 0.76);
+  --surface-border: rgba(255, 255, 255, 0.16);
+  --text-muted: #c3cbe4;
+  --primary: #7c6cff;
+  --primary-hover: #968aff;
+  --accent: #6ee7e1;
+  --danger: #ff879d;
+  --shadow: 0 24px 70px rgba(3, 7, 28, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
 }
 
 body {
-  background: linear-gradient(to bottom right, #220122, #3d0162) no-repeat 50%;
   margin: 0;
-  overflow: hidden;
-  min-height: 100%;
-  color: white;
+  color: #f8f9ff;
+  background: #10152f;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+body::before {
+  width: 38rem;
+  height: 38rem;
+  top: -14rem;
+  left: -12rem;
+  background: rgba(90, 91, 255, 0.48);
+}
+body::after {
+  width: 35rem;
+  height: 35rem;
+  right: -12rem;
+  bottom: -14rem;
+  background: rgba(34, 202, 185, 0.28);
 }
 
 .App {
-  height: 100vh;
-  /* fallback for Js load */
-  width: 100vw;
-  height: var(--doc-height);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: auto;
 }
-
-.App div {
-  word-break: break-all;
-  word-wrap: break-word;
-}
-
-.App p {
-  word-break: break-all;
-  word-wrap: break-word;
-}
-
 .page {
+  width: 100%;
+  flex: 1;
   padding-top: 3rem;
-  flex-grow: 1;
+  padding-bottom: 3rem;
+}
+.text-fam-kavoon,
+.mid-size-title,
+.formTitle {
+  font-family: "Kavoon", Georgia, serif;
+}
+.mid-size-title {
+  display: block;
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  margin-bottom: 1.5rem;
 }
 
-.loginDiv {
-  height: fit-content;
-  width: fit-content;
+.navbar {
+  background: rgba(13, 20, 47, 0.66) !important;
+  border-bottom: 1px solid var(--surface-border);
+  backdrop-filter: blur(18px);
+}
+.navbar .navbar-brand {
+  color: #fff;
+  font-family: "Kavoon", Georgia, serif;
+  letter-spacing: 0.04em;
+}
+.navbar .nav-link,
+.navbar .dropdown-toggle {
+  color: var(--text-muted) !important;
+}
+.navbar .nav-link:hover,
+.navbar .navbar-brand:hover {
+  color: var(--accent) !important;
+}
+.dropdown-menu {
+  background: #1b254b;
+  border-color: var(--surface-border);
+  box-shadow: var(--shadow);
+}
+.dropdown-item {
+  color: #f8f9ff;
+}
+.dropdown-item:hover {
+  color: #10152f;
+  background: var(--accent);
 }
 
 .authPage {
-  display: flex;
-  justify-content: center;
-}
-
-.titleDiv {
-  max-width: 750px;
-}
-
-.titleDiv .title {
-  font-family: 'kavoon';
-  font-size: 70px;
-}
-
-.line {
-  background-color: white;
-}
-
-.titleDiv .line {
-  height: 3px;
-  margin: 0 0 10px;
-  max-width: 300px;
-}
-
-.loginDiv {
-  position: relative;
-  top: 15rem;
-}
-
-.lightBox {
-  background-color: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-
-.lightBox:before {
-  content: "";
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  background: linear-gradient(aqua, transparent);
-  left: -50%;
-  top: -50%;
-}
-
-.lightBox::after {
-  content: "";
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  background: linear-gradient(0deg, aqua, transparent);
-  left: 50%;
-  top: 50%;
-}
-
-.lightBoxPanel {
-  background-color: #000;
-  border-radius: 10px;
-  inset: 1px;
-  position: absolute;
-  z-index: 1;
-}
-
-.authForm {
-  grid-gap: 5px;
   display: grid;
-  gap: 5px;
-  padding: 30px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+  align-items: center;
+  gap: clamp(2rem, 8vw, 8rem);
+}
+.titleDiv {
+  max-width: 46rem;
+}
+.titleDiv .title {
+  margin: 0;
+  font-family: "Kavoon", Georgia, serif;
+  font-size: clamp(4rem, 10vw, 7.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+.titleDiv .line {
+  width: 10rem;
+  margin: 1.5rem 0;
+}
+.descriptionDiv {
+  max-width: 38rem;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+.loginDiv {
+  width: 100%;
+}
+.lightBox,
+.itemContainer,
+.pad,
+.forgotPassForm,
+.resetPassform {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(22px);
+}
+.lightBox {
+  overflow: hidden;
+}
+.lightBoxPanel {
+  position: relative;
+}
+.loginForm {
+  width: 100%;
+  max-width: 26rem;
+  margin-left: auto;
+}
+.signUpForm {
+  width: min(100%, 30rem);
+}
+.authForm {
+  display: grid;
+  gap: 0.9rem;
+  padding: 2.25rem;
   text-align: center;
 }
-
 .formTitle {
-  font-family: "kavoon";
+  margin: 0 0 0.6rem;
+  font-size: 1.75rem;
 }
 
 .inputBox {
-  margin-top: 10px;
   position: relative;
+  margin-top: 0.75rem;
 }
-
-.inputBox input {
-  background-color: initial;
-  border: none;
-  color: #fff;
-  outline: none;
-  width: 100%;
-}
-
-.inputBox input:valid~label {
-  transform: translate(-5px, -20px);
-  font-size: 12px;
-  color: aqua;
-}
-
-.inputBox input:focus~label {
-  transform: translate(-5px, -20px);
-  font-size: 12px;
-  color: aqua;
-}
-
-.inputBox label {
-  bottom: 0;
-  left: 0;
-  pointer-events: none;
-  position: absolute;
-  transition: 1s;
-}
-
-.inputBox .line {
-  background-color: #fff;
-  height: 1px;
-}
-
-.errorMessage {
-  color: red;
-}
-
-button {
-  border-radius: 10px;
-  min-width: 30px;
-}
-
-button:hover:enabled {
-  background-color: aqua;
-  box-shadow: 0 0 10px aqua;
-  font-weight: bold;
-  color: white;
-}
-
-.loginForm {
-  height: 350px;
-  width: 350px;
-}
-
-.text-fam-kavoon {
-  font-family: "kavoon";
-}
-
-.itemContainer {
-  border-radius: 10px;
-  box-shadow: 0 0 10px white;
-  background-color: white;
-  color: black;
-  padding: 10px;
-}
-
-.itemContainer .topDescription {
-  display: grid;
-  gap: 5px;
-}
-
-.itemContainer .topDescription .line {
-  background-color: black;
-  height: 2px;
-  width: 100%;
-}
-
-.itemContainer .topDescription .searchBox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  border: 1px solid black;
-  border-radius: 10px;
-  width: 250px;
-}
-
-.searchBox input {
-  border: none;
-  outline: none;
-  background-color: transparent;
-  width: 200px;
-}
-
-.itemPanel {
-  border-radius: 10px;
-  box-shadow: inset 0 0 10px black;
-  margin-top: 10px;
-  padding: 10px;
-  display: flex;
-}
-
-.empty-list {
-  width: fit-content;
-  padding: 0;
-  margin: auto;
-}
-
-.mid-size-title {
-  font-family: kavoon;
-  font-size: 40px;
-}
-
-.loadingPage {
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-.createQuizPage form {
-  display: grid;
-  gap: 10px;
-}
-
-.itemsList {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  max-height: 70vh;
-  overflow: auto;
-  width: 100%;
-}
-
-.itemBox {
-  border: 1px solid black;
-  border-radius: 5px;
-  position: relative;
-  padding: 5px;
-  padding-top: 10px;
-  height: 150px;
-}
-
-.selectionPage .itemBox {
-  min-height: 150px;
-}
-
-.createQuizPage .itemBox {
-  padding-top: 20px;
-  height: 220px;
-}
-
-.createQuizPage .itemBox .deleteQuestion {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
-.createQuizPage .itemBox .question {
-  display: grid;
-  padding: 5px;
-}
-
+.inputBox input,
+.inputController,
 textarea {
-  border-radius: 5px;
-  resize: none;
-}
-
-.createQuizPage .answer {
-  display: grid;
-  padding: 0 5px;
-}
-
-.createQuizPage .answer input {
-  border-radius: 5px;
-}
-
-.quizPage .itemBox .p-2 {
-  max-height: 200px;
-  overflow: auto;
-}
-
-.itemPanel {
-  min-height: 70vh;
-}
-
-.itemName {
-  font-family: "kavoon";
-}
-
-.line {
   width: 100%;
-  height: 2px;
-  background-color: black;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.65rem;
+  outline: none;
+  padding: 0.75rem 0.85rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
 }
-
-.popupBlocker {
+.inputBox input {
+  padding-top: 1.15rem;
+}
+.inputBox input:focus,
+.inputController:focus,
+textarea:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 0 0 0.2rem rgba(110, 231, 225, 0.14);
+}
+.inputBox label:not(.errorMessage) {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, .7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  top: 0.72rem;
+  left: 0.85rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: 0.2s ease;
 }
-
-.quizzesPage .selection {
-  background-color: black;
-  width: fit-content;
-  padding: 10px;
-  border-radius: 5px;
-  color: white;
-  text-align: center;
-  border: white 1px solid;
-  display: grid;
-  gap: 5px;
+.inputBox input:focus ~ label,
+.inputBox input:not(:placeholder-shown) ~ label {
+  transform: translateY(-0.54rem) scale(0.78);
+  transform-origin: left;
+  color: var(--accent);
 }
-
-.hidden {
-  position: absolute;
-  top: 500%;
-  opacity: 0;
+.inputBox .line {
+  display: none;
 }
-
-ul {
-  padding: 0;
+.errorMessage {
+  min-height: 1.1rem;
+  color: var(--danger);
+  font-size: 0.82rem;
 }
-
-li {
-  list-style: none;
-}
-
-.quizPage .itemPanel .popupBlocker {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-}
-
-.quizPage .itemPanel .correctAnsPopup {
-  background-color: black;
-  min-width: 200px;
-  max-width: 350px;
-  word-wrap: break-word;
-  display: grid;
-  color: white;
-  padding: 10px;
-  z-index: 1;
-}
-
-.quizPage .itemPanel .correctAnsPopup p {
-  max-height: 270px;
-  border: white solid 1px;
-  padding: 5px;
-  overflow: auto;
-}
-
-.pad {
-  background-color: white;
-  color: black;
-  padding: 30px 20px;
-}
-
-.pad .topDescription {
-  display: flex;
-  gap: 5px;
-}
-
-.pad .left {
-  width: 2000px;
-}
-
-.pad .right {}
-
-.pad .body {
-  margin-top: 10px;
-}
-
-.pad .recordItems ul {
-  display: grid;
-  gap: 5px;
-}
-
-.pad .recordItems ul li {
-  position: relative;
-}
-
-.pad .recordItems svg {
-  position: absolute;
-  right: 10px;
-}
-
-.bold {
-  font-weight: bold;
-}
-
-.correctIcon {
-  color: rgb(75, 124, 0);
-}
-
-.incorrectIcon {
-  color: red;
-}
-
-.itemName {
-  max-height: 50px;
-  overflow: auto;
-}
-
-.quizPage .itemPanel {
-  flex-direction: column;
-  min-height: auto;
-}
-
-.bgCorrect {
-  background-color: rgb(75, 124, 0);
-}
-
-.lblCorrect {
-  color: rgb(75, 124, 0);
-}
-
-.quizPage .right {
-  min-width: 150px;
-}
-
-.updateQuizPage .itemBox {
-  padding-top: 20px;
-  height: 220px;
-}
-
-.updateQuizPage .itemBox .deleteQuestion {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
-.updateQuizPage .itemBox .question {
-  display: grid;
-  padding: 5px;
-}
-
-.updateQuizPage .answer {
-  display: grid;
-  padding: 0 5px;
-}
-
-.popupBackground {
-  position: absolute;
-  background-color: rgba(0, 0, 0, .7);
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popupPanel {
-  position: relative;
-  width: fit-content;
-}
-
-.empty-list {
-  width: fit-content;
-}
-
-.signUpForm {
-  width: 450px;
-  height: 250px;
-  z-index: 1;
-}
-
 .hide {
   opacity: 0;
 }
 
-.line {
-  background-color: white;
+button,
+.btn-primary,
+.btn-secondary,
+.btnUpdateQuiz,
+.btnDownloadAsPdf {
+  border: 0;
+  border-radius: 0.65rem;
+  padding: 0.62rem 1rem;
+  font-weight: 700;
+  transition:
+    transform 0.18s,
+    background 0.18s,
+    box-shadow 0.18s;
+}
+button:hover:enabled,
+.btn-primary:hover:enabled,
+.btn-secondary:hover:enabled,
+.btnUpdateQuiz:hover,
+.btnDownloadAsPdf:hover {
+  transform: translateY(-1px);
+}
+.btn-primary,
+.btnUpdateQuiz {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #a056db);
+  box-shadow: 0 8px 20px rgba(124, 108, 255, 0.25);
+}
+.btn-secondary,
+.btnDownloadAsPdf {
+  color: #10213c;
+  background: var(--accent);
+}
+button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+a {
+  color: var(--accent);
 }
 
+.itemContainer {
+  padding: clamp(1rem, 3vw, 1.6rem);
+  color: #fff;
+}
+.topDescription {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.25rem;
+}
+.topDescription h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+.line {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: min(100%, 17rem);
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.07);
+}
+.searchBox input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: #fff;
+  background: transparent;
+}
+.searchBox input::placeholder {
+  color: var(--text-muted);
+}
+.itemPanel {
+  min-height: 26rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.9rem;
+  background: rgba(2, 8, 28, 0.2);
+}
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  max-height: 65vh;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+.itemBox {
+  position: relative;
+  padding: 1rem;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.07);
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.2s;
+}
+.selectionPage .itemBox {
+  cursor: pointer;
+}
+.selectionPage .itemBox:hover {
+  transform: translateY(-2px);
+  border-color: rgba(110, 231, 225, 0.72);
+  background: rgba(110, 231, 225, 0.11);
+}
+.itemName {
+  display: block;
+  font-family: "Kavoon", Georgia, serif;
+  font-size: 1.25rem;
+}
+.descriptionBox,
+.description {
+  color: var(--text-muted);
+}
+.quizzesButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+.empty-list {
+  display: grid;
+  place-items: center;
+  min-height: 16rem;
+}
+
+.createQuizPage form,
+.updateQuizPage form {
+  display: grid;
+  gap: 1rem;
+}
+.createQuizPage form > .inputBox,
+.updateQuizPage form > .inputBox {
+  max-width: 20rem;
+}
+.createQuizPage .itemBox,
+.updateQuizPage .itemBox {
+  min-height: 13rem;
+  padding-top: 2.6rem;
+}
+.question,
+.answer {
+  display: grid;
+  gap: 0.35rem;
+}
+.answer {
+  margin-top: 0.6rem;
+}
+.deleteQuestion {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  color: #fff;
+  background: rgba(255, 135, 157, 0.25);
+}
+.innerButton {
+  text-align: center;
+}
+
+.popupBackground,
+.popupBlocker {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(4, 8, 24, 0.67);
+  backdrop-filter: blur(7px);
+}
+.popupPanel {
+  position: relative;
+  width: min(100%, 32rem);
+}
 .popupPanel .btn-exit {
   position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
   z-index: 2;
-  top: 10px;
-  right: 10px;
+  color: #fff;
+  background: transparent;
+}
+.hidden {
+  display: none;
+}
+.selection,
+.correctAnsPopup {
+  width: min(100%, 24rem);
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  color: #fff;
+  border: 1px solid var(--surface-border);
+  border-radius: 1rem;
+  background: var(--surface-strong);
+  box-shadow: var(--shadow);
 }
 
 .profilePage {
   display: grid;
-  gap: 3rem;
+  gap: 2rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
-
 .profilePage .top {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
+  gap: 1.25rem;
   text-align: center;
 }
-
+.profile {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
 .profilePage .bottom {
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
 }
-
-.profilePage .emailForm .formTitle {
+.changePassForm,
+.emailForm {
   display: grid;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 1rem;
+  background: var(--surface);
 }
-
-.forgotPassPage {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.imgFrame {
+  overflow: hidden;
+  padding: 0.35rem;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0.4rem rgba(110, 231, 225, 0.12);
 }
-
-.forgotPassForm {
-  width: 270px;
-  background-color: black;
-  border: white 1px solid;
-  padding: 20px;
-  text-align: center;
-  border-radius: 10px;
+.profilePage img {
+  display: block;
+  width: 9rem;
+  height: 9rem;
+  object-fit: cover;
+  border-radius: 50%;
 }
-
-.forgotPassForm .description {
-  font-weight: bold;
-}
-
+.forgotPassPage,
 .resetPassPage {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.resetPassPage .resetPassform {
-  width: 270px;
-  background-color: black;
-  border: white 1px solid;
-  padding: 20px;
-  text-align: center;
-  border-radius: 10px;
   display: grid;
-  gap: 5px;
+  place-items: center;
+}
+.forgotPassForm,
+.resetPassform {
+  width: min(100%, 25rem);
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.6rem;
+}
+.pad {
+  width: min(100%, 50rem);
+  margin: 1.25rem auto;
+  padding: 1.5rem;
+  color: #fff;
+}
+.correctIcon,
+.correctAns,
+.lblCorrect {
+  color: #70e4a9;
+}
+.incorrectIcon,
+.incorrectAns {
+  color: var(--danger);
 }
 
-.inputBox input .errorMessage {
-  color: red;
-}
-
-@media screen and (max-width: 370px) {
+@media (max-width: 767px) {
+  .page {
+    padding-top: 1.5rem;
+  }
+  .authPage {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
   .loginForm {
-    width: 100vw;
+    margin: 0 auto;
+  }
+  .profilePage .bottom {
+    grid-template-columns: 1fr;
+  }
+  .itemPanel {
+    min-height: 22rem;
   }
 }
 
-@media screen and (max-width: 850px) {
+/* Subject & Records cards */
+.subject-card,
+.record-card {
+  height: 100%;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.07);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
 
-  .authPage {
-    padding: 0;
-  }
+.subject-card:hover,
+.record-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(110, 231, 225, 0.65);
+  background: rgba(110, 231, 225, 0.08);
+  box-shadow: 0 10px 25px rgba(3, 7, 28, 0.25);
+}
 
-  .authPage {
-    display: flex;
+.subject-card .card-title,
+.record-card .card-title {
+  font-family: "Kavoon", Georgia, serif;
+}
+
+.subject-card button,
+.record-card button {
+  width: 100%;
+}
+
+/* ==============================
+   Record Page
+   ============================== */
+
+.recordPage {
+  display: flex;
+  justify-content: center;
+}
+
+.recordItems {
+  width: 100%;
+}
+
+.recordItemsHeader {
+  margin-bottom: 1.5rem;
+}
+
+.recordItemsHeader h3 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+
+.recordItemsHeader p {
+  margin: 0.4rem 0 0;
+  color: var(--text-muted);
+}
+
+.recordQuestions {
+  display: grid;
+  gap: 1rem;
+}
+
+.recordQuestion {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.recordQuestion:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.recordQuestionCorrect {
+  border-left: 4px solid #70e4a9;
+}
+
+.recordQuestionIncorrect {
+  border-left: 4px solid var(--danger);
+}
+
+.recordQuestionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.recordQuestionNumber {
+  color: #fff;
+  font-weight: 700;
+}
+
+.recordResult {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.recordQuestionBody {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.recordQuestionText {
+  margin: 0;
+  color: #fff;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.recordAnswer {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.7rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.recordAnswerLabel {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.recordAnswerValue {
+  color: #fff;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.correctAnswerBox {
+  border-color: rgba(112, 228, 169, 0.25);
+  background: rgba(112, 228, 169, 0.07);
+}
+
+.correctIcon,
+.incorrectIcon {
+  font-size: 1.2rem;
+}
+
+.correctAns {
+  color: #70e4a9;
+}
+
+.incorrectAns {
+  color: var(--danger);
+}
+
+@media (max-width: 576px) {
+  .recordQuestionHeader {
+    align-items: flex-start;
     flex-direction: column;
+    gap: 0.5rem;
   }
 
-  .authPage .loginDiv {
-    top: 0;
-    margin: auto;
+  .recordQuestionBody {
+    padding: 1rem;
   }
+}
 
-  .titleDiv {
-    text-align: center;
-  }
+.subjectsList {
+  max-height: 65vh;
+  overflow-y: auto;
+  padding: 0.25rem;
+}
 
-  .titleDiv .line {
-    min-width: 100%;
-  }
+.subjectCard {
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--surface-border) !important;
+  border-radius: 0.9rem;
+  transition:
+    transform 0.2s,
+    border-color 0.2s,
+    background 0.2s;
+}
 
-  .itemPanel {
-    min-height: 65vh;
-    max-height: 65vh;
-  }
+.subjectCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(110, 231, 225, 0.7) !important;
+  background: rgba(110, 231, 225, 0.08);
 }

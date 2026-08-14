@@ -12,7 +12,7 @@ const useRecordFetcher = (recordId) => {
             setLoading(false);
         }
         getUserRecord();
-    }, []);
+    }, [recordId]);
 
     return { isLoading, record }
 }

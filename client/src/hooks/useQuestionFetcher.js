@@ -16,7 +16,7 @@ const useQuestionFetcher = (quizId, numAnswered) => {
             setLoading(false);
         }
         getQuizItem();
-    }, [numAnswered]);
+    }, [numAnswered, quizId]);
 
     return { isLoading, item, quizEnded }
 }

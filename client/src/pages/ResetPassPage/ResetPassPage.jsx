@@ -20,7 +20,7 @@ const ResetPassPage = () => {
             setLoading(false);
         }
         verifyResetToken();
-    }, []);
+    }, [token, userId]);
 
     if (isLoading) {
         return <LoadingPage />

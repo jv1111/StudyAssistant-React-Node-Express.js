@@ -7,13 +7,13 @@ const AuthPage = () => {
 
     return (
         <div className="page authPage container">
-            <div className="titleDiv">
-                <h1 className="title">Rev-bot</h1>
+            <section className="titleDiv" aria-labelledby="app-title">
+                <h1 id="app-title" className="title">RevBot</h1>
                 <div className="line"></div>
                 <div className="descriptionDiv">
                     <p>An automatic quiz maker app automatically converts user-inputted questions and answers into multiple-choice quizzes and can grade them automatically. It is a time-saving tool for educators, trainers, and anyone who needs to create quizzes quickly and efficiently.</p>
                 </div>
-            </div>
+            </section>
             <div className="loginDiv">
                 <div className="lightBox loginForm">
                     <div className="lightBoxPanel">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
 import UserValidationSchema from "../validation/UserValidationSchema";
 import FormikTextField from "./FormikTextField";
@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 
 const SignUpForm = () => {
 
-    const [errorMessage, setErrorMessage] = useState("");
     const dispatch = useDispatch();
 
     const initialValues = {
@@ -20,11 +19,7 @@ const SignUpForm = () => {
 
         const response = await signUpAPI(userData);
         if (response.error) {
-            setErrorMessage(response.error);
-            // remove error massage after 5 seconds
-            setTimeout(() => {
-                setErrorMessage("");
-            }, 5000);
+            alert(response.error);
         } else if (response.success) {
             dispatch(login(response.user));
         }

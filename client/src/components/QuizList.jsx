@@ -27,10 +27,8 @@ const QuizList = () => {
     const DownloadPDFHanlder = async (event, quizId) => {
         event.stopPropagation();
         const pdfData = await setPDFOnServer(quizId);//set and save the pdf on server
-        console.log(pdfData);
         const pdf = await getPdf(pdfData.pdfName);
         saveAs(pdf, pdfData.pdfName);
-        console.log(pdfData.path);
         await deleteFile(pdfData.path);
     }
 

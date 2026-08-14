@@ -1,27 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const useItemFetcher = (items, setItems, searchVal, getDataApi, queryParams) => {
     const [isLoading, setLoading] = useState(true);
-    const [isSearching, setSearching] = useState(false);
     const [skipCount, setSkipCount] = useState(0);//the number of item to skip/taken
-    if (!queryParams) queryParams = {};
+    const queryKey = JSON.stringify(queryParams || {});
+    const params = useMemo(() => JSON.parse(queryKey), [queryKey]);
 
     useEffect(() => {
         const getItems = async () => {
-            queryParams.searchVal = searchVal;
-            queryParams.skipCount = skipCount;
-            const apiResponse = await getDataApi(queryParams);
-            if (!isSearching) setItems([...items, ...apiResponse]);//append new data
-            if (isSearching) {
-                setItems(apiResponse);//reset new data
-                setSearching(false);
-            }
+            const apiResponse = await getDataApi({ ...params, searchVal, skipCount });
+            setItems(currentItems => skipCount === 0 ? apiResponse : [...currentItems, ...apiResponse]);
             setLoading(false);
         }
         getItems();
-    }, [skipCount, searchVal])
+    }, [getDataApi, params, searchVal, setItems, skipCount])
 
-    return { isLoading, setSearching, setSkipCount }
+    return { isLoading, setSearching: () => {}, setSkipCount }
 }
 
 export default useItemFetcher;

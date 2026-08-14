@@ -18,8 +18,6 @@ const UpdateQuizForm = () => {
     const itemBoxRef = useRef(null);
     const navigate = useNavigate();
 
-    console.log(items);
-
     useSavedDataFetcher("updateQuiz", setItems, setSubject, setQuizName, quizId);
 
     const addQuestion = () => {
@@ -45,10 +43,11 @@ const UpdateQuizForm = () => {
 
     // update items value (e.g new questions and answers value)
     const itemOnChangeHandler = (e, index) => {
-        const newItems = [...items];
-        newItems[index][e.target.name] = e.target.value;//change item value base on index and target name (question/answer)
+        const newItems = items.map((item, itemIndex) => itemIndex === index
+            ? { ...item, [e.target.name]: e.target.value }
+            : item);
         setItems(newItems);
-        const data = { items: items, subject: subject, quizName: quizName }
+        const data = { items: newItems, subject, quizName }
         autoSave("updateQuiz", data, quizId);//save the pre-submitted automatically to the database
     }
 

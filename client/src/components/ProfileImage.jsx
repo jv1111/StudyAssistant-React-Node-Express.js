@@ -35,7 +35,7 @@ const ProfileImage = () => {
                 <div className="imgFrame">
                     <img
                         src={imgSrc ? imgSrc : empty_profile}
-                        alt="profile picture"
+                        alt="Profile"
                     />
                 </div>
 

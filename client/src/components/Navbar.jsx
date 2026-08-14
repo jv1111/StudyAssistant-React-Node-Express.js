@@ -13,7 +13,7 @@ function Navigation() {
     }
 
     return (
-        <Navbar bg="light" expand="lg">
+        <Navbar expand="lg" variant="dark" sticky="top">
             <Container>
                 <Navbar.Brand href="/">Rev-Bot</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -29,7 +29,7 @@ function Navigation() {
                         <NavDropdown title="Account" id="basic-nav-dropdown" align="end">
                             <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item onClick={logoutHandler} to="#action/3.4">
+                            <NavDropdown.Item as="button" className="w-100 text-start" onClick={logoutHandler}>
                                 Logout
                             </NavDropdown.Item>
                         </NavDropdown>

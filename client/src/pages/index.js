@@ -14,7 +14,7 @@ import ResetPassPage from "./ResetPassPage/ResetPassPage.jsx";
 import EnumQuizPage from "./EnumQuizPage/EnumQuizPage";
 import UpdateQuizPage from "./UpdateQuizPage/UpdateQuizPage";
 
-export default {
+const pages = {
     HomePage,
     AuthPage,
     ProtectedRoute,
@@ -30,4 +30,6 @@ export default {
     ResetPassPage,
     EnumQuizPage,
     UpdateQuizPage
-}
+};
+
+export default pages;

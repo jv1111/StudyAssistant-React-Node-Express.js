@@ -20,7 +20,7 @@ const useSessionChecker = () => {
             }
         }
         getSession();
-    }, []);
+    }, [dispatch]);
     return { isLoading, auth }
 }
 

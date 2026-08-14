@@ -1,24 +1,25 @@
 import React from 'react';
 import { ErrorMessage, useField } from 'formik';
 
-const FormikTextField = ({ ...props }) => {
+const FormikTextField = ({ label, ...props }) => {
     const [field, meta] = useField(props);
     return (
         <div className="inputBox">
             <input
-                required='required'
+                id={field.name}
+                placeholder=" "
+                required
                 {...props}
                 {...field}
             />
 
-            <label className={
+            <label htmlFor={field.name} className={
                 `inputLabel ${meta.error && meta.touched && 'hide'}`
             }>
-                {props.label}
+                {label}
             </label>
 
             <ErrorMessage component="label" name={field.name} className="errorMessage" />
-            <div className="line" />
         </div>
     );
 }

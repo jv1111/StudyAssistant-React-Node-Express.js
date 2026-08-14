@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getSavedData } from "../api/QuizApi";
 
 const useSavedDataFetcher = (key, setItems, setSubject, setQuizName, quizId) => {
@@ -13,7 +13,7 @@ const useSavedDataFetcher = (key, setItems, setSubject, setQuizName, quizId) => 
             }
         }
         dataFetcher();
-    }, []);
+    }, [key, quizId, setItems, setQuizName, setSubject]);
 }
 
 export default useSavedDataFetcher;

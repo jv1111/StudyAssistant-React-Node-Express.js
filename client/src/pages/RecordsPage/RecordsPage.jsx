@@ -1,6 +1,5 @@
 import React from "react";
 import { RecordsList } from "../../components";
-import "../../styles/items.css";
 
 const RecordsPage = () => {
 
