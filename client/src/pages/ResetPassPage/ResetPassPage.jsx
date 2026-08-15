@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { verifyTokenRequest } from "../../api/UserApi";
+import { verifyTokenAPI, resetPasswordAPI } from "../../api/user.api";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../Loading/LoadingPage";
 import FormikTextField from "../../components/forms/FormikTextField";
 import { Formik, Form } from "formik";
-import { resetPass } from "../../api/UserApi";
 import PassValidationSchema from "../../validation/PasswordValidation";
 
 const ResetPassPage = () => {
@@ -14,7 +13,7 @@ const ResetPassPage = () => {
 
   useEffect(() => {
     const verifyResetToken = async () => {
-      const verificationResponse = await verifyTokenRequest(
+      const verificationResponse = await verifyTokenAPI(
         userId,
         token,
         "resetPass",
@@ -47,7 +46,7 @@ const ResetPassForm = () => {
   };
 
   const submitHandler = async (data) => {
-    const response = await resetPass(data);
+    const response = await resetPasswordAPI(data.userId, data.newPassword);
     if (response.success) navigate("/");
     if (response.error) alert(response.error);
   };

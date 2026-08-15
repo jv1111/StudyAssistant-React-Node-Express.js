@@ -1,45 +1,60 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
 import FormTextField from "../../components/forms/FormTextField";
-import { resetPassRequestApi } from "../../api/UserApi";
+import { requestPasswordResetAPI } from "../../api/user.api";
 
 const ForgotPassPage = () => {
   const [email, setEmail] = useState("");
-  const [sending, setSending] = useState("");
-  const [errorMessage, setErrorMessage] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    setSending(true);
-    const response = await resetPassRequestApi(email);
-    if (response.error) {
-      setErrorMessage(response.error);
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      const response = await requestPasswordResetAPI(email);
+
+      if (response.error) {
+        setErrorMessage(response.error);
+        return;
+      }
+
+      if (response.success) {
+        // Replace this with your preferred success UI later.
+        alert("Password reset email sent");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-    if (response.success) alert("Email sent");
-    setSending(false);
   };
 
   return (
     <div className="forgotPassPage page">
-      <form className="forgotPassForm" onSubmit={submitHandler}>
+      <form className="forgotPassForm" onSubmit={handleSubmit}>
         <p className="description">
-          Request password link will be sent to your email
+          A password reset link will be sent to your email.
         </p>
+
         <FormTextField
-          label="Enter your email here"
+          type="email"
+          name="email"
+          label="Enter your email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(event) => setEmail(event.target.value)}
         />
+
         <button
           className="btn-primary mt-1 w-100"
           type="submit"
-          disabled={sending}
+          disabled={isSubmitting}
         >
-          Send request
+          {isSubmitting ? "Sending..." : "Send request"}
         </button>
-        <label className="errorMessage">{errorMessage}</label>
+
+        {errorMessage && <p className="errorMessage">{errorMessage}</p>}
       </form>
     </div>
   );

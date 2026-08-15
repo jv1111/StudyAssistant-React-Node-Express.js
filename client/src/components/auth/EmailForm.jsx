@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addOrUpdateEmail } from "../../api/UserApi";
+import { updateEmailAPI } from "../../api/user.api";
 import FormTextField from "../forms/FormTextField";
 
 const EmailForm = ({ email }) => {
@@ -10,7 +10,7 @@ const EmailForm = ({ email }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setSubmitting(true); //disable the submit button
-    const response = await addOrUpdateEmail(newEmail);
+    const response = await updateEmailAPI(newEmail);
     if (response.error) {
       setEmailError(response.error);
       setTimeout(() => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { changeProfile, fetchProfileImgAPI } from "../api/UserApi";
+import { changeProfileAPI, getProfileImageAPI } from "../api/user.api";
 import empty_profile from "../assets/img/profile.png";
 
 const ProfileImage = () => {
@@ -7,7 +7,7 @@ const ProfileImage = () => {
 
   useEffect(() => {
     const getImage = async () => {
-      const response = await fetchProfileImgAPI();
+      const response = await getProfileImageAPI();
       setImgSrc(response.url);
     };
     getImage();
@@ -26,7 +26,7 @@ const ProfileImage = () => {
   const upload = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
-    changeProfile(formData);
+    changeProfileAPI(formData);
   };
 
   return (

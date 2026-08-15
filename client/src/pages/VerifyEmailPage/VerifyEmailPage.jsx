@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../Loading/LoadingPage";
-import { verifyEmailApi } from "../../api/UserApi";
+import { verifyEmailAPI } from "../../api/user.api";
 
 const VerifyEmailPage = () => {
   const [isLoading, setLoading] = useState(true);
@@ -10,7 +10,7 @@ const VerifyEmailPage = () => {
 
   useEffect(() => {
     const verifyEmail = async () => {
-      const verificationResponse = await verifyEmailApi(userId, token);
+      const verificationResponse = await verifyEmailAPI(userId, token);
       if (verificationResponse.success) setIsValid(true);
       else setIsValid(false);
       setLoading(false);
