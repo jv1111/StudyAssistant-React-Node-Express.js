@@ -1,32 +1,43 @@
 const mongoose = require("mongoose");
-require("mongoose-type-email");//type: mongoose.SchemaTypes.Email
+require("mongoose-type-email");
 
-const UserSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     profileImg: {
-        type: Object,
-        default: {
-            url: null,
-            filePath: null
-        }
-    },
-    username: {
+      url: {
         type: String,
-        minlength: 3,
-        unique: true,
-        required: true
-    },
-    email: {
-        type: mongoose.SchemaTypes.Email,
-    },
-    password: {
+        default: null,
+      },
+      filePath: {
         type: String,
-        required: true,
+        default: null,
+      },
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-});
 
-const User = mongoose.model('User', UserSchema);
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      minlength: 3,
+      trim: true,
+    },
+
+    email: {
+      type: mongoose.SchemaTypes.Email,
+      unique: true,
+      sparse: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+const User = mongoose.model("User", userSchema);
+
 module.exports = User;

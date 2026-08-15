@@ -1,7 +1,7 @@
 const LocalStrategy = require("passport-local");
 const GoogleStrategy = require("passport-google-oauth20");
 
-const AuthService = require("../services/AuthService");
+const authService = require("../services/auth.service");
 
 module.exports = (passport) => {
   passport.use(
@@ -11,7 +11,7 @@ module.exports = (passport) => {
       },
       async (usernameOrEmail, password, done) => {
         try {
-          const user = await AuthService.verifyCredentials(
+          const user = await authService.verifyCredentials(
             usernameOrEmail,
             password,
           );
@@ -37,7 +37,7 @@ module.exports = (passport) => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          const user = await AuthService.findOrCreate(profile._json);
+          const user = await authService.findOrCreateGoogleUser(profile._json);
 
           return done(null, user);
         } catch (error) {
@@ -53,7 +53,7 @@ module.exports = (passport) => {
 
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await AuthService.getUserById(id);
+      const user = await authService.getUserById(id);
 
       if (!user) {
         return done(null, false);

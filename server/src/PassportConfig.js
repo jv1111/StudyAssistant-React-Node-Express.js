@@ -1,6 +1,6 @@
 const localStrategy = require("passport-local");
 const GoogleStrategy = require("passport-google-oauth20");
-const AuthService = require("./services/AuthService");
+const authService = require("./services/auth.service");
 
 module.exports = (passport) => {
   // ----------STRATEGIES----------
@@ -11,7 +11,7 @@ module.exports = (passport) => {
       },
       async (usernameOrEmail, password, done) => {
         console.log("local strategy");
-        const user = await AuthService.verifyCredentials(
+        const user = await authService.verifyCredentials(
           usernameOrEmail,
           password,
         );
@@ -31,7 +31,7 @@ module.exports = (passport) => {
       async (accessToken, refreshToken, profile, done) => {
         try {
           console.log("google strategy");
-          const user = await AuthService.findOrCreate(profile._json);
+          const user = await authService.findOrCreate(profile._json);
           console.log("here at google strategy");
           console.log(user);
           done(null, user);
@@ -49,7 +49,7 @@ module.exports = (passport) => {
   });
   passport.deserializeUser(async (id, done) => {
     console.log("deserializing");
-    const user = await AuthService.getUserById(id); //Retrieve the user from the database using the ID stored in the session
+    const user = await authService.getUserById(id); //Retrieve the user from the database using the ID stored in the session
     if (!user) done(null, { error: "error" });
     done(null, user); // Passes the user object to the 'done' function which will then store the user in the 'req.user' property.
   });
