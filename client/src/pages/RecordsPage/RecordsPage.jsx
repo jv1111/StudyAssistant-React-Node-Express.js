@@ -1,5 +1,5 @@
 import React from "react";
-import { RecordsList } from "../../components";
+import RecordsList from "../../components/RecordsList";
 
 const RecordsPage = () => {
   return (

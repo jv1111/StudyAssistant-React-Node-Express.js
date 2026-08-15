@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormTextField } from "../../components";
+import FormTextField from "../../components/forms/FormTextField";
 import { resetPassRequestApi } from "../../api/UserApi";
 
 const ForgotPassPage = () => {

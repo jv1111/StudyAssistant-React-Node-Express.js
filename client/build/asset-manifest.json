@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/static/css/main.2ef2b965.css",
+    "main.js": "/static/js/main.c5d174d8.js",
+    "static/media/Kavoon-Regular.ttf": "/static/media/Kavoon-Regular.c08a345df4ce2b8326ec.ttf",
+    "static/media/profile.png": "/static/media/profile.216c8446369c93d1905d.png",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.2ef2b965.css",
+    "static/js/main.c5d174d8.js"
+  ]
+}

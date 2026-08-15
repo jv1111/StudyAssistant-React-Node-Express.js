@@ -1,5 +1,5 @@
 import React from "react";
-import { SubjectsList } from "../../components";
+import SubjectsList from "../../components/SubjectsList";
 
 const HomePage = () => {
   return (

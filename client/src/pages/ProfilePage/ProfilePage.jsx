@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { ProfileImage, ChangePassForm, EmailForm } from "../../components";
+import ProfileImage from "../../components/ProfileImage";
+import ChangePassForm from "../../components/auth/ChangePassForm";
+import EmailForm from "../../components/auth/EmailForm";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);

@@ -1,5 +1,5 @@
 import React from "react";
-import { UpdateQuizForm } from "../../components";
+import UpdateQuizForm from "../../components/UpdateQuizForm";
 
 const UpdateQuizPage = () => {
   return (

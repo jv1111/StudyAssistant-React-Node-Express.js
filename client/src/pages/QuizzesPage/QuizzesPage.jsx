@@ -1,5 +1,5 @@
 import React from "react";
-import { QuizList } from "../../components";
+import QuizList from "../../components/QuizList";
 
 const HomePage = () => {
   return (
