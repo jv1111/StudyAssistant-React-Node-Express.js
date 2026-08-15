@@ -15,21 +15,21 @@ import EnumQuizPage from "./EnumQuizPage/EnumQuizPage";
 import UpdateQuizPage from "./UpdateQuizPage/UpdateQuizPage";
 
 const pages = {
-    HomePage,
-    AuthPage,
-    ProtectedRoute,
-    LoadingPage,
-    CreateQuizPage,
-    QuizzesPage,
-    QuizPage,
-    RecordsPage,
-    RecordPage,
-    ProfilePage,
-    VerifyEmailPage,
-    ForgotPassPage,
-    ResetPassPage,
-    EnumQuizPage,
-    UpdateQuizPage
+  HomePage,
+  AuthPage,
+  ProtectedRoute,
+  LoadingPage,
+  CreateQuizPage,
+  QuizzesPage,
+  QuizPage,
+  RecordsPage,
+  RecordPage,
+  ProfilePage,
+  VerifyEmailPage,
+  ForgotPassPage,
+  ResetPassPage,
+  EnumQuizPage,
+  UpdateQuizPage,
 };
 
 export default pages;

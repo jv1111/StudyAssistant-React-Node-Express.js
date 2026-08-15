@@ -1,5 +1,5 @@
 const VerifacationLinkBuilder = (header, message, url, buttonName) => {
-    const html = `
+  const html = `
     <div>
         <h1>${header}</h1>
         <p>${message}</p>
@@ -18,10 +18,10 @@ const VerifacationLinkBuilder = (header, message, url, buttonName) => {
             </a>
         </div>
     </div>    
-    `
-    return html;
-}
+    `;
+  return html;
+};
 
 module.exports = {
-    VerifacationLinkBuilder
-}   
+  VerifacationLinkBuilder,
+};

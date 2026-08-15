@@ -1,37 +1,36 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../Loading/LoadingPage";
 import { verifyEmailApi } from "../../api/UserApi";
 
 const VerifyEmailPage = () => {
+  const [isLoading, setLoading] = useState(true);
+  const [valid, setIsValid] = useState(false);
+  const { userId, token } = useParams();
 
-    const [isLoading, setLoading] = useState(true);
-    const [valid, setIsValid] = useState(false);
-    const { userId, token } = useParams();
+  useEffect(() => {
+    const verifyEmail = async () => {
+      const verificationResponse = await verifyEmailApi(userId, token);
+      if (verificationResponse.success) setIsValid(true);
+      else setIsValid(false);
+      setLoading(false);
+    };
+    verifyEmail();
+  }, [token, userId]);
 
-    useEffect(() => {
-        const verifyEmail = async () => {
-            const verificationResponse = await verifyEmailApi(userId, token);
-            if (verificationResponse.success) setIsValid(true);
-            else setIsValid(false);
-            setLoading(false);
-        }
-        verifyEmail();
-    }, [token, userId]);
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
-    if (isLoading) {
-        return <LoadingPage />
-    }
-
-    return (
-        <div className="validation-page container">
-            {valid ?
-                <h1>Your email is verified successfully</h1>
-                :
-                <h1>Invalid link</h1>
-            }
-        </div>
-    )
-}
+  return (
+    <div className="validation-page container">
+      {valid ? (
+        <h1>Your email is verified successfully</h1>
+      ) : (
+        <h1>Invalid link</h1>
+      )}
+    </div>
+  );
+};
 
 export default VerifyEmailPage;

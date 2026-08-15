@@ -1,12 +1,12 @@
 module.exports = (data) => {
-    // copy the html format at the test folder
-    const quizName = data.quizName;
-    const subject = data.subject;
-    const questions = data.questions;
-    const questionsItems = generateItems(questions);
-    const correctAnswersItems = generateAnswers(questions);
-    console.log(correctAnswersItems);
-    return `
+  // copy the html format at the test folder
+  const quizName = data.quizName;
+  const subject = data.subject;
+  const questions = data.questions;
+  const questionsItems = generateItems(questions);
+  const correctAnswersItems = generateAnswers(questions);
+  console.log(correctAnswersItems);
+  return `
 <html lang="en">
 
 <head>
@@ -117,51 +117,51 @@ module.exports = (data) => {
 
 </html>
 `;
-}
+};
 
 const generateItems = (items) => {
-    // todo generate items here for the html
-    let htmlString = "";
-    let htmlBuilder = [];
-    for (index in items) {
-        const question = items[index].question;
-        const choices = items[index].choices;
-        htmlBuilder.push(`
+  // todo generate items here for the html
+  let htmlString = "";
+  let htmlBuilder = [];
+  for (index in items) {
+    const question = items[index].question;
+    const choices = items[index].choices;
+    htmlBuilder.push(`
             <div class="item">
                 <label class="question">${question}</label>
             <div class="choices">
         `);
-        for (index in choices) {
-            let options = ["A", "B", "C"];
-            htmlBuilder.push(`
+    for (index in choices) {
+      let options = ["A", "B", "C"];
+      htmlBuilder.push(`
                 <div class="choice">
                     <label class="selection bold">${options[index]}: </label>
                     <label class="selection">${choices[index]}: </label>
                 </div>
-            `)
-        }
-        htmlBuilder.push(`
+            `);
+    }
+    htmlBuilder.push(`
             </div>
             </div>
         `);
-        htmlString = htmlBuilder.join("");
-    }
-    return htmlString;
-}
+    htmlString = htmlBuilder.join("");
+  }
+  return htmlString;
+};
 
 const generateAnswers = (items) => {
-    console.log("generate");
-    console.log(items);
-    let htmlString = "";
-    let htmlBuilder = [];
-    for (index in items) {
-        htmlBuilder.push(`
+  console.log("generate");
+  console.log(items);
+  let htmlString = "";
+  let htmlBuilder = [];
+  for (index in items) {
+    htmlBuilder.push(`
         <div class="item">
             <label class="question">${items[index].question}</label>
             <label class="answer">${items[index].correctAns}</label>
         </div>
         `);
-    }
-    htmlString = htmlBuilder.join("");
-    return htmlString;
-}
+  }
+  htmlString = htmlBuilder.join("");
+  return htmlString;
+};
