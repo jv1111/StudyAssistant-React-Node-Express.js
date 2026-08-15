@@ -109,9 +109,8 @@ const deleteSavedData = async (key, quizId) => {
   return response.data;
 };
 
-// TODO: Create a new server method to make this work.
 const getItemsApi = async (quizId) => {
-  const response = await api.get("/quiz/getItems", {
+  const response = await api.get("/quiz/items", {
     params: { quizId },
   });
 
@@ -119,7 +118,7 @@ const getItemsApi = async (quizId) => {
 };
 
 const updateQuiz = async (quizId, subject, quizName, items) => {
-  const response = await api.put("/quiz/updateQuiz", {
+  const response = await api.put("/quiz/update", {
     quizId,
     subject,
     quizName,
@@ -130,7 +129,7 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
 };
 
 const setPDFOnServer = async (quizId) => {
-  const response = await api.put("/quiz/createPdf", {
+  const response = await api.put("/quiz/pdf", {
     quizId,
   });
 
@@ -138,7 +137,7 @@ const setPDFOnServer = async (quizId) => {
 };
 
 const getPdf = async (pdfId) => {
-  const response = await api.get("/quiz/getPdf", {
+  const response = await api.get("/quiz/pdf", {
     params: { pdfId },
     responseType: "blob",
   });
@@ -147,7 +146,7 @@ const getPdf = async (pdfId) => {
 };
 
 const deleteFile = async (filePath) => {
-  const response = await api.delete("/quiz/deleteFile", {
+  const response = await api.delete("/quiz/file", {
     params: { filePath },
   });
 

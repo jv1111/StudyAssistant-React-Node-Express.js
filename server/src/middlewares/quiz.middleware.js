@@ -1,0 +1,30 @@
+const QuizSessionModel = require("../models/QuizSessionModel");
+const { getScore } = require("../services/quiz.service");
+const asyncHandler = require("../utils/asyncHandler");
+
+const finishedQuizChecker = asyncHandler(async (req, res, next) => {
+  const { quizId } = req.query;
+
+  const quizSession = await QuizSessionModel.find({
+    userId: req.user._id,
+    quizId,
+  });
+
+  const unansweredItems = quizSession.filter((item) => !item.answered);
+
+  if (quizSession.length > 0 && unansweredItems.length === 0) {
+    return res.status(200).json({
+      subject: quizSession[0].subject,
+      quizName: quizSession[0].quizName,
+      score: getScore(quizSession),
+      numberOfItems: quizSession.length,
+      quizEnded: true,
+    });
+  }
+
+  next();
+});
+
+module.exports = {
+  finishedQuizChecker,
+};

@@ -49,19 +49,12 @@ const savePDF = async (data) => {
 };
 
 const fileDelete = async (filePath) => {
-  try {
-    await fs.unlink(filePath);
+  await fs.unlink(filePath);
 
-    console.log("File deleted");
-
-    return {
-      success: true,
-      message: "File deleted",
-    };
-  } catch (error) {
-    console.error("Error deleting file:", error);
-    throw error;
-  }
+  return {
+    success: true,
+    message: "File deleted",
+  };
 };
 
 module.exports = {

@@ -1,105 +1,47 @@
 const express = require("express");
+
+const quizController = require("../controllers/quiz.controller");
+const quizMiddleware = require("../middlewares/quiz.middleware");
+const { verifyAuth } = require("../middlewares/auth.middleware");
+
 const router = express.Router();
-const QuizController = require("../controllers/QuizController.js");
-const QuizMiddleware = require("../middlewares/QuizMiddlewares.js");
-const { VerifyAuth } = require("../middlewares/UserMiddleware.js");
 
-router.put(
-    "/create",
-    VerifyAuth,//check if the user is logged in
-    QuizController.createQuiz
-);
+router.use(verifyAuth);
 
-router.get(
-    "/subjectsList",
-    VerifyAuth,//check if the user is logged in
-    QuizController.getSubjects
-);
+router.put("/create", quizController.createQuiz);
+
+router.get("/subjectsList", quizController.getSubjects);
+
+router.get("/quizList", quizController.getQuizzes);
 
 router.get(
-    "/quizList",
-    VerifyAuth,//check if the user is logged in
-    QuizController.getQuizzes
+  "/startQuiz",
+  quizMiddleware.finishedQuizChecker,
+  quizController.startQuiz,
 );
 
-router.get(
-    "/startQuiz",
-    VerifyAuth,//check if the user is logged in
-    QuizMiddleware.finishedQuizChecker,//return quizEnded: true if there is no unanswered item
-    QuizController.startQuiz
-);
+router.put("/submitAnswer", quizController.submitAnswer);
 
-router.put(
-    "/submitAnswer",
-    VerifyAuth,//check if the user is logged in
-    QuizController.submitAnswer
-);
+router.put("/saveRecord", quizController.saveQuizRecord);
 
-router.put(
-    "/saveRecord",
-    VerifyAuth,//check if the user is logged in
-    QuizController.saveQuizRecord
-);
+router.get("/records", quizController.getQuizRecords);
 
+router.get("/record", quizController.getQuizRecord);
 
-router.get(
-    "/records",
-    VerifyAuth,//check if the user is logged in
-    QuizController.getQuizRecords
-);
+router.put("/saveData", quizController.saveData);
 
-router.get(
-    "/record",
-    VerifyAuth,//check if the user is logged in
-    QuizController.getQuizRecord
-);
+router.get("/savedData", quizController.getSavedData);
 
-router.put(
-    "/saveData",
-    VerifyAuth,//check if the user is logged in
-    QuizController.saveData
-);
+router.delete("/savedData", quizController.deleteSavedData);
 
-router.get(
-    "/savedData",
-    VerifyAuth,//check if the user is logged in
-    QuizController.getSavedData
-);
+router.get("/items", quizController.getItems);
 
-router.delete(
-    "/savedData",
-    VerifyAuth,//check if the user is logged in
-    QuizController.deleteSavedData
-);
+router.put("/update", quizController.updateQuiz);
 
-router.get(
-    "/getItems",
-    VerifyAuth,
-    QuizController.getItems
-);
+router.put("/pdf", quizController.createPdf);
 
-router.put(
-    "/updateQuiz",
-    VerifyAuth,
-    QuizController.updateQuiz
-);
+router.get("/pdf", quizController.getPdf);
 
-router.put(
-    "/createPdf",
-    VerifyAuth,
-    QuizController.createPdf
-);
-
-router.get(
-    "/getPdf",
-    VerifyAuth,
-    QuizController.getPdf
-);
-
-router.delete(
-    "/deleteFile",
-    VerifyAuth,
-    QuizController.deleteFile
-)
+router.delete("/file", quizController.deleteFile);
 
 module.exports = router;
