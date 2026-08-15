@@ -4,8 +4,8 @@ const UserModel = require("../models/UserModel");
 const GoogleUserModel = require("../models/GoogleUserModel");
 
 const { generateUniqueUsername } = require("../utils/uniqueUsernameGenerator");
-
 const { generateUniqueObjectId } = require("../utils/uniqueUserIdGenerator");
+const AppError = require("../utils/AppError");
 
 const register = async ({ username, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,17 +26,13 @@ const verifyCredentials = async (usernameOrEmail, password) => {
   });
 
   if (!user) {
-    return {
-      error: "User not found",
-    };
+    throw new AppError("Invalid credentials", 401);
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    return {
-      error: "Invalid password",
-    };
+    throw new AppError("Invalid credentials", 401);
   }
 
   return user;
@@ -49,7 +45,13 @@ const getUserById = async (id) => {
     return user;
   }
 
-  return GoogleUserModel.findById(id);
+  const googleUser = await GoogleUserModel.findById(id);
+
+  if (!googleUser) {
+    throw new AppError("User not found", 404);
+  }
+
+  return googleUser;
 };
 
 const findOrCreateGoogleUser = async ({ given_name, picture, email }) => {
