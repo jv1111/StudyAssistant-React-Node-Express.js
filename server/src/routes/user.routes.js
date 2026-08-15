@@ -1,40 +1,30 @@
 const express = require("express");
-const router = express.Router();
-const UserController = require("../controllers/UserController.js");
+
+const userController = require("../controllers/user.controller.js");
 const upload = require("../multer.js");
 const { verifyAuth } = require("../middlewares/auth.middleware.js");
 
-router.post(
-  "/changePass",
-  verifyAuth, //check if the user is logged in
-  UserController.changePass,
-);
+const router = express.Router();
+
+router.post("/changePass", verifyAuth, userController.changePass);
 
 router.post(
   "/changeProfileImg",
-  verifyAuth, //check if the user is logged in
+  verifyAuth,
   upload.single("image"),
-  UserController.changeProfile,
+  userController.changeProfile,
 );
 
-router.post(
-  "/getProfileImg",
-  verifyAuth, //check if the user is logged in
-  UserController.getProfileImg,
-);
+router.get("/profileImg", verifyAuth, userController.getProfileImg);
 
-router.put(
-  "/addOrUpdateEmail",
-  verifyAuth, //check if the user is logged in
-  UserController.addOrUpdateEmail,
-);
+router.put("/email", verifyAuth, userController.addOrUpdateEmail);
 
-router.put("/verifyEmail", UserController.verifyEmail);
+router.put("/verifyEmail", userController.verifyEmail);
 
-router.put("/verifyToken", UserController.verifyToken);
+router.put("/verifyToken", userController.verifyToken);
 
-router.put("/sendResetPassRequest", UserController.sendResetPassRequest);
+router.put("/sendResetPassRequest", userController.sendResetPassRequest);
 
-router.put("/resetPass", UserController.resetPass);
+router.put("/resetPass", userController.resetPass);
 
 module.exports = router;

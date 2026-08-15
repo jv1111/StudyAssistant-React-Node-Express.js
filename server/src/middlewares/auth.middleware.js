@@ -1,5 +1,10 @@
+const AppError = require("../utils/AppError.js");
+
 const verifyAuth = (req, res, next) => {
-  if (!req.user) return res.status(401).json({ error: "unauthrized" });
+  if (!req.user) {
+    return next(new AppError("Unauthorized", 401));
+  }
+
   next();
 };
 
