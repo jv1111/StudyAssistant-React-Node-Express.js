@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const QuizController = require("../controllers/QuizController.js");
-const QuizMiddleware = require("../middlewares/QuizMiddlewares");
-const { VerifyAuth } = require("../middlewares/UserMiddleware");
+const QuizMiddleware = require("../middlewares/QuizMiddlewares.js");
+const { VerifyAuth } = require("../middlewares/UserMiddleware.js");
 
 router.put(
     "/create",

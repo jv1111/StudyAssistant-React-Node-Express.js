@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controllers/UserController.js");
-const upload = require("../multer");
-const { VerifyAuth } = require("../middlewares/UserMiddleware");
+const upload = require("../multer.js");
+const { VerifyAuth } = require("../middlewares/UserMiddleware.js");
 
 router.post(
     "/changePass",
