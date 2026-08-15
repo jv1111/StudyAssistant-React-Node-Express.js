@@ -4,7 +4,7 @@ const passport = require("passport");
 
 const session = require("./config/session");
 const configurePassport = require("./config/passport");
-const errorHandler = require("./middleware/error.middleware");
+const errorHandler = require("./middlewares/error.middleware");
 
 const authRoutes = require("./routes/auth.routes");
 const quizRoutes = require("./routes/quiz.routes");
