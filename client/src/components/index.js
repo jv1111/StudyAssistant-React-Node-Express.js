@@ -1,5 +1,5 @@
-import LoginForm from "./LoginForm";
-import SignUpForm from "./SignUpForm";
+import LoginForm from "./auth/LoginForm";
+import SignUpForm from "./auth/SignUpForm";
 import Popup from "./Popup";
 import Navbar from "./Navbar";
 
@@ -16,11 +16,11 @@ import RecordItems from "./RecordItems";
 
 import CreateQuizForm from "./CreateQuizForm";
 import UpdateQuizForm from "./UpdateQuizForm";
-import FormTextField from "./FormTextField";
+import FormTextField from "./forms/FormTextField";
 
 import ProfileImage from "./ProfileImage";
-import ChangePassForm from "./ChangePassForm";
-import EmailForm from "./EmailForm";
+import ChangePassForm from "./auth/ChangePassForm";
+import EmailForm from "./auth/EmailForm";
 
 import ItemContainer from "./ItemContainer";
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { verifyTokenRequest } from "../../api/UserApi";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingPage from "../Loading/LoadingPage";
-import FormikTextField from "../../components/FormikTextField";
+import FormikTextField from "../../components/forms/FormikTextField";
 import { Formik, Form } from "formik";
 import { resetPass } from "../../api/UserApi";
 import PassValidationSchema from "../../validation/PasswordValidation";

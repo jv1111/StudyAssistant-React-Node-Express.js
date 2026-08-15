@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { login, logout } from "../redux/slice/authSlice";
-import { getSessionAPI } from "../api/AuthApi";
+import { getSessionAPI } from "../api/auth.api";
 
 const useSessionChecker = () => {
   const [isLoading, setLoading] = useState(true);

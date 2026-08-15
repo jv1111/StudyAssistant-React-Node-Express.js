@@ -1,8 +1,8 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import FormikTextField from "./FormikTextField";
-import ChangePassValidationSchema from "../validation/ChangePassValidationSchema";
-import { changePass } from "../api/UserApi.js";
+import FormikTextField from "../forms/FormikTextField";
+import ChangePassValidationSchema from "../../validation/ChangePassValidationSchema.js";
+import { changePass } from "../../api/UserApi.js";
 
 const ChangePassForm = () => {
   const initialValues = {

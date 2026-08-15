@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { addOrUpdateEmail } from "../api/UserApi";
-import FormTextField from "./FormTextField";
+import { addOrUpdateEmail } from "../../api/UserApi";
+import FormTextField from "../forms/FormTextField";
 
 const EmailForm = ({ email }) => {
   const [newEmail, setNewEmail] = useState("");

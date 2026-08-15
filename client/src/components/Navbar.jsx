@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { logoutAPI } from "../api/AuthApi";
+import { logoutAPI } from "../api/auth.api";
 import { logout } from "../redux/slice/authSlice";
 import { useDispatch } from "react-redux";
 

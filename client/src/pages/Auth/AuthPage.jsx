@@ -1,8 +1,12 @@
-import React, { useState } from "react";
-import { LoginForm, SignUpForm, Popup } from "../../components";
+import { useState } from "react";
+
+import AuthCard from "../../components/auth/AuthCard";
+import LoginForm from "../../components/auth/LoginForm";
+import SignUpForm from "../../components/auth/SignUpForm";
+import Modal from "../../components/common/Modal";
 
 const AuthPage = () => {
-  const [signUptrigger, setSignUpTrigger] = useState(false);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   return (
     <div className="page authPage container">
@@ -10,7 +14,9 @@ const AuthPage = () => {
         <h1 id="app-title" className="title">
           RevBot
         </h1>
-        <div className="line"></div>
+
+        <div className="line" />
+
         <div className="descriptionDiv">
           <p>
             An automatic quiz maker app automatically converts user-inputted
@@ -21,20 +27,18 @@ const AuthPage = () => {
           </p>
         </div>
       </section>
+
       <div className="loginDiv">
-        <div className="lightBox loginForm">
-          <div className="lightBoxPanel">
-            <LoginForm setSignUpTrigger={setSignUpTrigger} />
-          </div>
-        </div>
+        <AuthCard>
+          <LoginForm onSignUp={() => setIsSignUpOpen(true)} />
+        </AuthCard>
       </div>
-      <Popup trigger={signUptrigger} setTrigger={setSignUpTrigger}>
-        <div className="lightBox signUpForm">
-          <div className="lightBoxPanel">
-            <SignUpForm />
-          </div>
-        </div>
-      </Popup>
+
+      <Modal isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
+        <AuthCard>
+          <SignUpForm />
+        </AuthCard>
+      </Modal>
     </div>
   );
 };
