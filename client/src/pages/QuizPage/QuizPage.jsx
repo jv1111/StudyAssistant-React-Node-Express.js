@@ -58,32 +58,41 @@ const QuizPage = () => {
   }
 
   return (
-    <div className="quizPage page container">
-      <div className="itemContainer">
-        <div className="topDescription ">
-          <div className="d-flex justify-content-between">
-            <div className="left d-grid">
-              <label className="fw-bold">
-                Subject: <label className="fw-normal">{item.subject}</label>
-              </label>
-              <label className="fw-bold">
-                Quiz Name:{" "}
-                <label className="fw-normal">{item.quizName}</label>{" "}
-              </label>
-            </div>
-            <div className="right d-grid">
-              <label className="fw-bold">
-                Score: <label className="fw-normal">{item.score}</label>
-              </label>
-              <label className="fw-bold">
-                Number Of Items:{" "}
-                <label className="fw-normal">{item.numberOfItems}</label>
-              </label>
-            </div>
+    <main className="quiz-play-page">
+      <section className="quiz-play" aria-labelledby="quiz-play-title">
+        <header className="quiz-play-header">
+          <div>
+            <span className="form-eyebrow">QUIZ IN PROGRESS</span>
+            <h1 id="quiz-play-title">{item.quizName}</h1>
+            <p>{item.subject}</p>
           </div>
-          <div className="line"></div>
+
+          <dl className="quiz-stats">
+            <div>
+              <dt>Score</dt>
+              <dd>{item.score}</dd>
+            </div>
+            <div>
+              <dt>Question</dt>
+              <dd>
+                {item.questionNumber} <span>/ {item.numberOfItems}</span>
+              </dd>
+            </div>
+          </dl>
+        </header>
+
+        <div
+          className="quiz-progress"
+          aria-label={`Question ${item.questionNumber} of ${item.numberOfItems}`}
+        >
+          <span
+            style={{
+              width: `${(item.questionNumber / item.numberOfItems) * 100}%`,
+            }}
+          />
         </div>
-        <div className="itemPanel position-relative">
+
+        <section className="quiz-question-panel" aria-labelledby="question-title">
           {showCorrectAnsPopup && (
             <CorrectAnsPopup
               correctAns={correctAns}
@@ -92,30 +101,28 @@ const QuizPage = () => {
               setDisableSubmittion={setDisableSubmittion}
             />
           )}
-          <div
-            className="itemBox"
-            style={{ height: "250px", overflow: "auto" }}
-          >
-            <div className="d-flex justify-content-between">
-              <label className="itemName">
-                Question# {item.questionNumber}{" "}
-              </label>
-              {showCorrectLbl && (
-                <label className="lblCorrect fw-bold">Correct!</label>
-              )}
-            </div>
-            <div className="line"></div>
-            <div className="p-2">
-              <p>{item.question}</p>
-            </div>
-          </div>
-          <div className="selectionPanel d-grid gap-1 mt-1">
+
+          <header className="quiz-question-header">
+            <span>QUESTION {item.questionNumber}</span>
+            {showCorrectLbl && (
+              <strong className="quiz-correct-feedback" aria-live="polite">
+                Correct!
+              </strong>
+            )}
+          </header>
+
+          <h2 id="question-title" className="quiz-question-text">
+            {item.question}
+          </h2>
+
+          <div className="quiz-choices" aria-label="Answer choices">
             {item.choices.map((choice, index) => {
               if (choice) {
                 return (
                   <button
                     key={index}
-                    className="btn-primary"
+                    type="button"
+                    className="quiz-choice"
                     ref={(element) => {
                       choicesRef.current[index] = element;
                     }}
@@ -129,9 +136,9 @@ const QuizPage = () => {
               return null;
             })}
           </div>
-        </div>
-      </div>
-    </div>
+        </section>
+      </section>
+    </main>
   );
 };
 
@@ -142,22 +149,29 @@ const CorrectAnsPopup = ({
   setDisableSubmittion,
 }) => {
   return (
-    <div className="popupBlocker">
-      <div className="correctAnsPopup">
-        <label className="fw-bold text-danger">Incorrect answer</label>
-        <div className="line"></div>
-        <label className="fw-bold">Correct Answer:</label>
-        <p className="lblCorrect">{correctAns}</p>
+    <div className="quiz-answer-modal" role="presentation">
+      <section
+        className="quiz-answer-modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="incorrect-answer-title"
+      >
+        <span className="form-eyebrow">KEEP GOING</span>
+        <h2 id="incorrect-answer-title">Incorrect answer</h2>
+        <p className="quiz-answer-modal-label">The correct answer is</p>
+        <p className="quiz-answer-modal-value">{correctAns}</p>
         <button
+          type="button"
+          className="btn btn-primary"
           onClick={() => {
             setNumAnswered((prev) => prev + 1);
             setShowCorrectAnsPopup(false);
             setDisableSubmittion(false);
           }}
         >
-          Ok
+          Next question
         </button>
-      </div>
+      </section>
     </div>
   );
 };
