@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ItemContainer from "./ItemContainer";
@@ -49,12 +49,12 @@ const CreateQuizForm = () => {
     });
   };
 
-  const itemOnChangeHandler = (e, index) => {
+  const itemOnChangeHandler = (event, index) => {
     const newItems = items.map((item, itemIndex) =>
       itemIndex === index
         ? {
             ...item,
-            [e.target.name]: e.target.value,
+            [event.target.name]: event.target.value,
           }
         : item,
     );
@@ -68,8 +68,8 @@ const CreateQuizForm = () => {
     });
   };
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const submitHandler = async (event) => {
+    event.preventDefault();
 
     const response = await createQuiz(subject, quizName, items);
 
@@ -83,86 +83,100 @@ const CreateQuizForm = () => {
   };
 
   return (
-    <form autoComplete="off" onSubmit={submitHandler}>
-      {/* Header */}
-      <div className="mb-4">
-        <h1 className="text-white mid-size-title mb-2">Create Quiz</h1>
+    <section className="create-quiz">
+      <header className="create-quiz-header">
+        <span className="form-eyebrow">QUIZ BUILDER</span>
 
-        <p className="text-white-50 mb-0">
+        <h1 className="create-quiz-title">Create Quiz</h1>
+
+        <p className="create-quiz-description">
           Create a quiz by providing the basic information and adding questions.
         </p>
-      </div>
+      </header>
 
-      {/* Quiz Information */}
-      <div className="card bg-dark border-secondary mb-4">
-        <div className="card-body p-4">
-          <h5 className="text-white mb-4">Quiz Information</h5>
+      <form
+        className="create-quiz-form"
+        autoComplete="off"
+        onSubmit={submitHandler}
+      >
+        {/* Quiz Information */}
+        <section className="create-quiz-card" aria-labelledby="quiz-info-title">
+          <header className="create-quiz-card-header">
+            <div>
+              <h2 id="quiz-info-title">Quiz Information</h2>
 
-          <div className="row g-4">
+              <p>Provide the basic details for your quiz.</p>
+            </div>
+          </header>
+
+          <div className="row g-3">
             <div className="col-12 col-md-6">
-              <label htmlFor="subject" className="form-label text-white">
-                Subject
-              </label>
+              <div className="form-field">
+                <label htmlFor="subject">Subject</label>
 
-              <input
-                id="subject"
-                type="text"
-                className="form-control"
-                name="subject"
-                value={subject}
-                onChange={(e) => {
-                  setSubject(e.target.value);
+                <input
+                  id="subject"
+                  type="text"
+                  name="subject"
+                  value={subject}
+                  placeholder="e.g. Mathematics"
+                  onChange={(event) => {
+                    setSubject(event.target.value);
 
-                  autoSave("createQuiz", {
-                    items,
-                    subject: e.target.value,
-                    quizName,
-                  });
-                }}
-                required
-              />
+                    autoSave("createQuiz", {
+                      items,
+                      subject: event.target.value,
+                      quizName,
+                    });
+                  }}
+                  required
+                />
+              </div>
             </div>
 
             <div className="col-12 col-md-6">
-              <label htmlFor="quizName" className="form-label text-white">
-                Quiz Name
-              </label>
+              <div className="form-field">
+                <label htmlFor="quizName">Quiz Name</label>
 
-              <input
-                id="quizName"
-                type="text"
-                className="form-control"
-                name="quizName"
-                value={quizName}
-                onChange={(e) => {
-                  setQuizName(e.target.value);
+                <input
+                  id="quizName"
+                  type="text"
+                  name="quizName"
+                  value={quizName}
+                  placeholder="e.g. Algebra Quiz"
+                  onChange={(event) => {
+                    setQuizName(event.target.value);
 
-                  autoSave("createQuiz", {
-                    items,
-                    subject,
-                    quizName: e.target.value,
-                  });
-                }}
-                required
-              />
+                    autoSave("createQuiz", {
+                      items,
+                      subject,
+                      quizName: event.target.value,
+                    });
+                  }}
+                  required
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* Questions */}
-      <ItemContainer search={false} title="Questions">
-        <div className="p-3 p-md-4">
-          <div className="itemsList" ref={itemBoxRef}>
+        {/* Questions */}
+        <ItemContainer search={false} title="Questions">
+          <div className="question-list" ref={itemBoxRef}>
             {items.map((item, index) => (
-              <div className="card bg-dark border-secondary mb-4" key={index}>
-                {/* Question Header */}
-                <div className="card-header border-secondary d-flex align-items-center justify-content-between py-3">
-                  <h6 className="text-white mb-0">Question {index + 1}</h6>
+              <article className="question-card" key={index}>
+                <header className="question-card-header">
+                  <div>
+                    <span className="question-number">
+                      QUESTION {index + 1}
+                    </span>
+
+                    <h3>Question {index + 1}</h3>
+                  </div>
 
                   <button
                     type="button"
-                    className="btn btn-outline-danger btn-sm"
+                    className="btn btn-danger"
                     onClick={() => deleteQuestion(index)}
                     disabled={items.length <= 3}
                     title={
@@ -173,62 +187,60 @@ const CreateQuizForm = () => {
                   >
                     Delete
                   </button>
-                </div>
+                </header>
 
-                {/* Question Content */}
-                <div className="card-body p-3 p-md-4">
-                  <div className="mb-4">
-                    <label className="form-label text-white">Question</label>
+                <div className="question-card-body">
+                  <div className="form-field">
+                    <label htmlFor={`question-${index}`}>Question</label>
 
                     <textarea
+                      id={`question-${index}`}
                       rows="4"
-                      className="form-control"
                       name="question"
                       required
                       placeholder="Enter your question..."
                       value={item.question}
-                      onChange={(e) => itemOnChangeHandler(e, index)}
+                      onChange={(event) => itemOnChangeHandler(event, index)}
                     />
                   </div>
 
-                  <div>
-                    <label className="form-label text-white">Answer</label>
+                  <div className="form-field">
+                    <label htmlFor={`answer-${index}`}>Answer</label>
 
                     <input
-                      className="form-control"
+                      id={`answer-${index}`}
                       type="text"
                       name="answer"
                       required
                       placeholder="Enter the correct answer..."
                       value={item.answer}
-                      onChange={(e) => itemOnChangeHandler(e, index)}
+                      onChange={(event) => itemOnChangeHandler(event, index)}
                     />
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
 
-          {/* Add Question */}
-          <div className="d-flex justify-content-center pt-2">
+          <footer className="question-list-footer">
             <button
               type="button"
-              className="btn btn-outline-light px-4"
+              className="btn btn-secondary"
               onClick={addQuestion}
             >
               + Add Question
             </button>
-          </div>
-        </div>
-      </ItemContainer>
+          </footer>
+        </ItemContainer>
 
-      {/* Submit */}
-      <div className="d-flex justify-content-end mt-4 mb-4">
-        <button type="submit" className="btn btn-primary px-5">
-          Create Quiz
-        </button>
-      </div>
-    </form>
+        {/* Form Actions */}
+        <footer className="create-quiz-actions">
+          <button type="submit" className="btn btn-primary">
+            Create Quiz
+          </button>
+        </footer>
+      </form>
+    </section>
   );
 };
 

@@ -8,6 +8,7 @@
 @import "./list-page.css";
 @import "./quiz-card.css";
 @import "./buttons.css";
+@import "./create-quiz.css";
 
 * {
   box-sizing: border-box;

@@ -1,32 +1,41 @@
-import React from "react";
 import { Search } from "react-bootstrap-icons";
 import searchDelay from "../helper/searchDelay";
 
 const ItemContainer = ({ children, search, title, setSearchVal }) => {
-  const searchHandler = (e) => {
-    searchDelay(setSearchVal, e.target.value);
+  const searchHandler = (event) => {
+    searchDelay(setSearchVal, event.target.value);
   };
 
+  const titleId = `${title.toLowerCase().replace(/\s+/g, "-")}-title`;
+
   return (
-    <div className="itemContainer">
-      <div className="topDescription">
-        <h2 className="text-fam-kavoon">{title}</h2>
-        <div className="line"></div>
+    <section className="item-container" aria-labelledby={titleId}>
+      <header className="item-container-header">
+        <div>
+          <h2 id={titleId}>{title}</h2>
+        </div>
+
         {search && (
-          <div className="searchBox">
-            <Search className="searchIcon" />
+          <div className="item-container-search">
+            <Search aria-hidden="true" />
+
+            <label htmlFor={`${titleId}-search`} className="visually-hidden">
+              Search {title}
+            </label>
+
             <input
-              aria-label={`Search ${title}`}
-              type="text"
+              id={`${titleId}-search`}
+              type="search"
               name="search"
-              placeholder="search"
+              placeholder={`Search ${title}...`}
               onChange={searchHandler}
             />
           </div>
         )}
-      </div>
-      <div className="itemPanel">{children}</div>
-    </div>
+      </header>
+
+      <div className="item-container-content">{children}</div>
+    </section>
   );
 };
 
