@@ -1,12 +1,7 @@
-import React from "react";
 import QuizList from "../../components/QuizList";
 
-const HomePage = () => {
-  return (
-    <div className="quizzesPage selectionPage page container">
-      <QuizList />
-    </div>
-  );
+const QuizPage = () => {
+  return <QuizList />;
 };
 
-export default HomePage;
+export default QuizPage;

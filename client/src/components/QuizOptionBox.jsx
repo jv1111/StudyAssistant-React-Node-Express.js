@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const QuizOptionBox = ({ selectingType, quizId, onClose }) => {
@@ -14,32 +13,28 @@ const QuizOptionBox = ({ selectingType, quizId, onClose }) => {
     }
   };
 
-  return (
-    <div className={`popupBlocker ${selectingType ? "" : "hidden"}`}>
-      <div className="selection">
-        <h3 className="text-fam-kavoon">Select quiz type</h3>
+  if (!selectingType) {
+    return null;
+  }
 
-        <button
-          type="button"
-          className="btn-primary"
-          onClick={() => selectHandler("multipleChoice")}
-        >
+  return (
+    <section aria-labelledby="quiz-type-title">
+      <h2 id="quiz-type-title">Select quiz type</h2>
+
+      <div>
+        <button type="button" onClick={() => selectHandler("multipleChoice")}>
           Multiple choices
         </button>
 
-        <button
-          type="button"
-          className="btn-primary"
-          onClick={() => selectHandler("enumeration")}
-        >
+        <button type="button" onClick={() => selectHandler("enumeration")}>
           Enumeration
         </button>
 
-        <button type="button" className="btn-secondary" onClick={onClose}>
+        <button type="button" onClick={onClose}>
           Cancel
         </button>
       </div>
-    </div>
+    </section>
   );
 };
 

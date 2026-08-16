@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { saveAs } from "file-saver";
 
 import EmptyState from "./EmptyState";
@@ -42,12 +42,14 @@ const QuizList = () => {
   }
 
   return (
-    <section className="quizzesSection py-4">
-      <header className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <section className="list-page" aria-labelledby="quiz-list-title">
+      <header className="list-page-header">
         <div>
-          <h2 className="text-white text-fam-kavoon mb-1">Quizzes</h2>
+          <h1 id="quiz-list-title" className="list-page-title">
+            Quizzes
+          </h1>
 
-          <p className="text-secondary mb-0">Choose a quiz to get started</p>
+          <p className="list-page-description">Choose a quiz to get started</p>
         </div>
 
         <SearchInput
@@ -57,25 +59,24 @@ const QuizList = () => {
         />
       </header>
 
-      <div className="card bg-dark border-secondary shadow-sm">
-        <div className="card-body p-3 p-md-4">
-          {quizzes.length > 0 ? (
-            <div className="row g-3" onScroll={handleScroll}>
-              {quizzes.map((quiz) => (
-                <div className="col-12 col-md-6 col-lg-4" key={quiz._id}>
-                  <QuizCard
-                    quiz={quiz}
-                    onSelect={handleQuizSelect}
-                    onDownload={handleDownloadPdf}
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyState />
-          )}
-        </div>
-      </div>
+      {quizzes.length > 0 ? (
+        <ul className="list-page-grid" onScroll={handleScroll}>
+          {quizzes.map((quiz) => (
+            <li key={quiz._id}>
+              <QuizCard
+                quiz={quiz}
+                onSelect={handleQuizSelect}
+                onDownload={handleDownloadPdf}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptyState
+          title="No quizzes found"
+          description="There are no quizzes matching your search."
+        />
+      )}
 
       <QuizOptionBox
         selectingType={selectedQuiz !== null}

@@ -1,5 +1,3 @@
-import React from "react";
-
 import EmptyState from "./EmptyState";
 import SubjectCard from "./SubjectCard";
 import SearchInput from "./SearchInput";
@@ -17,12 +15,14 @@ const SubjectsList = () => {
   }
 
   return (
-    <section className="subjects-section">
-      <header className="subjects-header">
+    <section className="list-page" aria-labelledby="subjects-title">
+      <header className="list-page-header">
         <div>
-          <h1 className="subjects-title">Subjects</h1>
+          <h1 id="subjects-title" className="list-page-title">
+            Subjects
+          </h1>
 
-          <p className="subjects-description">Browse your quiz subjects</p>
+          <p className="list-page-description">Browse your quiz subjects</p>
         </div>
 
         <SearchInput
@@ -33,7 +33,7 @@ const SubjectsList = () => {
       </header>
 
       {subjects.length > 0 ? (
-        <ul className="subjects-grid" onScroll={handleScroll}>
+        <ul className="list-page-grid" onScroll={handleScroll}>
           {subjects.map((subject) => (
             <li key={subject._id}>
               <SubjectCard subject={subject} />

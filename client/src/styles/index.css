@@ -3,8 +3,11 @@
 @import "./navigation.css";
 @import "./auth.css";
 @import "./global.css";
-@import "./subjects.css";
+@import "./subjects-card.css";
 @import "./common.css";
+@import "./list-page.css";
+@import "./quiz-card.css";
+@import "./buttons.css";
 
 * {
   box-sizing: border-box;
