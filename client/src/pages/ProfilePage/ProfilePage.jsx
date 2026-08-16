@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-import ProfileImage from "../../components/ProfileImage";
+import ProfileImage from "../../components/profile/ProfileImage";
 import ChangePassForm from "../../components/auth/ChangePassForm";
 import EmailForm from "../../components/auth/EmailForm";
 

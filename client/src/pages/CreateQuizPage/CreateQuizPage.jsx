@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import ItemContainer from "../../components/ItemContainer";
+import ItemContainer from "../../components/quiz/ItemContainer";
 
 import { createQuiz, deleteSavedData } from "../../api/QuizApi";
 import useSavedDataFetcher from "../../hooks/useSavedDataFetcher";

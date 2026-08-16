@@ -1,8 +1,8 @@
 import useRecordFetcher from "../../hooks/useRecordFetcher";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../Loading/LoadingPage";
-import Pad from "../../components/Pad";
-import RecordItems from "../../components/RecordItems";
+import Pad from "../../components/records/Pad";
+import RecordItems from "../../components/records/RecordItems";
 
 const RecordPage = () => {
   const { recordId } = useParams();

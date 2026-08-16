@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import { changeProfileAPI, getProfileImageAPI } from "../api/user.api";
-import emptyProfile from "../assets/img/profile.png";
+import { changeProfileAPI, getProfileImageAPI } from "../../api/user.api";
+import emptyProfile from "../../assets/img/profile.png";
 
 const ProfileImage = () => {
   const [imgSrc, setImgSrc] = useState(null);

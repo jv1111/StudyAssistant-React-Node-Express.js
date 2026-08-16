@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
-import EmptyState from "../../components/EmptyState";
-import RecordCard from "../../components/RecordCard";
-import SearchInput from "../../components/SearchInput";
+import EmptyState from "../../components/common/EmptyState";
+import RecordCard from "../../components/records/RecordCard";
+import SearchInput from "../../components/common/SearchInput";
 
 import useRecords from "../../hooks/useRecords";
 

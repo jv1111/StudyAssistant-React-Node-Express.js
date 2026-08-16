@@ -1,6 +1,6 @@
-import EmptyState from "../../components/EmptyState";
-import SubjectCard from "../../components/SubjectCard";
-import SearchInput from "../../components/SearchInput";
+import EmptyState from "../../components/common/EmptyState";
+import SubjectCard from "../../components/quiz/SubjectCard";
+import SearchInput from "../../components/common/SearchInput";
 
 import useSubjects from "../../hooks/useSubjects";
 import LoadingPage from "../Loading/LoadingPage";

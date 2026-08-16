@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { saveAs } from "file-saver";
 
-import EmptyState from "../../components/EmptyState";
-import QuizCard from "../../components/QuizCard";
-import QuizOptionBox from "../../components/QuizOptionBox";
-import SearchInput from "../../components/SearchInput";
+import EmptyState from "../../components/common/EmptyState";
+import QuizCard from "../../components/quiz/QuizCard";
+import QuizOptionBox from "../../components/quiz/QuizOptionBox";
+import SearchInput from "../../components/common/SearchInput";
 
 import useQuizzes from "../../hooks/useQuizzes";
 

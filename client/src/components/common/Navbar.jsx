@@ -2,8 +2,8 @@ import { Link, NavLink } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 
-import { logoutAPI } from "../api/auth.api";
-import { logout } from "../redux/slice/authSlice";
+import { logoutAPI } from "../../api/auth.api";
+import { logout } from "../../redux/slice/authSlice";
 
 function Navigation() {
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import { Search } from "react-bootstrap-icons";
-import searchDelay from "../helper/searchDelay";
+import searchDelay from "../../helper/searchDelay";
 
 const ItemContainer = ({ children, search, title, setSearchVal }) => {
   const searchHandler = (event) => {

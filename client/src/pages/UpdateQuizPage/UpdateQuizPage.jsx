@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import ItemContainer from "../../components/ItemContainer";
+import ItemContainer from "../../components/quiz/ItemContainer";
 
 import { deleteSavedData, updateQuiz } from "../../api/QuizApi";
 import autoSave from "../../helper/autoSave";
