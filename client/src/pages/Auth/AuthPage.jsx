@@ -13,32 +13,38 @@ const AuthPage = () => {
       <div className="row align-items-center justify-content-center g-5 min-vh-75">
         <section className="col-12 col-lg-7" aria-labelledby="app-title">
           <div className="auth-intro">
-            <span className="auth-eyebrow">QUIZ MAKING MADE SIMPLE</span>
+            <span className="auth-eyebrow">QUIZ CREATION MADE SIMPLE</span>
 
             <h1 id="app-title" className="auth-title">
-              Rev<span>Bot</span>
+              Quiz<span>Builder</span>
             </h1>
 
             <p className="auth-description">
-              Create multiple-choice quizzes from your own questions and
-              answers. RevBot automatically generates and grades quizzes, making
-              it easier to prepare assessments quickly.
+              Create and practice multiple-choice quizzes, review your
+              knowledge, track your learning progress, and generate quizzes as
+              PDF documents.
             </p>
 
             <div className="auth-features">
               <div className="auth-feature">
                 <span className="auth-feature-icon">✦</span>
                 <div>
-                  <strong>Generate quizzes</strong>
-                  <p>Turn your questions into ready-to-use quizzes.</p>
+                  <strong>Create and practice quizzes</strong>
+                  <p>
+                    Build multiple-choice quizzes and use them for review and
+                    practice.
+                  </p>
                 </div>
               </div>
 
               <div className="auth-feature">
                 <span className="auth-feature-icon">✓</span>
                 <div>
-                  <strong>Automatic grading</strong>
-                  <p>Get your results without checking every answer.</p>
+                  <strong>Track your progress</strong>
+                  <p>
+                    Review your quiz results and monitor your learning progress
+                    over time.
+                  </p>
                 </div>
               </div>
             </div>

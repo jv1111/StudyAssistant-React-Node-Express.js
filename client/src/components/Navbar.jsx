@@ -20,7 +20,7 @@ function Navigation() {
     <Navbar expand="lg" className="glass-navbar">
       <Container>
         <Navbar.Brand as={Link} to="/" className="navbar-brand-custom">
-          Rev<span>-Bot</span>
+          Quiz<span>Builder</span>
         </Navbar.Brand>
 
         <Navbar.Toggle

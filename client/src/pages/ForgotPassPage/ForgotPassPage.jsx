@@ -23,7 +23,6 @@ const ForgotPassPage = () => {
       }
 
       if (response.success) {
-        // Replace this with your preferred success UI later.
         alert("Password reset email sent");
       }
     } finally {
@@ -32,11 +31,9 @@ const ForgotPassPage = () => {
   };
 
   return (
-    <div className="forgotPassPage page">
-      <form className="forgotPassForm" onSubmit={handleSubmit}>
-        <p className="description">
-          A password reset link will be sent to your email.
-        </p>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <p>A password reset link will be sent to your email.</p>
 
         <FormTextField
           type="email"
@@ -46,15 +43,11 @@ const ForgotPassPage = () => {
           onChange={(event) => setEmail(event.target.value)}
         />
 
-        <button
-          className="btn-primary mt-1 w-100"
-          type="submit"
-          disabled={isSubmitting}
-        >
+        <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Sending..." : "Send request"}
         </button>
 
-        {errorMessage && <p className="errorMessage">{errorMessage}</p>}
+        {errorMessage && <p>{errorMessage}</p>}
       </form>
     </div>
   );
