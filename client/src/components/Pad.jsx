@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 
 const Pad = ({ children, record }) => {
@@ -6,32 +5,32 @@ const Pad = ({ children, record }) => {
   const numberOfItems = record.items.length;
 
   return (
-    <div className="pad">
-      <div className="topDescription">
-        <div className="right">
-          <label className="bold">
-            Name: <label className="normal">{auth.user.username}</label>
-          </label>
-          <label className="bold">
-            subject:
-            <label className="normal">{record.subject}</label>
-          </label>
+    <section className="record-preview" aria-labelledby="record-preview-title">
+      <header className="record-preview-header">
+        <div>
+          <span className="form-eyebrow">QUIZ REVIEW</span>
+          <h1 id="record-preview-title">{record.quizName}</h1>
+          <p>{record.subject}</p>
         </div>
 
-        <div className="left">
-          <label className="bold">
-            Date:
-            <label className="normal">{record.date}</label>
-          </label>
-          <label className="bold">
-            Score: {numberOfItems}/
-            <label className="normal">{record.score}</label>
-          </label>
-        </div>
-      </div>
+        <dl className="record-preview-stats">
+          <div>
+            <dt>Score</dt>
+            <dd>{record.score} <span>/ {numberOfItems}</span></dd>
+          </div>
+          <div>
+            <dt>Completed</dt>
+            <dd>{record.date}</dd>
+          </div>
+          <div>
+            <dt>Student</dt>
+            <dd>{auth.user.username}</dd>
+          </div>
+        </dl>
+      </header>
 
-      <div className="body">{children}</div>
-    </div>
+      <div className="record-preview-body">{children}</div>
+    </section>
   );
 };
 

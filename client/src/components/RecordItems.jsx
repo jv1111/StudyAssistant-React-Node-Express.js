@@ -1,82 +1,84 @@
-import React from "react";
 import { CheckCircle, XCircle } from "react-bootstrap-icons";
 
 const RecordItems = ({ record }) => {
   return (
-    <div className="recordItems">
-      <div className="recordItemsHeader">
-        <h3 className="text-fam-kavoon">Quiz Review</h3>
+    <section className="record-items" aria-labelledby="answer-review-title">
+      <header className="record-items-header">
+        <h2 id="answer-review-title">Answer review</h2>
 
         <p>Review your answers and see which questions you got right.</p>
-      </div>
+      </header>
 
-      <div className="recordQuestions">
+      <div className="record-questions">
         {record.items.map((item, index) => {
           const isCorrect = item.correct;
 
           return (
-            <div
-              className={`recordQuestion ${
-                isCorrect ? "recordQuestionCorrect" : "recordQuestionIncorrect"
+            <article
+              className={`record-question ${
+                isCorrect
+                  ? "record-question-correct"
+                  : "record-question-incorrect"
               }`}
               key={index}
             >
               {/* Question header */}
-              <div className="recordQuestionHeader">
-                <div className="d-flex align-items-center gap-2">
+              <header className="record-question-header">
+                <div className="record-question-status">
                   {isCorrect ? (
-                    <CheckCircle className="correctIcon" />
+                    <CheckCircle className="correct-icon" />
                   ) : (
-                    <XCircle className="incorrectIcon" />
+                    <XCircle className="incorrect-icon" />
                   )}
 
-                  <span className="recordQuestionNumber">
+                  <span className="record-question-number">
                     Question {index + 1}
                   </span>
                 </div>
 
                 <span
-                  className={`recordResult ${
-                    isCorrect ? "correctAns" : "incorrectAns"
+                  className={`record-result ${
+                    isCorrect ? "correct-answer" : "incorrect-answer"
                   }`}
                 >
                   {isCorrect ? "Correct" : "Incorrect"}
                 </span>
-              </div>
+              </header>
 
               {/* Question */}
-              <div className="recordQuestionBody">
-                <p className="recordQuestionText">{item.question}</p>
+              <div className="record-question-body">
+                <p className="record-question-text">{item.question}</p>
 
                 {/* User answer */}
-                <div className="recordAnswer">
-                  <span className="recordAnswerLabel">Your answer</span>
+                <div className="record-answers">
+                  <div className="record-answer">
+                    <span className="record-answer-label">Your answer</span>
 
-                  <span
-                    className={`recordAnswerValue ${
-                      isCorrect ? "correctAns" : "incorrectAns"
-                    }`}
-                  >
-                    {item.userAnswer}
-                  </span>
-                </div>
-
-                {/* Correct answer */}
-                {!isCorrect && (
-                  <div className="recordAnswer correctAnswerBox">
-                    <span className="recordAnswerLabel">Correct answer</span>
-
-                    <span className="recordAnswerValue correctAns">
-                      {item.answer}
+                    <span
+                      className={`record-answer-value ${
+                        isCorrect ? "correct-answer" : "incorrect-answer"
+                      }`}
+                    >
+                      {item.userAnswer}
                     </span>
                   </div>
-                )}
+
+                  {!isCorrect && (
+                    <div className="record-answer">
+                      <span className="record-answer-label">Correct answer</span>
+
+                      <span className="record-answer-value correct-answer">
+                        {item.answer}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>
-    </div>
+    </section>
   );
 };
 

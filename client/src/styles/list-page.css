@@ -3,7 +3,7 @@
    ============================== */
 
 .list-page {
-  width: min(100% - 2rem, var(--content-max-width));
+  width: min(100% - 2rem, 65rem);
   margin: 0 auto;
   padding: 3rem 0;
 }

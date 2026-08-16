@@ -1,5 +1,5 @@
-import React from "react";
 import { Formik, Form } from "formik";
+
 import FormikTextField from "../forms/FormikTextField";
 import ChangePassValidationSchema from "../../validation/ChangePassValidationSchema.js";
 import { changePasswordAPI } from "../../api/user.api.js";
@@ -13,8 +13,13 @@ const ChangePassForm = () => {
 
   const submitHandler = async (data, resetForm) => {
     const response = await changePasswordAPI(data);
-    if (response.error) return alert(response.error);
-    alert("password changed");
+
+    if (response.error) {
+      alert(response.error);
+      return;
+    }
+
+    alert("Password changed successfully.");
     resetForm();
   };
 
@@ -24,34 +29,40 @@ const ChangePassForm = () => {
       validationSchema={ChangePassValidationSchema}
       onSubmit={async (data, { setSubmitting, resetForm }) => {
         await submitHandler(data, resetForm);
-        setSubmitting(false); //Enable submit button
+        setSubmitting(false);
       }}
     >
       {({ isSubmitting }) => (
-        <Form className="changePassForm">
-          <label className="formTitle fw-bold">Change password</label>
-          <FormikTextField
-            type="password"
-            name="oldPassword"
-            label="Old password"
-          />
-          <FormikTextField
-            type="password"
-            name="newPassword"
-            label="New password"
-          />
-          <FormikTextField
-            type="password"
-            name="confirmPassword"
-            label="Confirm password"
-          />
-          <button
-            className="btn-primary mt-2"
-            type="submit"
-            disabled={isSubmitting} //disable the button when submitting
-          >
-            Change password
-          </button>
+        <Form className="profile-form">
+          <div className="profile-form-fields">
+            <FormikTextField
+              type="password"
+              name="oldPassword"
+              label="Old password"
+            />
+
+            <FormikTextField
+              type="password"
+              name="newPassword"
+              label="New password"
+            />
+
+            <FormikTextField
+              type="password"
+              name="confirmPassword"
+              label="Confirm password"
+            />
+          </div>
+
+          <footer className="profile-form-actions">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Changing..." : "Change Password"}
+            </button>
+          </footer>
         </Form>
       )}
     </Formik>

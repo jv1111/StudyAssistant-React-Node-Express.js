@@ -13,7 +13,7 @@ const RecordPage = () => {
   }
 
   return (
-    <div className="recordPage page container">
+    <div className="record-page">
       <Pad record={record}>
         <RecordItems record={record} />
       </Pad>

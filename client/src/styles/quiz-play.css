@@ -3,7 +3,7 @@
    ============================== */
 
 .quiz-play-page {
-  width: min(100% - 2rem, 52rem);
+  width: min(100% - 2rem, 65rem);
   margin: 0 auto;
   padding: 3rem 0 4rem;
 }

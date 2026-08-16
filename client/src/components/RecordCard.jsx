@@ -1,5 +1,3 @@
-import React from "react";
-
 const RecordCard = ({ record, onSelect }) => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -9,49 +7,32 @@ const RecordCard = ({ record, onSelect }) => {
   };
 
   return (
-    <div
-      className="card content-card"
+    <article
+      className="record-card"
       role="button"
       tabIndex={0}
       onClick={() => onSelect(record._id)}
       onKeyDown={handleKeyDown}
     >
-      <div className="card-body p-3 p-md-4">
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-          <div>
-            <h5 className="card-title text-white mb-1">{record.quizName}</h5>
-
-            <small className="text-white-50">Quiz Record</small>
-          </div>
-
-          <span className="text-white-50">{record.date}</span>
+      <header className="record-card-header">
+        <div>
+          <span className="record-card-type">QUIZ RECORD</span>
+          <h2>{record.quizName}</h2>
         </div>
+        <time>{record.date}</time>
+      </header>
 
-        <hr className="border-secondary my-3" />
-
-        <div className="row g-3">
-          <div className="col-12 col-sm-6">
-            <div className="recordStat">
-              <small className="text-white-50 d-block">Score</small>
-
-              <span className="text-white fs-5 fw-semibold">
-                {record.score}
-              </span>
-            </div>
-          </div>
-
-          <div className="col-12 col-sm-6">
-            <div className="recordStat">
-              <small className="text-white-50 d-block">Number of Items</small>
-
-              <span className="text-white fs-5 fw-semibold">
-                {record.numberOfItems}
-              </span>
-            </div>
-          </div>
+      <dl className="record-card-stats">
+        <div>
+          <dt>Score</dt>
+          <dd>{record.score}</dd>
         </div>
-      </div>
-    </div>
+        <div>
+          <dt>Questions</dt>
+          <dd>{record.numberOfItems}</dd>
+        </div>
+      </dl>
+    </article>
   );
 };
 

@@ -1,9 +1,8 @@
-import React from "react";
 import RecordsList from "../../components/RecordsList";
 
 const RecordsPage = () => {
   return (
-    <div className="recordsPage page container">
+    <div className="records-page">
       <RecordsList />
     </div>
   );

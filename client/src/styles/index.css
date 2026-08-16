@@ -10,6 +10,8 @@
 @import "./buttons.css";
 @import "./create-quiz.css";
 @import "./quiz-play.css";
+@import "./records.css";
+@import "./profile.css";
 
 * {
   box-sizing: border-box;

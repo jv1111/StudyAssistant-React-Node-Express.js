@@ -1,47 +1,63 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
 import { changeProfileAPI, getProfileImageAPI } from "../api/user.api";
-import empty_profile from "../assets/img/profile.png";
+import emptyProfile from "../assets/img/profile.png";
 
 const ProfileImage = () => {
-  const [imgSrc, setImgSrc] = useState();
+  const [imgSrc, setImgSrc] = useState(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const getImage = async () => {
       const response = await getProfileImageAPI();
-      setImgSrc(response.url);
+
+      if (response.url) {
+        setImgSrc(response.url);
+      }
     };
+
     getImage();
   }, []);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImgSrc(e.target.result);
-    };
-    reader.readAsDataURL(file);
-    upload(file);
-  };
+  const handleImageChange = async (event) => {
+    const file = event.target.files?.[0];
 
-  const upload = async (file) => {
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = (loadEvent) => {
+      setImgSrc(loadEvent.target.result);
+    };
+
+    reader.readAsDataURL(file);
+
     const formData = new FormData();
     formData.append("image", file);
-    changeProfileAPI(formData);
+
+    await changeProfileAPI(formData);
   };
 
   return (
-    <div className="profileImage">
-      <label className="imageInput" htmlFor="imageInput">
-        <div className="imgFrame">
-          <img src={imgSrc ? imgSrc : empty_profile} alt="Profile" />
-        </div>
-      </label>
+    <div className="profile-image">
+      <button
+        type="button"
+        className="profile-image-button"
+        onClick={() => fileInputRef.current?.click()}
+        title="Change profile picture"
+      >
+        <img src={imgSrc || emptyProfile} alt="Profile" />
+
+        <span className="profile-image-overlay">Change</span>
+      </button>
+
       <input
+        ref={fileInputRef}
         id="imageInput"
         type="file"
         accept="image/*"
         name="image"
-        style={{ display: "none" }}
+        className="visually-hidden"
         onChange={handleImageChange}
       />
     </div>
