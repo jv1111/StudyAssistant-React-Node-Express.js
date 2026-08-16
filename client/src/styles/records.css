@@ -9,7 +9,7 @@
   padding: 3rem 0 4rem;
 }
 
-.records-list-header,
+.records-page-header,
 .record-preview-header,
 .record-card-header,
 .record-question-header {
@@ -19,12 +19,12 @@
   gap: 1.5rem;
 }
 
-.records-list-header {
+.records-page-header {
   align-items: flex-end;
   margin-bottom: 2rem;
 }
 
-.records-list-header h1,
+.records-page-header h1,
 .record-preview-header h1 {
   margin: 0.45rem 0 0;
   font-size: clamp(2rem, 4vw, 3rem);

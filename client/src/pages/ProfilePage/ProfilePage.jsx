@@ -22,7 +22,7 @@ const ProfilePage = () => {
       </header>
 
       <div className="profile-content">
-        <section className="profile-card profile-overview">
+        <article className="profile-card profile-overview">
           <div className="profile-image-wrapper">
             <ProfileImage />
           </div>
@@ -34,7 +34,7 @@ const ProfilePage = () => {
 
             <p>Manage your account information below.</p>
           </div>
-        </section>
+        </article>
 
         <div className="profile-settings">
           <article className="profile-card">
