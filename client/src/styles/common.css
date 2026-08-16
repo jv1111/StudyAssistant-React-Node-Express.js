@@ -1,0 +1,70 @@
+/* ==============================
+   Search Input
+   ============================== */
+
+.search-input {
+  position: relative;
+  width: min(100%, 350px);
+}
+
+.search-input > svg {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  z-index: 1;
+
+  color: var(--color-text-muted);
+
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-input input {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.7rem 0.9rem 0.7rem 2.5rem;
+
+  color: var(--color-text);
+  border: 1px solid var(--glass-border);
+  border-radius: 0.65rem;
+  outline: none;
+  background: var(--glass-bg);
+
+  transition:
+    border-color var(--transition-normal),
+    background var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.search-input input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.search-input input:focus {
+  border-color: var(--color-accent);
+  background: var(--glass-bg-strong);
+  box-shadow: 0 0 0 0.2rem rgba(110, 231, 225, 0.1);
+}
+
+/* ==============================
+   Empty State
+   ============================== */
+
+.empty-state {
+  padding: 4rem 1rem;
+  text-align: center;
+  border: 1px dashed var(--glass-border);
+  border-radius: var(--glass-radius);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.empty-state h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.empty-state p {
+  margin: 0.5rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}

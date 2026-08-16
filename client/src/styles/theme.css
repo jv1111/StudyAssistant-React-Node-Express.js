@@ -1,4 +1,5 @@
 :root {
+  /* Colors */
   --color-bg: #080d1c;
   --color-bg-secondary: #10172b;
 
@@ -12,6 +13,7 @@
   --color-danger: #ff879d;
   --color-success: #70e4a9;
 
+  /* Glass */
   --glass-bg: rgba(255, 255, 255, 0.065);
   --glass-bg-strong: rgba(255, 255, 255, 0.095);
   --glass-border: rgba(255, 255, 255, 0.13);
@@ -19,4 +21,12 @@
   --glass-blur: 24px;
   --glass-radius: 0.75rem;
   --glass-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+
+  /* Layout */
+  --content-max-width: 1200px;
+  --page-padding: 1.5rem;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import EmptyList from "./EmptyList";
+import EmptyState from "./EmptyState";
 import RecordCard from "./RecordCard";
 import SearchInput from "./SearchInput";
 
@@ -52,7 +52,7 @@ const RecordsList = () => {
               ))}
             </div>
           ) : (
-            <EmptyList />
+            <EmptyState />
           )}
         </div>
       </div>

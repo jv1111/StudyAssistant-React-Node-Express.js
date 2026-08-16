@@ -5,7 +5,9 @@ const AppLayout = () => {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <main>
+        <Outlet />
+      </main>
     </>
   );
 };

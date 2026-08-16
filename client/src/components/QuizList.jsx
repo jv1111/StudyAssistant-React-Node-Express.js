@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { saveAs } from "file-saver";
 
-import EmptyList from "./EmptyList";
+import EmptyState from "./EmptyState";
 import QuizCard from "./QuizCard";
 import QuizOptionBox from "./QuizOptionBox";
 import SearchInput from "./SearchInput";
@@ -72,7 +72,7 @@ const QuizList = () => {
               ))}
             </div>
           ) : (
-            <EmptyList />
+            <EmptyState />
           )}
         </div>
       </div>

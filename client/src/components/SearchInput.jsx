@@ -1,20 +1,17 @@
-import React from "react";
 import { Search } from "react-bootstrap-icons";
 
 const SearchInput = ({ value, onChange, placeholder = "Search..." }) => {
   return (
-    <div className="input-group" style={{ maxWidth: "350px" }}>
-      <span className="input-group-text bg-dark border-secondary text-secondary">
-        <Search />
-      </span>
+    <div className="search-input">
+      <Search aria-hidden="true" />
 
       <input
-        type="text"
+        type="search"
         name="search"
-        className="form-control bg-dark text-white border-secondary"
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        aria-label="Search subjects"
       />
     </div>
   );

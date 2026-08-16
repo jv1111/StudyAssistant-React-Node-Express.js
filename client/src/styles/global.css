@@ -1,11 +1,3 @@
-@import "./theme.css";
-@import "./forms.css";
-@import "./navigation.css";
-@import "./auth.css";
-@import "./global.css";
-@import "./subjects.css";
-@import "./common.css";
-
 * {
   box-sizing: border-box;
 }
@@ -39,4 +31,17 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
 }

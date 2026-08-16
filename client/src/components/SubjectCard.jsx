@@ -1,32 +1,18 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SubjectCard = ({ subject }) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`quiz/${subject._id}`);
-  };
-
   return (
-    <div className="col-12 col-md-6 col-lg-4">
-      <button type="button" className="card-button" onClick={handleClick}>
-        <div className="card content-card">
-          <div className="card-body">
-            <div className="d-flex justify-content-between align-items-start gap-2">
-              <h5 className="card-title text-white mb-0">{subject._id}</h5>
+    <Link to={`quiz/${subject._id}`} className="subject-card">
+      <div className="subject-card-header">
+        <h2>{subject._id}</h2>
 
-              <span className="badge text-bg-primary">Subject</span>
-            </div>
+        <span>Subject</span>
+      </div>
 
-            <hr className="border-secondary my-3" />
+      <hr />
 
-            <p className="card-text text-secondary mb-0">
-              View quizzes for this subject
-            </p>
-          </div>
-        </div>
-      </button>
-    </div>
+      <p>View quizzes for this subject</p>
+    </Link>
   );
 };
 

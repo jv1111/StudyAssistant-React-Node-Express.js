@@ -1,6 +1,6 @@
 import React from "react";
 
-import EmptyList from "./EmptyList";
+import EmptyState from "./EmptyState";
 import SubjectCard from "./SubjectCard";
 import SearchInput from "./SearchInput";
 
@@ -17,12 +17,12 @@ const SubjectsList = () => {
   }
 
   return (
-    <section className="subjectsSection py-4">
-      <header className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <section className="subjects-section">
+      <header className="subjects-header">
         <div>
-          <h2 className="text-white text-fam-kavoon mb-1">Subjects</h2>
+          <h1 className="subjects-title">Subjects</h1>
 
-          <p className="text-secondary mb-0">Browse your quiz subjects</p>
+          <p className="subjects-description">Browse your quiz subjects</p>
         </div>
 
         <SearchInput
@@ -32,19 +32,20 @@ const SubjectsList = () => {
         />
       </header>
 
-      <div className="card bg-dark border-secondary shadow-sm">
-        <div className="card-body p-3 p-md-4">
-          {subjects.length > 0 ? (
-            <div className="row g-3" onScroll={handleScroll}>
-              {subjects.map((subject) => (
-                <SubjectCard key={subject._id} subject={subject} />
-              ))}
-            </div>
-          ) : (
-            <EmptyList />
-          )}
-        </div>
-      </div>
+      {subjects.length > 0 ? (
+        <ul className="subjects-grid" onScroll={handleScroll}>
+          {subjects.map((subject) => (
+            <li key={subject._id}>
+              <SubjectCard subject={subject} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptyState
+          title="No subjects found"
+          description="There are no subjects matching your search."
+        />
+      )}
     </section>
   );
 };
