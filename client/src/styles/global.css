@@ -1,3 +1,7 @@
+/* ==============================
+   Global
+   ============================== */
+
 * {
   box-sizing: border-box;
 }
@@ -23,6 +27,7 @@ body {
       transparent 30rem
     ),
     var(--color-bg);
+
   font-family:
     Inter,
     ui-sans-serif,
@@ -31,15 +36,6 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-}
-
-button,
-input {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
 }
 
 a {

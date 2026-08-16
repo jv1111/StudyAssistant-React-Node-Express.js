@@ -65,8 +65,13 @@
 
 .quiz-card-actions {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: auto;
   padding-top: 1.5rem;
+}
+
+.quiz-card-actions .btn {
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
 }
