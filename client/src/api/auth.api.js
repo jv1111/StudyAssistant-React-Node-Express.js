@@ -1,30 +1,58 @@
 import api from "./axios";
 
 const loginAPI = async (usernameOrEmail, password) => {
-  const response = await api.post("/auth/login", {
-    usernameOrEmail,
-    password,
-  });
+  try {
+    const response = await api.post("/auth/login", {
+      usernameOrEmail,
+      password,
+    });
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Login failed",
+    };
+  }
 };
 
 const signUpAPI = async (userData) => {
-  const response = await api.post("/auth/register", userData);
+  try {
+    const response = await api.post("/auth/register", userData);
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Registration failed",
+    };
+  }
 };
 
-const getSessionAPI = async () => {
-  const response = await api.get("/auth/login");
+const getMeAPI = async () => {
+  try {
+    const response = await api.get("/auth/me");
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Failed to get user",
+    };
+  }
 };
 
 const logoutAPI = async () => {
-  const response = await api.get("/auth/logout");
+  try {
+    const response = await api.post("/auth/logout");
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Logout failed",
+    };
+  }
 };
 
-export { loginAPI, signUpAPI, getSessionAPI, logoutAPI };
+export { loginAPI, signUpAPI, getMeAPI, logoutAPI };

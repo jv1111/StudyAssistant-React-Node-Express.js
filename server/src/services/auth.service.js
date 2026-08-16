@@ -8,6 +8,12 @@ const { generateUniqueObjectId } = require("../utils/uniqueUserIdGenerator");
 const AppError = require("../utils/AppError");
 
 const register = async ({ username, password }) => {
+  const existingUser = await UserModel.findOne({ username });
+
+  if (existingUser) {
+    throw new AppError("Username is already taken", 409);
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = new UserModel({

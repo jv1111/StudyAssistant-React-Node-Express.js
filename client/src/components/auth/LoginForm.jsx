@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { Formik, Form } from "formik";
 import { useDispatch } from "react-redux";
 
-import FormTextField from "../forms/FormTextField";
+import FormikTextField from "../forms/FormikTextField";
 import GoogleSignIn from "../../assets/img/google-signin.png";
 import { loginAPI } from "../../api/auth.api";
 import { login } from "../../redux/slice/authSlice";
@@ -9,75 +9,100 @@ import { login } from "../../redux/slice/authSlice";
 const LoginForm = ({ onSignUp }) => {
   const dispatch = useDispatch();
 
-  const [usernameOrEmail, setUsernameOrEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const initialValues = {
+    usernameOrEmail: "",
+    password: "",
+  };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
+    try {
+      setStatus("");
 
-    setIsSubmitting(true);
-    setErrorMessage("");
+      const response = await loginAPI(values.usernameOrEmail, values.password);
 
-    const response = await loginAPI(usernameOrEmail, password);
+      if (!response.success) {
+        console.log("error: ", response.success);
+        setStatus(response.message);
+        return;
+      }
 
-    if (response.error) {
-      setErrorMessage(response.error);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (response.success) {
       dispatch(login(response.user));
+    } finally {
+      setSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   return (
-    <form className="authForm" onSubmit={handleSubmit}>
-      <h2 className="formTitle">Login</h2>
+    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      {({ isSubmitting, status }) => (
+        <Form className="auth-form">
+          <div className="text-center mb-4">
+            <span className="form-eyebrow">WELCOME BACK</span>
 
-      <FormTextField
-        type="text"
-        name="usernameOrEmail"
-        label="Username or Email"
-        value={usernameOrEmail}
-        onChange={(event) => setUsernameOrEmail(event.target.value)}
-      />
+            <h2 className="form-title">Sign in</h2>
 
-      <FormTextField
-        type="password"
-        name="password"
-        label="Password"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-      />
+            <p className="form-description">
+              Sign in to continue to your RevBot account.
+            </p>
+          </div>
 
-      <button className="btn-primary" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Logging in..." : "Login"}
-      </button>
+          <div className="d-grid gap-3">
+            <FormikTextField
+              type="text"
+              name="usernameOrEmail"
+              label="Username or Email"
+            />
 
-      <button
-        className="btn-secondary"
-        type="button"
-        disabled={isSubmitting}
-        onClick={onSignUp}
-      >
-        Sign up
-      </button>
+            <FormikTextField type="password" name="password" label="Password" />
 
-      <a href={`${process.env.REACT_APP_URL}/auth/forgotPass`}>
-        Forgot password?
-      </a>
+            <div className="text-end">
+              <a
+                href={`${import.meta.env.VITE_API_URL}/auth/forgotPass`}
+                className="auth-link"
+              >
+                Forgot password?
+              </a>
+            </div>
 
-      <a href={`${process.env.REACT_APP_API_URL}/auth/google`} className="mt-1">
-        <img src={GoogleSignIn} alt="Google Sign in" />
-      </a>
+            {status && (
+              <p className="error-message text-center mb-0">{status}</p>
+            )}
 
-      {errorMessage && <p className="errorMessage">{errorMessage}</p>}
-    </form>
+            <button
+              className="btn btn-primary auth-submit"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Logging in..." : "Login"}
+            </button>
+
+            <div className="auth-divider">
+              <span>OR</span>
+            </div>
+
+            <a
+              href={`${import.meta.env.VITE_API_URL}/auth/google`}
+              className="google-button"
+            >
+              <img src={GoogleSignIn} alt="" />
+              <span>Continue with Google</span>
+            </a>
+
+            <p className="auth-switch text-center mb-0">
+              Don't have an account?{" "}
+              <button
+                type="button"
+                className="auth-link-button"
+                disabled={isSubmitting}
+                onClick={onSignUp}
+              >
+                Sign up
+              </button>
+            </p>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

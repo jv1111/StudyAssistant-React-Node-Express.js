@@ -16,10 +16,6 @@ module.exports = (passport) => {
             password,
           );
 
-          if (user.error) {
-            return done(new Error(user.error), false);
-          }
-
           return done(null, user);
         } catch (error) {
           return done(error, false);

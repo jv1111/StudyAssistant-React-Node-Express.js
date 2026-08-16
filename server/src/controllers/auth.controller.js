@@ -22,6 +22,7 @@ const register = asyncHandler(async (req, res, next) => {
 
     return res.status(201).json({
       success: true,
+      message: "Account created successfully",
       user: createUserResponse(user),
     });
   });
@@ -50,11 +51,12 @@ const login = asyncHandler(async (req, res, next) => {
 
   return res.status(200).json({
     success: true,
+    message: "Login successful",
     user: createUserResponse(req.user),
   });
 });
 
-const getSession = asyncHandler((req, res) => {
+const getMe = asyncHandler((req, res) => {
   if (!req.user) {
     throw new AppError("There is no active session", 401);
   }
@@ -93,6 +95,6 @@ const logout = asyncHandler(async (req, res) => {
 module.exports = {
   register,
   login,
-  getSession,
+  getMe,
   logout,
 };

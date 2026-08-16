@@ -4,18 +4,27 @@ const Modal = ({ isOpen, onClose, children }) => {
   }
 
   return (
-    <div className="popupBackground">
-      <div className="popupPanel">
-        {children}
-
+    <div
+      className="modal-backdrop-custom"
+      role="presentation"
+      onMouseDown={onClose}
+    >
+      <div
+        className="modal-dialog-custom"
+        role="dialog"
+        aria-modal="true"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
-          className="btn-exit"
+          className="modal-close"
           onClick={onClose}
           aria-label="Close"
         >
-          X
+          ×
         </button>
+
+        {children}
       </div>
     </div>
   );

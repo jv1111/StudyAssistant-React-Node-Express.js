@@ -1,9 +1,5 @@
 const AuthCard = ({ children }) => {
-  return (
-    <div className="lightBox">
-      <div className="lightBoxPanel">{children}</div>
-    </div>
-  );
+  return <div className="auth-card">{children}</div>;
 };
 
 export default AuthCard;

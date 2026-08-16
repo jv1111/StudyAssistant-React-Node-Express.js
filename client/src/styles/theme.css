@@ -1,0 +1,22 @@
+:root {
+  --color-bg: #080d1c;
+  --color-bg-secondary: #10172b;
+
+  --color-primary: #7c6cff;
+  --color-primary-hover: #9386ff;
+  --color-accent: #6ee7e1;
+
+  --color-text: #f8f9ff;
+  --color-text-muted: #aeb8d0;
+
+  --color-danger: #ff879d;
+  --color-success: #70e4a9;
+
+  --glass-bg: rgba(255, 255, 255, 0.065);
+  --glass-bg-strong: rgba(255, 255, 255, 0.095);
+  --glass-border: rgba(255, 255, 255, 0.13);
+
+  --glass-blur: 24px;
+  --glass-radius: 1.25rem;
+  --glass-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}

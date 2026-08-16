@@ -1,0 +1,26 @@
+.form-field {
+  position: relative;
+}
+
+.form-field input {
+  width: 100%;
+  padding: 1rem 0.9rem;
+  color: var(--text-primary);
+  background: var(--glass-background);
+  border: 1px solid var(--glass-border);
+  border-radius: 0.75rem;
+  outline: none;
+}
+
+.form-field input::placeholder {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.form-field input:focus {
+  border-color: var(--accent);
+}
+
+.form-field input:focus::placeholder {
+  opacity: 0.6;
+}

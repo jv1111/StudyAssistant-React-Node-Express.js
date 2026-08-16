@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { login, logout } from "../redux/slice/authSlice";
-import { getSessionAPI } from "../api/auth.api";
+import { getMeAPI } from "../api/auth.api";
 
 const useSessionChecker = () => {
   const [isLoading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ const useSessionChecker = () => {
   useEffect(() => {
     const getSession = async () => {
       try {
-        const response = await getSessionAPI();
+        const response = await getMeAPI();
 
         if (response.success) {
           dispatch(login(response.user));

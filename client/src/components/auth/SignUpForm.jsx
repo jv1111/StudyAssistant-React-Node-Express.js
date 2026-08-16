@@ -14,18 +14,16 @@ const SignUpForm = () => {
     password: "",
   };
 
-  const handleSubmit = async (userData, { setSubmitting }) => {
+  const handleSubmit = async (userData, { setSubmitting, setStatus }) => {
     try {
       const response = await signUpAPI(userData);
 
-      if (response.error) {
-        alert(response.error);
+      if (!response.success) {
+        setStatus(response.message);
         return;
       }
 
-      if (response.success) {
-        dispatch(login(response.user));
-      }
+      dispatch(login(response.user));
     } finally {
       setSubmitting(false);
     }
@@ -37,17 +35,35 @@ const SignUpForm = () => {
       validationSchema={UserValidationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting }) => (
-        <Form className="authForm">
-          <h2 className="formTitle">Sign up</h2>
+      {({ isSubmitting, status }) => (
+        <Form className="auth-form">
+          <div className="text-center mb-4">
+            <span className="form-eyebrow">GET STARTED</span>
 
-          <FormikTextField type="text" name="username" label="Username" />
+            <h2 className="form-title">Create account</h2>
 
-          <FormikTextField type="password" name="password" label="Password" />
+            <p className="form-description">
+              Create your RevBot account to start making quizzes.
+            </p>
+          </div>
 
-          <button className="btn-primary" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Signing up..." : "Sign up"}
-          </button>
+          <div className="d-grid gap-3">
+            <FormikTextField type="text" name="username" label="Username" />
+
+            <FormikTextField type="password" name="password" label="Password" />
+
+            {status && (
+              <p className="error-message text-center mb-0">{status}</p>
+            )}
+
+            <button
+              className="btn btn-primary auth-submit"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Creating account..." : "Create account"}
+            </button>
+          </div>
         </Form>
       )}
     </Formik>

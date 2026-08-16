@@ -1,20 +1,15 @@
-import React from "react";
-
 const FormTextField = ({ label, name, ...inputProps }) => {
   const inputId = inputProps.id || name;
 
   return (
-    <div className="inputBox">
+    <div className="form-field">
       <input
         id={inputId}
         name={name}
-        placeholder=" "
+        placeholder={label}
         required
         {...inputProps}
       />
-      <label className="inputLabel" htmlFor={inputId}>
-        {label}
-      </label>
     </div>
   );
 };

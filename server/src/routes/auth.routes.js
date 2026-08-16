@@ -2,12 +2,17 @@ const express = require("express");
 const passport = require("passport");
 
 const authController = require("../controllers/auth.controller");
+const {
+  validateRegister,
+  validateLogin,
+} = require("../middlewares/validate.middleware");
 
 const router = express.Router();
 
-router.post("/register", authController.register);
-router.post("/login", authController.login);
-router.get("/login", authController.getSession);
+router.post("/register", validateRegister, authController.register);
+router.post("/login", validateLogin, authController.login);
+
+router.get("/me", authController.getMe);
 router.get("/logout", authController.logout);
 
 router.get(
