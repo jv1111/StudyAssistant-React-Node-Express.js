@@ -13,7 +13,7 @@ router.post("/register", validateRegister, authController.register);
 router.post("/login", validateLogin, authController.login);
 
 router.get("/me", authController.getMe);
-router.get("/logout", authController.logout);
+router.post("/logout", authController.logout);
 
 router.get(
   "/google",

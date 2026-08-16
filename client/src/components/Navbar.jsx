@@ -1,45 +1,62 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+
 import { logoutAPI } from "../api/auth.api";
 import { logout } from "../redux/slice/authSlice";
-import { useDispatch } from "react-redux";
 
 function Navigation() {
   const dispatch = useDispatch();
-  const logoutHandler = () => {
-    logoutAPI();
-    dispatch(logout());
+
+  const logoutHandler = async () => {
+    const response = await logoutAPI();
+
+    if (response.success) {
+      dispatch(logout());
+    }
   };
 
   return (
-    <Navbar expand="lg" variant="dark" sticky="top">
+    <Navbar expand="lg" className="glass-navbar">
       <Container>
-        <Navbar.Brand href="/">Rev-Bot</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
+        <Navbar.Brand as={Link} to="/" className="navbar-brand-custom">
+          Rev<span>-Bot</span>
+        </Navbar.Brand>
+
+        <Navbar.Toggle
+          aria-controls="main-navigation"
+          className="navbar-toggle-custom"
+        />
+
+        <Navbar.Collapse id="main-navigation">
+          <Nav className="navbar-nav-custom">
+            <Nav.Link as={NavLink} to="/" className="navbar-link">
               Home
             </Nav.Link>
-            <Nav.Link as={Link} to="/quiz/create">
+
+            <Nav.Link as={NavLink} to="/quiz/create" className="navbar-link">
               Create quiz
             </Nav.Link>
-            <Nav.Link as={Link} to="/quiz/records">
+
+            <Nav.Link as={NavLink} to="/quiz/records" className="navbar-link">
               Records
             </Nav.Link>
           </Nav>
 
           <Nav className="ms-auto">
-            <NavDropdown title="Account" id="basic-nav-dropdown" align="end">
-              <NavDropdown.Item as={Link} to="/profile">
+            <NavDropdown
+              title="Account"
+              id="account-dropdown"
+              align="end"
+              className="navbar-account"
+            >
+              <NavDropdown.Item as={NavLink} to="/profile">
                 Profile
               </NavDropdown.Item>
+
               <NavDropdown.Divider />
-              <NavDropdown.Item
-                as="button"
-                className="w-100 text-start"
-                onClick={logoutHandler}
-              >
+
+              <NavDropdown.Item as="button" onClick={logoutHandler}>
                 Logout
               </NavDropdown.Item>
             </NavDropdown>
