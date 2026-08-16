@@ -48,11 +48,11 @@ const EmailForm = ({ email }) => {
         {emailError && <p className="error-message">{emailError}</p>}
       </div>
 
-      <footer className="profile-form-actions">
+      <div className="profile-form-actions">
         <button type="submit" className="btn btn-primary" disabled={submitting}>
           {submitting ? "Sending..." : email ? "Change Email" : "Add Email"}
         </button>
-      </footer>
+      </div>
     </form>
   );
 };

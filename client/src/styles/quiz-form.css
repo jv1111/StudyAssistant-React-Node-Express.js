@@ -1,19 +1,27 @@
 /* ==============================
-   Create Quiz
+   Quiz Form
    ============================== */
 
-.create-quiz-page {
+.create-quiz-page,
+.update-quiz-page {
   width: min(100% - 2rem, 65rem);
   margin: 0 auto;
   padding: 3rem 0 4rem;
 }
 
-.create-quiz-header {
+.create-quiz,
+.update-quiz {
+  width: 100%;
+}
+
+.create-quiz-header,
+.update-quiz-header {
   max-width: 38rem;
   margin-bottom: 2rem;
 }
 
-.create-quiz-title {
+.create-quiz-title,
+.update-quiz-title {
   margin: 0.45rem 0 0;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
@@ -21,19 +29,23 @@
   line-height: 1.1;
 }
 
-.create-quiz-description {
+.create-quiz-description,
+.update-quiz-description {
   margin: 0.65rem 0 0;
   color: var(--color-text-muted);
   line-height: 1.6;
 }
 
-.create-quiz-form {
+.create-quiz-form,
+.update-quiz-form {
   display: grid;
   gap: 1.25rem;
 }
 
 .create-quiz-card,
-.create-quiz .item-container {
+.update-quiz-card,
+.create-quiz .item-container,
+.update-quiz .item-container {
   border: 1px solid var(--glass-border);
   border-radius: var(--glass-radius);
   background: var(--glass-bg);
@@ -42,41 +54,55 @@
   -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
-.create-quiz-card {
+.create-quiz-card,
+.update-quiz-card {
   padding: 1.5rem;
 }
 
 .create-quiz-card-header,
-.create-quiz .item-container-header {
+.update-quiz-card-header,
+.create-quiz .item-container-header,
+.update-quiz .item-container-header {
   margin-bottom: 1.25rem;
 }
 
 .create-quiz-card h2,
-.create-quiz .item-container-header h2 {
+.update-quiz-card h2,
+.create-quiz .item-container-header h2,
+.update-quiz .item-container-header h2 {
   margin: 0;
   font-size: 1.15rem;
   font-weight: 700;
 }
 
-.create-quiz-card p {
+.create-quiz-card p,
+.update-quiz-card p {
   margin: 0.35rem 0 0;
   color: var(--color-text-muted);
   font-size: 0.9rem;
 }
 
-.create-quiz .form-field {
+/* ==============================
+   Form Fields
+   ============================== */
+
+.create-quiz .form-field,
+.update-quiz .form-field {
   display: grid;
   gap: 0.45rem;
 }
 
-.create-quiz .form-field label {
+.create-quiz .form-field label,
+.update-quiz .form-field label {
   color: var(--color-text-muted);
   font-size: 0.82rem;
   font-weight: 600;
 }
 
 .create-quiz .form-field input,
-.create-quiz .form-field textarea {
+.create-quiz .form-field textarea,
+.update-quiz .form-field input,
+.update-quiz .form-field textarea {
   width: 100%;
   color: var(--color-text);
   border: 1px solid var(--glass-border);
@@ -89,38 +115,51 @@
     box-shadow var(--transition-normal);
 }
 
-.create-quiz .form-field input {
+.create-quiz .form-field input,
+.update-quiz .form-field input {
   min-height: 2.75rem;
   padding: 0.7rem 0.85rem;
 }
 
-.create-quiz .form-field textarea {
+.create-quiz .form-field textarea,
+.update-quiz .form-field textarea {
   min-height: 7rem;
   padding: 0.8rem 0.85rem;
   resize: vertical;
 }
 
 .create-quiz .form-field input::placeholder,
-.create-quiz .form-field textarea::placeholder {
+.create-quiz .form-field textarea::placeholder,
+.update-quiz .form-field input::placeholder,
+.update-quiz .form-field textarea::placeholder {
   color: var(--color-text-muted);
 }
 
 .create-quiz .form-field input:focus,
-.create-quiz .form-field textarea:focus {
+.create-quiz .form-field textarea:focus,
+.update-quiz .form-field input:focus,
+.update-quiz .form-field textarea:focus {
   border-color: var(--color-accent);
   background: var(--glass-bg-strong);
   box-shadow: 0 0 0 0.2rem rgba(110, 231, 225, 0.1);
 }
 
-.create-quiz .item-container {
+/* ==============================
+   Question Container
+   ============================== */
+
+.create-quiz .item-container,
+.update-quiz .item-container {
   overflow: hidden;
 }
 
-.create-quiz .item-container-header {
+.create-quiz .item-container-header,
+.update-quiz .item-container-header {
   padding: 1.5rem 1.5rem 0;
 }
 
-.create-quiz .item-container-content {
+.create-quiz .item-container-content,
+.update-quiz .item-container-content {
   padding: 0 1.5rem 1.5rem;
 }
 
@@ -133,6 +172,10 @@
   scrollbar-color: var(--glass-border) transparent;
   scrollbar-width: thin;
 }
+
+/* ==============================
+   Question Card
+   ============================== */
 
 .question-card {
   padding: 1.1rem;
@@ -167,6 +210,10 @@
   gap: 0.9rem;
 }
 
+/* ==============================
+   Question List Action
+   ============================== */
+
 .question-list-footer {
   display: flex;
   justify-content: center;
@@ -177,12 +224,18 @@
   min-width: 10rem;
 }
 
-.create-quiz-actions {
+/* ==============================
+   Form Actions
+   ============================== */
+
+.create-quiz-actions,
+.update-quiz-actions {
   display: flex;
   justify-content: flex-end;
 }
 
-.create-quiz-actions .btn {
+.create-quiz-actions .btn,
+.update-quiz-actions .btn {
   min-width: 10rem;
   min-height: 2.9rem;
   border: 0;
@@ -190,19 +243,28 @@
   box-shadow: 0 10px 25px rgba(124, 108, 255, 0.2);
 }
 
-.create-quiz-actions .btn:hover:not(:disabled) {
+.create-quiz-actions .btn:hover:not(:disabled),
+.update-quiz-actions .btn:hover:not(:disabled) {
   box-shadow: 0 14px 30px rgba(124, 108, 255, 0.28);
 }
 
+/* ==============================
+   Mobile
+   ============================== */
+
 @media (max-width: 575.98px) {
-  .create-quiz-page {
+  .create-quiz-page,
+  .update-quiz-page {
     width: min(100% - 1.5rem, 58rem);
     padding: 2rem 0 3rem;
   }
 
   .create-quiz-card,
+  .update-quiz-card,
   .create-quiz .item-container-header,
-  .create-quiz .item-container-content {
+  .create-quiz .item-container-content,
+  .update-quiz .item-container-header,
+  .update-quiz .item-container-content {
     padding-right: 1rem;
     padding-left: 1rem;
   }
@@ -220,7 +282,8 @@
     padding: 0.5rem 0.65rem;
   }
 
-  .create-quiz-actions .btn {
+  .create-quiz-actions .btn,
+  .update-quiz-actions .btn {
     width: 100%;
   }
 }

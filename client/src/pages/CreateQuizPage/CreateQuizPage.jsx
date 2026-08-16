@@ -227,7 +227,7 @@ const CreateQuizPage = () => {
               ))}
             </div>
 
-            <footer className="question-list-footer">
+            <div className="question-list-action">
               <button
                 type="button"
                 className="btn btn-secondary"
@@ -235,15 +235,15 @@ const CreateQuizPage = () => {
               >
                 + Add Question
               </button>
-            </footer>
+            </div>
           </ItemContainer>
 
           {/* Form Actions */}
-          <footer className="create-quiz-actions">
+          <div className="create-quiz-actions">
             <button type="submit" className="btn btn-primary">
               Create Quiz
             </button>
-          </footer>
+          </div>
         </form>
       </section>
     </div>

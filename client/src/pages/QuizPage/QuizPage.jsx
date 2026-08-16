@@ -92,7 +92,10 @@ const QuizPage = () => {
           />
         </div>
 
-        <section className="quiz-question-panel" aria-labelledby="question-title">
+        <section
+          className="quiz-question-panel"
+          aria-labelledby="question-title"
+        >
           {showCorrectAnsPopup && (
             <CorrectAnsPopup
               correctAns={correctAns}

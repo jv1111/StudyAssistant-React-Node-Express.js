@@ -54,7 +54,7 @@ const ChangePassForm = () => {
             />
           </div>
 
-          <footer className="profile-form-actions">
+          <div className="profile-form-actions">
             <button
               type="submit"
               className="btn btn-primary"
@@ -62,7 +62,7 @@ const ChangePassForm = () => {
             >
               {isSubmitting ? "Changing..." : "Change Password"}
             </button>
-          </footer>
+          </div>
         </Form>
       )}
     </Formik>
