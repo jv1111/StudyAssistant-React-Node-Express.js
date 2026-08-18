@@ -183,10 +183,10 @@ const CreateQuizPage = () => {
                       type="button"
                       className="btn btn-danger"
                       onClick={() => deleteQuestion(index)}
-                      disabled={items.length <= 3}
+                      disabled={items.length <= MIN_QUESTIONS}
                       title={
-                        items.length <= 3
-                          ? "A quiz must contain at least 3 questions"
+                        items.length <= MIN_QUESTIONS
+                          ? `A quiz must contain at least ${MIN_QUESTIONS} questions`
                           : "Delete question"
                       }
                     >
@@ -250,7 +250,13 @@ const CreateQuizPage = () => {
   );
 };
 
+const MIN_QUESTIONS = 4;
+
 const onLoad_items = [
+  {
+    question: "",
+    answer: "",
+  },
   {
     question: "",
     answer: "",

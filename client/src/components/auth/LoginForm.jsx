@@ -69,7 +69,7 @@ const LoginForm = ({ onSignUp }) => {
             )}
 
             <button
-              className="btn btn-primary auth-submit"
+              className="btn btn-primary"
               type="submit"
               disabled={isSubmitting}
             >
@@ -82,10 +82,9 @@ const LoginForm = ({ onSignUp }) => {
 
             <a
               href={`${import.meta.env.VITE_API_URL}/auth/google`}
-              className="google-button"
+              className="btn btn-secondary"
             >
-              <img src={GoogleSignIn} alt="" />
-              <span>Continue with Google</span>
+              Continue with Google
             </a>
 
             <p className="auth-switch text-center mb-0">

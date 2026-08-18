@@ -22,7 +22,7 @@ const QuizCard = ({ quiz, onSelect, onDownload }) => {
           className="btn btn-primary"
           onClick={() => onSelect(quiz._id)}
         >
-          Start quiz
+          Take Quiz
         </button>
 
         <button
@@ -38,7 +38,7 @@ const QuizCard = ({ quiz, onSelect, onDownload }) => {
           className="btn btn-secondary"
           onClick={(event) => onDownload(event, quiz._id)}
         >
-          Download PDF
+          Download
         </button>
       </div>
     </article>

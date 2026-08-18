@@ -127,35 +127,27 @@ const getScore = (session) => {
 };
 
 const generateRandomChoices = (correctAnswer, allItems) => {
-  let choices = [];
-  let correctAnsIndex = Math.floor(Math.random() * 3);
-  let pushCount = 0;
-  const maxLoopPerChoice = 500;
-  let loopCountPerChoice = 0; //loop count per choice
-  while (pushCount < 3) {
-    // push the correct answer base on the random index(correctAnsIndex)
-    if (pushCount === correctAnsIndex) {
-      choices.push(correctAnswer);
-      pushCount++;
-      continue;
-    }
-    const randomIndexOfAllItems = Math.floor(Math.random() * allItems.length);
-    const incorrectAnsToAdd = allItems[randomIndexOfAllItems].answer;
-    // push incorrect answers and prevent duplicate
-    if (
-      incorrectAnsToAdd !== correctAnswer &&
-      !choices.includes(incorrectAnsToAdd)
-    ) {
-      choices.push(incorrectAnsToAdd);
-      pushCount++;
-    } else if (maxLoopPerChoice === loopCountPerChoice) {
-      choices.push(null);
-      pushCount++;
-      loopCountPerChoice = 0;
-    }
-    loopCountPerChoice++;
+  const choices = [correctAnswer];
+
+  const incorrectAnswers = [
+    ...new Set(
+      allItems
+        .map((item) => item.answer)
+        .filter(
+          (answer) => answer !== correctAnswer && !choices.includes(answer),
+        ),
+    ),
+  ];
+
+  while (choices.length < 4 && incorrectAnswers.length > 0) {
+    const randomIndex = Math.floor(Math.random() * incorrectAnswers.length);
+
+    choices.push(incorrectAnswers[randomIndex]);
+    incorrectAnswers.splice(randomIndex, 1);
   }
-  return choices;
+
+  // Randomize the position of the correct answer
+  return choices.sort(() => Math.random() - 0.5);
 };
 
 const submitAnswer = async (questionId, answer) => {

@@ -137,7 +137,7 @@
   border-radius: 0.65rem;
   background: var(--glass-bg);
   font-weight: 600;
-  text-align: left;
+  text-align: center;
   transition:
     transform var(--transition-normal),
     background var(--transition-normal),
