@@ -1,4 +1,6 @@
-import Page from "../pages";
+import AuthPage from "../pages/Auth/AuthPage";
+import ForgotPassPage from "../pages/ForgotPassPage/ForgotPassPage.jsx";
+import ResetPassPage from "../pages/ResetPassPage/ResetPassPage.jsx";
 
 import ProtectedRoute from "./guards/ProtectedRoute";
 import AuthLayout from "../layouts/AuthLayout";
@@ -11,15 +13,15 @@ export const authRoutes = {
       children: [
         {
           path: "/auth",
-          element: <Page.AuthPage />,
+          element: <AuthPage />,
         },
         {
           path: "/auth/forgotPass",
-          element: <Page.ForgotPassPage />,
+          element: <ForgotPassPage />,
         },
         {
           path: "/verification/resetPassword/:userId/:token",
-          element: <Page.ResetPassPage />,
+          element: <ResetPassPage />,
         },
       ],
     },

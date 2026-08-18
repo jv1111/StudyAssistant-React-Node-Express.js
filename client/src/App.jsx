@@ -1,6 +1,6 @@
 import { RouterProvider } from "react-router-dom";
 
-import Page from "./pages";
+import LoadingPage from "./pages/Loading/LoadingPage";
 import router from "./router";
 import useSessionChecker from "./hooks/useSessionChecker";
 
@@ -10,7 +10,7 @@ function App() {
   if (isLoading) {
     return (
       <div className="App">
-        <Page.LoadingPage />
+        <LoadingPage />
       </div>
     );
   }

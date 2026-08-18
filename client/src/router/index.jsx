@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import Page from "../pages";
+import VerifyEmailPage from "../pages/VerifyEmailPage/VerifyEmailPage";
 
 import { appRoutes } from "./app.routes";
 import { authRoutes } from "./auth.routes";
@@ -10,7 +10,7 @@ const router = createBrowserRouter([
   authRoutes,
   {
     path: "/verification/verifyEmail/:userId/:token",
-    element: <Page.VerifyEmailPage />,
+    element: <VerifyEmailPage />,
   },
 ]);
 

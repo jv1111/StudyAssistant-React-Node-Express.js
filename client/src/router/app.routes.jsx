@@ -1,4 +1,12 @@
-import Page from "../pages";
+import HomePage from "../pages/Home/HomePage";
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import CreateQuizPage from "../pages/CreateQuizPage/CreateQuizPage.jsx";
+import UpdateQuizPage from "../pages/UpdateQuizPage/UpdateQuizPage";
+import RecordsPage from "../pages/RecordsPage/RecordsPage";
+import RecordPage from "../pages/RecordPage/RecordPage";
+import QuizzesPage from "../pages/QuizzesPage/QuizzesPage";
+import QuizPage from "../pages/QuizPage/QuizPage";
+import EnumQuizPage from "../pages/EnumQuizPage/EnumQuizPage";
 
 import ProtectedRoute from "./guards/ProtectedRoute";
 import AppLayout from "../layouts/AppLayout";
@@ -11,42 +19,42 @@ export const appRoutes = {
       children: [
         {
           path: "/",
-          element: <Page.HomePage />,
+          element: <HomePage />,
         },
         {
           path: "/profile",
-          element: <Page.ProfilePage />,
+          element: <ProfilePage />,
         },
         {
           path: "/quiz",
           children: [
             {
               path: "create",
-              element: <Page.CreateQuizPage />,
+              element: <CreateQuizPage />,
             },
             {
               path: "update/:quizId",
-              element: <Page.UpdateQuizPage />,
+              element: <UpdateQuizPage />,
             },
             {
               path: "records",
-              element: <Page.RecordsPage />,
+              element: <RecordsPage />,
             },
             {
               path: "records/:recordId",
-              element: <Page.RecordPage />,
+              element: <RecordPage />,
             },
             {
               path: ":subject",
-              element: <Page.QuizzesPage />,
+              element: <QuizzesPage />,
             },
             {
               path: ":subject/:quizId",
-              element: <Page.QuizPage />,
+              element: <QuizPage />,
             },
             {
               path: ":subject/enum/:quizId",
-              element: <Page.EnumQuizPage />,
+              element: <EnumQuizPage />,
             },
           ],
         },
