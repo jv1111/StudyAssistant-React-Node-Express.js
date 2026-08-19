@@ -1,21 +1,27 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import ItemContainer from "../../components/quiz/ItemContainer";
+import Card from "../../components/common/Card";
+import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
 
 import { createQuiz, deleteSavedData } from "../../api/QuizApi";
 import useSavedDataFetcher from "../../hooks/useSavedDataFetcher";
 import autoSave from "../../helper/autoSave";
+import QuizEditor from "../../components/quiz/QuizEditor";
 
 const CreateQuizPage = () => {
   const [items, setItems] = useState(onLoad_items);
   const [subject, setSubject] = useState("");
   const [quizName, setQuizName] = useState("");
 
-  const itemBoxRef = useRef(null);
   const navigate = useNavigate();
 
   useSavedDataFetcher("createQuiz", setItems, setSubject, setQuizName);
+
+  const saveData = (data) => {
+    autoSave("createQuiz", data);
+  };
 
   const addQuestion = () => {
     const newItems = [
@@ -28,21 +34,19 @@ const CreateQuizPage = () => {
 
     setItems(newItems);
 
-    setTimeout(() => {
-      if (itemBoxRef.current) {
-        itemBoxRef.current.scrollTop = itemBoxRef.current.scrollHeight;
-      }
-    }, 10);
+    saveData({
+      items: newItems,
+      subject,
+      quizName,
+    });
   };
 
   const deleteQuestion = (index) => {
-    const newItems = [...items];
-
-    newItems.splice(index, 1);
+    const newItems = items.filter((_, itemIndex) => itemIndex !== index);
 
     setItems(newItems);
 
-    autoSave("createQuiz", {
+    saveData({
       items: newItems,
       subject,
       quizName,
@@ -61,7 +65,7 @@ const CreateQuizPage = () => {
 
     setItems(newItems);
 
-    autoSave("createQuiz", {
+    saveData({
       items: newItems,
       subject,
       quizName,
@@ -83,170 +87,56 @@ const CreateQuizPage = () => {
   };
 
   return (
-    <div className="create-quiz-page">
-      <section className="create-quiz">
-        <header className="create-quiz-header">
-          <span className="form-eyebrow">QUIZ BUILDER</span>
+    <main className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-10">
+      <header className="mb-8">
+        <span className="text-xs font-medium uppercase tracking-wider text-primary">
+          Quiz Builder
+        </span>
 
-          <h1 className="create-quiz-title">Create Quiz</h1>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
+          Create Quiz
+        </h1>
 
-          <p className="create-quiz-description">
-            Create a quiz by providing the basic information and adding
-            questions.
-          </p>
-        </header>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+          Create a quiz by providing the basic information and adding questions.
+        </p>
+      </header>
 
-        <form
-          className="create-quiz-form"
-          autoComplete="off"
-          onSubmit={submitHandler}
-        >
-          {/* Quiz Information */}
-          <section
-            className="create-quiz-card"
-            aria-labelledby="quiz-info-title"
-          >
-            <header className="create-quiz-card-header">
-              <div>
-                <h2 id="quiz-info-title">Quiz Information</h2>
+      <QuizEditor
+        subject={subject}
+        quizName={quizName}
+        items={items}
+        onSubjectChange={(event) => {
+          const value = event.target.value;
 
-                <p>Provide the basic details for your quiz.</p>
-              </div>
-            </header>
+          setSubject(value);
 
-            <div className="row g-3">
-              <div className="col-12 col-md-6">
-                <div className="form-field">
-                  <label htmlFor="subject">Subject</label>
+          saveData({
+            items,
+            subject: value,
+            quizName,
+          });
+        }}
+        onQuizNameChange={(event) => {
+          const value = event.target.value;
 
-                  <input
-                    id="subject"
-                    type="text"
-                    name="subject"
-                    value={subject}
-                    placeholder="e.g. Mathematics"
-                    onChange={(event) => {
-                      setSubject(event.target.value);
+          setQuizName(value);
 
-                      autoSave("createQuiz", {
-                        items,
-                        subject: event.target.value,
-                        quizName,
-                      });
-                    }}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="col-12 col-md-6">
-                <div className="form-field">
-                  <label htmlFor="quizName">Quiz Name</label>
-
-                  <input
-                    id="quizName"
-                    type="text"
-                    name="quizName"
-                    value={quizName}
-                    placeholder="e.g. Algebra Quiz"
-                    onChange={(event) => {
-                      setQuizName(event.target.value);
-
-                      autoSave("createQuiz", {
-                        items,
-                        subject,
-                        quizName: event.target.value,
-                      });
-                    }}
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Questions */}
-          <ItemContainer search={false} title="Questions">
-            <div className="question-list" ref={itemBoxRef}>
-              {items.map((item, index) => (
-                <article className="question-card" key={index}>
-                  <header className="question-card-header">
-                    <div>
-                      <span className="question-number">
-                        QUESTION {index + 1}
-                      </span>
-
-                      <h3>Question {index + 1}</h3>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="btn btn-danger"
-                      onClick={() => deleteQuestion(index)}
-                      disabled={items.length <= MIN_QUESTIONS}
-                      title={
-                        items.length <= MIN_QUESTIONS
-                          ? `A quiz must contain at least ${MIN_QUESTIONS} questions`
-                          : "Delete question"
-                      }
-                    >
-                      Delete
-                    </button>
-                  </header>
-
-                  <div className="question-card-body">
-                    <div className="form-field">
-                      <label htmlFor={`question-${index}`}>Question</label>
-
-                      <textarea
-                        id={`question-${index}`}
-                        rows="4"
-                        name="question"
-                        required
-                        placeholder="Enter your question..."
-                        value={item.question}
-                        onChange={(event) => itemOnChangeHandler(event, index)}
-                      />
-                    </div>
-
-                    <div className="form-field">
-                      <label htmlFor={`answer-${index}`}>Answer</label>
-
-                      <input
-                        id={`answer-${index}`}
-                        type="text"
-                        name="answer"
-                        required
-                        placeholder="Enter the correct answer..."
-                        value={item.answer}
-                        onChange={(event) => itemOnChangeHandler(event, index)}
-                      />
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <div className="question-list-action">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={addQuestion}
-              >
-                + Add Question
-              </button>
-            </div>
-          </ItemContainer>
-
-          {/* Form Actions */}
-          <div className="create-quiz-actions">
-            <button type="submit" className="btn btn-primary">
-              Create Quiz
-            </button>
-          </div>
-        </form>
-      </section>
-    </div>
+          saveData({
+            items,
+            subject,
+            quizName: value,
+          });
+        }}
+        onItemChange={itemOnChangeHandler}
+        onDeleteQuestion={deleteQuestion}
+        onAddQuestion={addQuestion}
+        onSubmit={submitHandler}
+        submitLabel="Create Quiz"
+        quizInfoDescription="Provide the basic details for your quiz."
+        questionsDescription="Add questions and provide the correct answers."
+      />
+    </main>
   );
 };
 
