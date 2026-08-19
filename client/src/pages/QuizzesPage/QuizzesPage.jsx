@@ -2,15 +2,18 @@ import { useState } from "react";
 import { saveAs } from "file-saver";
 
 import EmptyState from "../../components/common/EmptyState";
-import QuizCard from "../../components/quiz/QuizCard";
+import QuizCardContent from "../../components/quiz/QuizCardContent";
 import QuizOptionBox from "../../components/quiz/QuizOptionBox";
 import SearchInput from "../../components/common/SearchInput";
+import Card from "../../components/common/Card";
+import Modal from "../../components/common/Modal";
 
 import useQuizzes from "../../hooks/useQuizzes";
 
 import { deleteFile, getPdf, setPDFOnServer } from "../../api/QuizApi";
 
 import LoadingPage from "../Loading/LoadingPage";
+import ListPageLayout from "../../components/common/ListPageLayout";
 
 const QuizPage = () => {
   const { quizzes, isLoading, searchInput, handleSearch, handleScroll } =
@@ -42,32 +45,27 @@ const QuizPage = () => {
   }
 
   return (
-    <section className="list-page" aria-labelledby="quiz-list-title">
-      <header className="list-page-header">
-        <div>
-          <h1 id="quiz-list-title" className="list-page-title">
-            Quizzes
-          </h1>
-
-          <p className="list-page-description">Choose a quiz to get started</p>
-        </div>
-
-        <SearchInput
-          value={searchInput}
-          onChange={handleSearch}
-          placeholder="Search quizzes..."
-        />
-      </header>
-
+    <ListPageLayout
+      title="Quizzes"
+      description="Choose a quiz to get started"
+      searchInput={searchInput}
+      onSearch={handleSearch}
+      searchPlaceholder="Search quizzes..."
+    >
       {quizzes.length > 0 ? (
-        <ul className="list-page-grid" onScroll={handleScroll}>
+        <ul
+          onScroll={handleScroll}
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {quizzes.map((quiz) => (
             <li key={quiz._id}>
-              <QuizCard
-                quiz={quiz}
-                onSelect={handleQuizSelect}
-                onDownload={handleDownloadPdf}
-              />
+              <Card>
+                <QuizCardContent
+                  quiz={quiz}
+                  onSelect={handleQuizSelect}
+                  onDownload={handleDownloadPdf}
+                />
+              </Card>
             </li>
           ))}
         </ul>
@@ -78,12 +76,15 @@ const QuizPage = () => {
         />
       )}
 
-      <QuizOptionBox
-        selectingType={selectedQuiz !== null}
-        quizId={selectedQuiz}
-        onClose={handleQuizOptionClose}
-      />
-    </section>
+      <Modal isOpen={selectedQuiz !== null} onClose={handleQuizOptionClose}>
+        <Card className="max-w-md">
+          <QuizOptionBox
+            quizId={selectedQuiz}
+            onClose={handleQuizOptionClose}
+          />
+        </Card>
+      </Modal>
+    </ListPageLayout>
   );
 };
 

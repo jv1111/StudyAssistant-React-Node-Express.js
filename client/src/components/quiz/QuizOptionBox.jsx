@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
-const QuizOptionBox = ({ selectingType, quizId, onClose }) => {
+import Button from "../common/Button";
+import AuthFormHeader from "../auth/AuthFormHeader";
+
+const QuizOptionBox = ({ quizId, onClose }) => {
   const navigate = useNavigate();
 
   const selectHandler = (type) => {
@@ -13,28 +16,32 @@ const QuizOptionBox = ({ selectingType, quizId, onClose }) => {
     }
   };
 
-  if (!selectingType) {
-    return null;
-  }
-
   return (
-    <section aria-labelledby="quiz-type-title">
-      <h2 id="quiz-type-title">Select quiz type</h2>
+    <div>
+      <AuthFormHeader
+        eyebrow="QUIZ MODE"
+        title="Select quiz type"
+        description="Choose how you want to take this quiz."
+      />
 
-      <div>
-        <button type="button" onClick={() => selectHandler("multipleChoice")}>
+      <div className="mt-7 flex gap-3">
+        <Button type="button" onClick={() => selectHandler("multipleChoice")}>
           Multiple choices
-        </button>
+        </Button>
 
-        <button type="button" onClick={() => selectHandler("enumeration")}>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => selectHandler("enumeration")}
+        >
           Enumeration
-        </button>
+        </Button>
 
-        <button type="button" onClick={onClose}>
+        <Button type="button" variant="danger" onClick={onClose}>
           Cancel
-        </button>
+        </Button>
       </div>
-    </section>
+    </div>
   );
 };
 

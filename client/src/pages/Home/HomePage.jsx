@@ -1,9 +1,10 @@
 import EmptyState from "../../components/common/EmptyState";
-import SubjectCard from "../../components/quiz/SubjectCard";
-import SearchInput from "../../components/common/SearchInput";
+import SubjectCardContent from "../../components/quiz/SubjectCardContent";
+import Card from "../../components/common/Card";
 
 import useSubjects from "../../hooks/useSubjects";
 import LoadingPage from "../Loading/LoadingPage";
+import ListPageLayout from "../../components/common/ListPageLayout";
 
 const HomePage = () => {
   const { subjects, isLoading, searchInput, handleSearch, handleScroll } =
@@ -14,28 +15,23 @@ const HomePage = () => {
   }
 
   return (
-    <section className="list-page" aria-labelledby="subjects-title">
-      <header className="list-page-header">
-        <div>
-          <h1 id="subjects-title" className="list-page-title">
-            Subjects
-          </h1>
-
-          <p className="list-page-description">Browse your quiz subjects</p>
-        </div>
-
-        <SearchInput
-          value={searchInput}
-          onChange={handleSearch}
-          placeholder="Search subjects..."
-        />
-      </header>
-
+    <ListPageLayout
+      title="Subjects"
+      description="Browse your quiz subjects"
+      searchInput={searchInput}
+      onSearch={handleSearch}
+      searchPlaceholder="Search subjects..."
+    >
       {subjects.length > 0 ? (
-        <ul className="list-page-grid" onScroll={handleScroll}>
+        <ul
+          onScroll={handleScroll}
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {subjects.map((subject) => (
             <li key={subject._id}>
-              <SubjectCard subject={subject} />
+              <Card>
+                <SubjectCardContent subject={subject} />
+              </Card>
             </li>
           ))}
         </ul>
@@ -45,7 +41,7 @@ const HomePage = () => {
           description="There are no subjects matching your search."
         />
       )}
-    </section>
+    </ListPageLayout>
   );
 };
 
