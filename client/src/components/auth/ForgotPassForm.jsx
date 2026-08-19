@@ -1,4 +1,5 @@
 import { Formik, Form } from "formik";
+import { Link } from "react-router-dom";
 
 import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
@@ -59,12 +60,12 @@ const ForgotPassForm = () => {
 
           <p className="text-center text-sm text-muted">
             Remember your password?{" "}
-            <a
-              href="/auth"
+            <Link
+              to="/auth"
               className="text-primary transition-colors hover:text-primary-hover"
             >
               Sign in
-            </a>
+            </Link>
           </p>
         </AuthFormLayout>
       )}

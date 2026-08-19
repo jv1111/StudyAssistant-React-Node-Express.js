@@ -2,7 +2,6 @@ import { Formik, Form } from "formik";
 import { useDispatch } from "react-redux";
 
 import FormikTextField from "../forms/FormikTextField";
-import Eyebrow from "../common/Eyebrow";
 import Button from "../common/Button";
 
 import { loginAPI } from "../../api/auth.api";
