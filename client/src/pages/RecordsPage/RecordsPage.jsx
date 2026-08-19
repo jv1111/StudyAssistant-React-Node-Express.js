@@ -1,58 +1,47 @@
-import { useNavigate } from "react-router-dom";
-
 import EmptyState from "../../components/common/EmptyState";
-import RecordCard from "../../components/records/RecordCard";
-import SearchInput from "../../components/common/SearchInput";
+import ListPageLayout from "../../components/common/ListPageLayout";
+import RecordCardContent from "../../components/records/RecordCardContent";
+import Card from "../../components/common/Card";
 
 import useRecords from "../../hooks/useRecords";
-
 import LoadingPage from "../Loading/LoadingPage";
 
 const RecordsPage = () => {
   const { records, isLoading, searchInput, handleSearch, handleScroll } =
     useRecords();
 
-  const navigate = useNavigate();
-
   if (isLoading) {
     return <LoadingPage />;
   }
 
   return (
-    <section className="records-page" aria-labelledby="records-title">
-      <header className="records-page-header">
-        <div>
-          <span className="form-eyebrow">QUIZ HISTORY</span>
-
-          <h1 id="records-title">Records</h1>
-
-          <p>Review your previous quiz results.</p>
-        </div>
-
-        <SearchInput
-          value={searchInput}
-          onChange={handleSearch}
-          placeholder="Search records..."
-        />
-      </header>
-
+    <ListPageLayout
+      title="Records"
+      description="Review your previous quiz results"
+      searchInput={searchInput}
+      onSearch={handleSearch}
+      searchPlaceholder="Search records..."
+    >
       {records.length > 0 ? (
-        <div className="records-grid" onScroll={handleScroll}>
+        <ul
+          onScroll={handleScroll}
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {records.map((record) => (
-            <RecordCard
-              key={record._id}
-              record={record}
-              onSelect={(recordId) => navigate(recordId)}
-            />
+            <li key={record._id}>
+              <Card>
+                <RecordCardContent record={record} />
+              </Card>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : (
         <EmptyState
           title="No records found"
-          description="Complete a quiz to see its results here."
+          description="Complete a quiz to see your results here."
         />
       )}
-    </section>
+    </ListPageLayout>
   );
 };
 

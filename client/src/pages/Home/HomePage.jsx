@@ -1,10 +1,10 @@
 import EmptyState from "../../components/common/EmptyState";
+import ListPageLayout from "../../components/common/ListPageLayout";
 import SubjectCardContent from "../../components/quiz/SubjectCardContent";
 import Card from "../../components/common/Card";
 
 import useSubjects from "../../hooks/useSubjects";
 import LoadingPage from "../Loading/LoadingPage";
-import ListPageLayout from "../../components/common/ListPageLayout";
 
 const HomePage = () => {
   const { subjects, isLoading, searchInput, handleSearch, handleScroll } =
