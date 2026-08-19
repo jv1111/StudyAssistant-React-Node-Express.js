@@ -1,47 +1,59 @@
 import { useState } from "react";
 
-import AuthCard from "../../components/auth/AuthCard";
+import Card from "../../components/common/Card";
 import LoginForm from "../../components/auth/LoginForm";
 import SignUpForm from "../../components/auth/SignUpForm";
 import Modal from "../../components/common/Modal";
+import Eyebrow from "../../components/common/Eyebrow";
 
 const AuthPage = () => {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   return (
     <>
-      <div className="row align-items-center justify-content-center g-5 min-vh-75">
-        <section className="col-12 col-lg-7" aria-labelledby="app-title">
-          <div className="auth-intro">
-            <span className="auth-eyebrow">QUIZ CREATION MADE SIMPLE</span>
+      <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+        <section aria-labelledby="app-title">
+          <div className="max-w-2xl">
+            <Eyebrow>QUIZ CREATION MADE SIMPLE</Eyebrow>
 
-            <h1 id="app-title" className="auth-title">
-              Quiz<span>Builder</span>
+            <h1
+              id="app-title"
+              className="mt-3 text-6xl font-extrabold tracking-[-0.05em] sm:text-7xl"
+            >
+              Quiz<span className="text-primary">Builder</span>
             </h1>
 
-            <p className="auth-description">
+            <p className="text-muted mt-6 max-w-xl text-base leading-relaxed">
               Create and practice multiple-choice quizzes, review your
               knowledge, track your learning progress, and generate quizzes as
               PDF documents.
             </p>
 
-            <div className="auth-features">
-              <div className="auth-feature">
-                <span className="auth-feature-icon">✦</span>
+            <div className="mt-8 flex flex-col gap-5">
+              <div className="flex gap-4">
+                <span className="text-accent text-lg">✦</span>
+
                 <div>
-                  <strong>Create and practice quizzes</strong>
-                  <p>
+                  <strong className="text-foreground block font-semibold">
+                    Create and practice quizzes
+                  </strong>
+
+                  <p className="text-muted mt-1 text-sm leading-relaxed">
                     Build multiple-choice quizzes and use them for review and
                     practice.
                   </p>
                 </div>
               </div>
 
-              <div className="auth-feature">
-                <span className="auth-feature-icon">✓</span>
+              <div className="flex gap-4">
+                <span className="text-accent text-lg">✓</span>
+
                 <div>
-                  <strong>Track your progress</strong>
-                  <p>
+                  <strong className="text-foreground block font-semibold">
+                    Track your progress
+                  </strong>
+
+                  <p className="text-muted mt-1 text-sm leading-relaxed">
                     Review your quiz results and monitor your learning progress
                     over time.
                   </p>
@@ -51,17 +63,17 @@ const AuthPage = () => {
           </div>
         </section>
 
-        <section className="col-12 col-md-8 col-lg-5" aria-label="Login">
-          <AuthCard>
+        <section aria-label="Login">
+          <Card className="max-w-md">
             <LoginForm onSignUp={() => setIsSignUpOpen(true)} />
-          </AuthCard>
+          </Card>
         </section>
       </div>
 
       <Modal isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
-        <AuthCard>
+        <Card className="max-w-md">
           <SignUpForm />
-        </AuthCard>
+        </Card>
       </Modal>
     </>
   );

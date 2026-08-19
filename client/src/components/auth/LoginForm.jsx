@@ -2,9 +2,13 @@ import { Formik, Form } from "formik";
 import { useDispatch } from "react-redux";
 
 import FormikTextField from "../forms/FormikTextField";
-import GoogleSignIn from "../../assets/img/google-signin.png";
+import Eyebrow from "../common/Eyebrow";
+import Button from "../common/Button";
+
 import { loginAPI } from "../../api/auth.api";
 import { login } from "../../redux/slice/authSlice";
+import AuthFormLayout from "./AuthFormLayout";
+import AuthFormHeader from "./AuthFormHeader";
 
 const LoginForm = ({ onSignUp }) => {
   const dispatch = useDispatch();
@@ -35,18 +39,14 @@ const LoginForm = ({ onSignUp }) => {
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       {({ isSubmitting, status }) => (
-        <Form className="auth-form">
-          <div className="text-center mb-4">
-            <span className="form-eyebrow">WELCOME BACK</span>
+        <AuthFormLayout>
+          <AuthFormHeader
+            eyebrow="WELCOME BACK"
+            title="Sign in"
+            description="Sign in to continue to your RevBot account."
+          />
 
-            <h2 className="form-title">Sign in</h2>
-
-            <p className="form-description">
-              Sign in to continue to your RevBot account.
-            </p>
-          </div>
-
-          <div className="d-grid gap-3">
+          <div className="flex flex-col gap-4">
             <FormikTextField
               type="text"
               name="usernameOrEmail"
@@ -55,51 +55,55 @@ const LoginForm = ({ onSignUp }) => {
 
             <FormikTextField type="password" name="password" label="Password" />
 
-            <div className="text-end">
+            <div className="flex justify-end">
               <a
                 href={`${import.meta.env.VITE_API_URL}/auth/forgotPass`}
-                className="auth-link"
+                className="text-sm text-muted transition-colors hover:text-foreground"
               >
                 Forgot password?
               </a>
             </div>
 
             {status && (
-              <p className="error-message text-center mb-0">{status}</p>
+              <p className="text-center text-sm text-danger">{status}</p>
             )}
+          </div>
 
-            <button
-              className="btn btn-primary"
-              type="submit"
-              disabled={isSubmitting}
-            >
+          <div className="flex flex-col gap-4">
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Logging in..." : "Login"}
-            </button>
+            </Button>
 
-            <div className="auth-divider">
-              <span>OR</span>
+            <div className="flex items-center gap-4">
+              <div className="h-px flex-1 bg-white/10" />
+
+              <span className="text-xs font-medium tracking-wider text-muted">
+                OR
+              </span>
+
+              <div className="h-px flex-1 bg-white/10" />
             </div>
 
-            <a
+            <Button
               href={`${import.meta.env.VITE_API_URL}/auth/google`}
-              className="btn btn-secondary"
+              variant="secondary"
             >
               Continue with Google
-            </a>
-
-            <p className="auth-switch text-center mb-0">
-              Don't have an account?{" "}
-              <button
-                type="button"
-                className="auth-link-button"
-                disabled={isSubmitting}
-                onClick={onSignUp}
-              >
-                Sign up
-              </button>
-            </p>
+            </Button>
           </div>
-        </Form>
+
+          <p className="text-center text-sm text-muted">
+            Don't have an account?{" "}
+            <Button
+              type="button"
+              variant="link"
+              disabled={isSubmitting}
+              onClick={onSignUp}
+            >
+              Sign up
+            </Button>
+          </p>
+        </AuthFormLayout>
       )}
     </Formik>
   );
