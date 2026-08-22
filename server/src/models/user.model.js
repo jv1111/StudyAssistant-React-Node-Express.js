@@ -23,9 +23,11 @@ const userSchema = new mongoose.Schema(
     },
 
     email: {
-      type: mongoose.SchemaTypes.Email,
+      type: String,
       unique: true,
       sparse: true,
+      lowercase: true,
+      trim: true,
     },
 
     password: {

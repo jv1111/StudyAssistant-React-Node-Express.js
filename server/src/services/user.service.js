@@ -2,9 +2,9 @@ const fs = require("fs");
 const util = require("util");
 const bcrypt = require("bcrypt");
 
-const UserModel = require("../models/UserModel");
-const GoogleUserModel = require("../models/GoogleUserModel");
-const TokenRequestModel = require("../models/TokenRequestModel");
+const User = require("../models/user.model");
+const GoogleUser = require("../models/googleUser.model");
+const TokenRequest = require("../models/tokenRequest.model");
 
 const {
   generateToken,
@@ -18,7 +18,7 @@ const AppError = require("../utils/AppError");
 const unlinkFile = util.promisify(fs.unlink);
 
 const changePass = async (userId, oldPassword, newPassword) => {
-  const user = await UserModel.findById(userId);
+  const user = await User.findById(userId);
 
   if (!user) {
     throw new AppError("User not found", 404);
@@ -32,7 +32,7 @@ const changePass = async (userId, oldPassword, newPassword) => {
 
   const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
-  await UserModel.findByIdAndUpdate(userId, {
+  await User.findByIdAndUpdate(userId, {
     password: newHashedPassword,
   });
 
@@ -42,7 +42,7 @@ const changePass = async (userId, oldPassword, newPassword) => {
 };
 
 const changeProfile = async (userId, filePath) => {
-  const user = await UserModel.findById(userId);
+  const user = await User.findById(userId);
 
   if (!user) {
     throw new AppError("User not found", 404);
@@ -52,7 +52,7 @@ const changeProfile = async (userId, filePath) => {
 
   const imgUrl = filePath.replace("public", process.env.BASE_URL);
 
-  await UserModel.findByIdAndUpdate(userId, {
+  await User.findByIdAndUpdate(userId, {
     profileImg: {
       url: imgUrl,
       filePath,
@@ -82,7 +82,7 @@ const deleteLastProfileImg = async (user) => {
 };
 
 const getProfileImg = async (userId) => {
-  const user = await UserModel.findById(userId);
+  const user = await User.findById(userId);
 
   if (user) {
     return {
@@ -90,7 +90,7 @@ const getProfileImg = async (userId) => {
     };
   }
 
-  const googleUser = await GoogleUserModel.findById(userId);
+  const googleUser = await GoogleUser.findById(userId);
 
   if (!googleUser) {
     throw new AppError("User not found", 404);
@@ -102,11 +102,11 @@ const getProfileImg = async (userId) => {
 };
 
 const addOrUpdateEmail = async (userId, newEmail) => {
-  const existingUser = await UserModel.findOne({
+  const existingUser = await User.findOne({
     email: newEmail,
   });
 
-  const existingGoogleUser = await GoogleUserModel.findOne({
+  const existingGoogleUser = await GoogleUser.findOne({
     email: newEmail,
   });
 
@@ -114,13 +114,13 @@ const addOrUpdateEmail = async (userId, newEmail) => {
     throw new AppError("Email already exists", 409);
   }
 
-  const googleUser = await GoogleUserModel.findById(userId);
+  const googleUser = await GoogleUser.findById(userId);
 
   if (googleUser) {
     throw new AppError("Cannot change email for a Google account", 400);
   }
 
-  const user = await UserModel.findById(userId);
+  const user = await User.findById(userId);
 
   if (!user) {
     throw new AppError("User not found", 404);
@@ -155,7 +155,7 @@ const addOrUpdateEmail = async (userId, newEmail) => {
 };
 
 const sendResetPassRequest = async (email) => {
-  const user = await UserModel.findOne({ email });
+  const user = await User.findOne({ email });
 
   if (!user) {
     throw new AppError("This email is not registered", 404);
@@ -196,18 +196,18 @@ const verifyEmail = async (userId, token) => {
     type: "addOrUpdateEmail",
   };
 
-  const registeredToken = await TokenRequestModel.findOne(filter);
+  const registeredToken = await TokenRequest.findOne(filter);
 
   if (!registeredToken) {
     throw new AppError("Invalid or expired verification link", 400);
   }
 
-  await UserModel.findByIdAndUpdate(userId, {
+  await User.findByIdAndUpdate(userId, {
     email: registeredToken.data.email,
     emailVerified: true,
   });
 
-  await TokenRequestModel.findOneAndDelete(filter);
+  await TokenRequest.findOneAndDelete(filter);
 
   return {
     success: true,
@@ -222,13 +222,13 @@ const verifyToken = async (userId, token, type) => {
     type,
   };
 
-  const registeredToken = await TokenRequestModel.findOne(filter);
+  const registeredToken = await TokenRequest.findOne(filter);
 
   if (!registeredToken) {
     throw new AppError("Invalid or expired token", 400);
   }
 
-  await TokenRequestModel.findOneAndDelete(filter);
+  await TokenRequest.findOneAndDelete(filter);
 
   return {
     success: true,
@@ -237,7 +237,7 @@ const verifyToken = async (userId, token, type) => {
 };
 
 const resetPass = async (userId, newPassword) => {
-  const user = await UserModel.findById(userId);
+  const user = await User.findById(userId);
 
   if (!user) {
     throw new AppError("User not found", 404);
@@ -245,7 +245,7 @@ const resetPass = async (userId, newPassword) => {
 
   const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
-  await UserModel.findByIdAndUpdate(userId, {
+  await User.findByIdAndUpdate(userId, {
     password: newHashedPassword,
   });
 

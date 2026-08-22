@@ -1,11 +1,11 @@
-const QuizSessionModel = require("../models/QuizSessionModel");
+const QuizSession = require("../models/quizSession.model");
 const { getScore } = require("../services/quiz.service");
 const asyncHandler = require("../utils/asyncHandler");
 
 const finishedQuizChecker = asyncHandler(async (req, res, next) => {
   const { quizId } = req.query;
 
-  const quizSession = await QuizSessionModel.find({
+  const quizSession = await QuizSession.find({
     userId: req.user._id,
     quizId,
   });

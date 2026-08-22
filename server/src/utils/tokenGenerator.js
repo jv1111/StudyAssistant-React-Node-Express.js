@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const TokenRequestModel = require("../models/TokenRequestModel");
+const TokenRequest = require("../models/tokenRequest.model");
 
 const generateToken = () => {
   const token = crypto.randomBytes(64).toString("hex");
@@ -11,19 +11,19 @@ const insertTokenToDatabase = async (userId, data, token, type) => {
     userId: userId,
     type: type,
   };
-  const tokenExist = await TokenRequestModel.findOne({
+  const tokenExist = await TokenRequest.findOne({
     userId: userId,
     type: type,
   });
 
   if (tokenExist) {
-    await TokenRequestModel.updateOne(filter, {
+    await TokenRequest.updateOne(filter, {
       verificationToken: token,
       data: data,
       createdAt: Date.now(),
     });
   } else {
-    const newToken = new TokenRequestModel({
+    const newToken = new TokenRequest({
       userId: userId,
       verificationToken: token,
       data: data,

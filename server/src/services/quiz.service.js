@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
-const QuizModel = require("../models/QuizModel");
-const QuizSessionModel = require("../models/QuizSessionModel");
-const RecordsModel = require("../models/RecordsModel");
-const AutoSaveModel = require("../models/AutoSaveModel");
+
+const Quiz = require("../models/quiz.model");
+const QuizSession = require("../models/quizSession.model");
+
+const Records = require("../models/records.model");
+const AutoSave = require("../models/autoSave.model");
+
 const dateFormatter = require("../utils/dateFormatter");
 const { savePDF } = require("../utils/pdfHandler");
 
 const AppError = require("../utils/AppError");
 
 const createQuiz = async (userId, subject, quizName, items) => {
-  const quiz = new QuizModel({
+  const quiz = new Quiz({
     userId: userId,
     subject: subject,
     quizName: quizName,
@@ -28,7 +31,7 @@ const getSubjects = async (userId, searchQuery, skipCount) => {
 
   if (!skipCount) skipCount = 0;
 
-  const subjects = await QuizModel.aggregate()
+  const subjects = await Quiz.aggregate()
     .match(filter)
     .group({ _id: "$subject" })
     .sort({ _id: 1 }) //sort accending
@@ -47,8 +50,8 @@ const getQuizzes = async (userId, subject, searchQuery, skipCount) => {
 
   if (searchQuery) filter.quizName = { $regex: new RegExp(searchQuery, "i") };
 
-  // const quiz = await QuizModel.find(filter).select("subject quizName numberOfItems");//select only subject and quizName
-  const quiz = await QuizModel.aggregate()
+  // const quiz = await Quiz.find(filter).select("subject quizName numberOfItems");//select only subject and quizName
+  const quiz = await Quiz.aggregate()
     .match(filter)
     .project({ subject: 1, quizName: 1, numberOfItems: 1 }) //get only specific field
     .sort({ _id: 1 }) //sort accending
@@ -59,7 +62,7 @@ const getQuizzes = async (userId, subject, searchQuery, skipCount) => {
 };
 
 const startQuiz = async (userId, quizId) => {
-  let session = await QuizSessionModel.find({
+  let session = await QuizSession.find({
     userId,
     quizId,
   });
@@ -92,7 +95,7 @@ const startQuiz = async (userId, quizId) => {
 };
 
 const createQuizSession = async (userId, quizId) => {
-  const quiz = await QuizModel.findById(quizId);
+  const quiz = await Quiz.findById(quizId);
 
   if (!quiz) {
     throw new AppError("Quiz not found", 404);
@@ -107,7 +110,7 @@ const createQuizSession = async (userId, quizId) => {
     answer: quizItem.answer,
   }));
 
-  return QuizSessionModel.insertMany(sessionData);
+  return QuizSession.insertMany(sessionData);
 };
 
 const getRandomItem = (unansweredItems) => {
@@ -151,7 +154,7 @@ const generateRandomChoices = (correctAnswer, allItems) => {
 };
 
 const submitAnswer = async (questionId, answer) => {
-  const sessionItem = await QuizSessionModel.findById(questionId);
+  const sessionItem = await QuizSession.findById(questionId);
 
   if (!sessionItem) {
     throw new AppError("Quiz question not found", 404);
@@ -163,7 +166,7 @@ const submitAnswer = async (questionId, answer) => {
 
   const isCorrect = sessionItem.answer.toLowerCase() === answer.toLowerCase();
 
-  await QuizSessionModel.findByIdAndUpdate(questionId, {
+  await QuizSession.findByIdAndUpdate(questionId, {
     userAnswer: answer,
     answered: true,
     correct: isCorrect,
@@ -176,7 +179,7 @@ const submitAnswer = async (questionId, answer) => {
 };
 
 const saveRecordQuizResult = async (quizId, userId) => {
-  const quizSession = await QuizSessionModel.find({
+  const quizSession = await QuizSession.find({
     quizId,
     userId,
   });
@@ -185,7 +188,7 @@ const saveRecordQuizResult = async (quizId, userId) => {
     throw new AppError("Quiz session not found", 404);
   }
 
-  const record = new RecordsModel({
+  const record = new Records({
     userId,
     subject: quizSession[0].subject,
     quizName: quizSession[0].quizName,
@@ -196,7 +199,7 @@ const saveRecordQuizResult = async (quizId, userId) => {
 
   await record.save();
 
-  await QuizSessionModel.deleteMany({
+  await QuizSession.deleteMany({
     quizId,
     userId,
   });
@@ -213,7 +216,7 @@ const getRecords = async (userId, searchQuery) => {
     };
   }
 
-  const records = await RecordsModel.find(filter);
+  const records = await Records.find(filter);
 
   return records.map((record) => ({
     _id: record._id,
@@ -226,7 +229,7 @@ const getRecords = async (userId, searchQuery) => {
 };
 
 const getRecord = async (recordId) => {
-  const record = await RecordsModel.findById(recordId);
+  const record = await Records.findById(recordId);
 
   if (!record) {
     throw new AppError("Quiz record not found", 404);
@@ -247,13 +250,13 @@ const saveData = async (userId, key, data, quizId) => {
 
   if (savedData) {
     // update the data if there is an existing data
-    await AutoSaveModel.findOneAndUpdate(
+    await AutoSave.findOneAndUpdate(
       { userId: userId, key: key, quizId: quizId },
       { data: data },
     );
   } else {
     // create new data
-    const saveData = new AutoSaveModel({
+    const saveData = new AutoSave({
       userId: userId,
       key: key,
       data: data,
@@ -270,7 +273,7 @@ const saveData = async (userId, key, data, quizId) => {
 };
 
 const getSavedData = async (userId, key, quizId) => {
-  return AutoSaveModel.findOne({
+  return AutoSave.findOne({
     userId,
     key,
     quizId,
@@ -278,7 +281,7 @@ const getSavedData = async (userId, key, quizId) => {
 };
 
 const deleteSavedData = async (userId, key, quizId) => {
-  await AutoSaveModel.findOneAndDelete({
+  await AutoSave.findOneAndDelete({
     userId,
     key,
     quizId,
@@ -291,7 +294,7 @@ const deleteSavedData = async (userId, key, quizId) => {
 };
 
 const getItems = async (quizId) => {
-  const quiz = await QuizModel.findById(quizId);
+  const quiz = await Quiz.findById(quizId);
 
   if (!quiz) {
     throw new AppError("Quiz not found", 404);
@@ -301,7 +304,7 @@ const getItems = async (quizId) => {
 };
 
 const updateQuiz = async (quizId, subject, quizName, items) => {
-  const updatedQuiz = await QuizModel.findByIdAndUpdate(
+  const updatedQuiz = await Quiz.findByIdAndUpdate(
     quizId,
     {
       subject,
@@ -320,7 +323,7 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
 };
 
 const createPdf = async (quizId) => {
-  const quiz = await QuizModel.findById(quizId);
+  const quiz = await Quiz.findById(quizId);
 
   if (!quiz) {
     throw new AppError("Quiz not found", 404);
