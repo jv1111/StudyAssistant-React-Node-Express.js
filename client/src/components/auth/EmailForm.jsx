@@ -1,59 +1,65 @@
-import { useState } from "react";
+import { Formik, Form } from "formik";
+
+import FormikTextField from "../forms/FormikTextField";
+import Button from "../common/Button";
 
 import { updateEmailAPI } from "../../api/user.api";
-import FormTextField from "../forms/FormTextField";
 
 const EmailForm = ({ email }) => {
-  const [newEmail, setNewEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const initialValues = {
+    email: "",
+  };
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
+    try {
+      setStatus("");
 
-    setSubmitting(true);
-    setEmailError("");
+      const response = await updateEmailAPI(values.email);
 
-    const response = await updateEmailAPI(newEmail);
+      if (response.error) {
+        setStatus(response.error);
+        return;
+      }
 
-    if (response.error) {
-      setEmailError(response.error);
-    }
-
-    if (response.success) {
-      alert("Email request sent.");
-    }
-
-    setTimeout(() => {
+      if (response.success) {
+        alert("Email request sent.");
+      }
+    } finally {
       setSubmitting(false);
-    }, 5000);
+    }
   };
 
   return (
-    <form className="profile-form" onSubmit={submitHandler}>
-      <div className="profile-form-fields">
-        <div className="form-field">
-          <label htmlFor="email">Email</label>
+    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      {({ isSubmitting, status }) => (
+        <Form className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
+            <FormikTextField
+              type="email"
+              name="email"
+              label="Email"
+              placeholder={email || "Enter your email address"}
+            />
 
-          <FormTextField
-            id="email"
-            type="email"
-            value={newEmail}
-            onChange={(event) => setNewEmail(event.target.value)}
-            placeholder={email || "Enter your email address"}
-            required
-          />
-        </div>
+            {status && (
+              <p className="text-sm text-danger" role="alert">
+                {status}
+              </p>
+            )}
+          </div>
 
-        {emailError && <p className="error-message">{emailError}</p>}
-      </div>
-
-      <div className="profile-form-actions">
-        <button type="submit" className="btn btn-primary" disabled={submitting}>
-          {submitting ? "Sending..." : email ? "Change Email" : "Add Email"}
-        </button>
-      </div>
-    </form>
+          <div className="flex justify-end">
+            <Button type="submit" fit disabled={isSubmitting}>
+              {isSubmitting
+                ? "Sending..."
+                : email
+                  ? "Change Email"
+                  : "Add Email"}
+            </Button>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

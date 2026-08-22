@@ -1,6 +1,8 @@
 import { Formik, Form } from "formik";
 
 import FormikTextField from "../forms/FormikTextField";
+import Button from "../common/Button";
+
 import ChangePassValidationSchema from "../../validation/ChangePassValidationSchema.js";
 import { changePasswordAPI } from "../../api/user.api.js";
 
@@ -33,8 +35,8 @@ const ChangePassForm = () => {
       }}
     >
       {({ isSubmitting }) => (
-        <Form className="profile-form">
-          <div className="profile-form-fields">
+        <Form className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
             <FormikTextField
               type="password"
               name="oldPassword"
@@ -54,14 +56,10 @@ const ChangePassForm = () => {
             />
           </div>
 
-          <div className="profile-form-actions">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
+          <div className="flex justify-end">
+            <Button type="submit" fit disabled={isSubmitting}>
               {isSubmitting ? "Changing..." : "Change Password"}
-            </button>
+            </Button>
           </div>
         </Form>
       )}

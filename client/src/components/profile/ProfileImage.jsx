@@ -39,16 +39,22 @@ const ProfileImage = () => {
   };
 
   return (
-    <div className="profile-image">
+    <div className="shrink-0">
       <button
         type="button"
-        className="profile-image-button"
         onClick={() => fileInputRef.current?.click()}
         title="Change profile picture"
+        className="group relative h-24 w-24 overflow-hidden rounded-full border border-white/10 bg-white/5 shadow-(--shadow-glass)"
       >
-        <img src={imgSrc || emptyProfile} alt="Profile" />
+        <img
+          src={imgSrc || emptyProfile}
+          alt="Profile"
+          className="h-full w-full object-cover"
+        />
 
-        <span className="profile-image-overlay">Change</span>
+        <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
+          Change
+        </span>
       </button>
 
       <input
@@ -57,7 +63,7 @@ const ProfileImage = () => {
         type="file"
         accept="image/*"
         name="image"
-        className="visually-hidden"
+        className="hidden"
         onChange={handleImageChange}
       />
     </div>

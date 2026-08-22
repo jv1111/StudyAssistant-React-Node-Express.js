@@ -18,7 +18,7 @@ const AuthPage = () => {
 
             <h1
               id="app-title"
-              className="mt-3 text-6xl font-extrabold tracking-[-0.05em] sm:text-7xl"
+              className="mt-3 text-6xl font-extrabold tracking-tighter sm:text-7xl"
             >
               Quiz<span className="text-primary">Builder</span>
             </h1>
