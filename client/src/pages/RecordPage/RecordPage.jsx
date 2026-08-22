@@ -1,45 +1,26 @@
-import EmptyState from "../../components/common/EmptyState";
-import RecordCardContent from "../../components/records/RecordCardContent";
-import Card from "../../components/common/Card";
+import useRecordFetcher from "../../hooks/useRecordFetcher";
+import { useParams } from "react-router-dom";
 
-import useRecords from "../../hooks/useRecords";
+import RecordItems from "../../components/records/RecordItems";
+import Pad from "../../components/records/Pad";
+
 import LoadingPage from "../Loading/LoadingPage";
-import ListPageLayout from "../../components/common/ListPageLayout";
 
-const RecordsPage = () => {
-  const { records, isLoading, searchInput, handleSearch, handleScroll } =
-    useRecords();
+const RecordPage = () => {
+  const { recordId } = useParams();
+  const { isLoading, record } = useRecordFetcher(recordId);
 
   if (isLoading) {
     return <LoadingPage />;
   }
 
   return (
-    <ListPageLayout
-      title="Records"
-      description="Review your previous quiz results"
-      searchInput={searchInput}
-      onSearch={handleSearch}
-      searchPlaceholder="Search records..."
-    >
-      {records.length > 0 ? (
-        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {records.map((record) => (
-            <li key={record._id}>
-              <Card>
-                <RecordCardContent record={record} />
-              </Card>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <EmptyState
-          title="No records found"
-          description="Complete a quiz to see your results here."
-        />
-      )}
-    </ListPageLayout>
+    <div className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-10">
+      <Pad record={record}>
+        <RecordItems record={record} />
+      </Pad>
+    </div>
   );
 };
 
-export default RecordsPage;
+export default RecordPage;

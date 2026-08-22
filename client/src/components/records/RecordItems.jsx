@@ -2,82 +2,78 @@ import { CheckCircle, XCircle } from "react-bootstrap-icons";
 
 const RecordItems = ({ record }) => {
   return (
-    <section className="record-items" aria-labelledby="answer-review-title">
-      <header className="record-items-header">
-        <h2 id="answer-review-title">Answer review</h2>
+    <section aria-labelledby="record-items-title">
+      <header className="mb-6">
+        <h2
+          id="record-items-title"
+          className="text-lg font-semibold text-foreground"
+        >
+          Questions
+        </h2>
 
-        <p>Review your answers and see which questions you got right.</p>
+        <p className="mt-1 text-sm text-muted">
+          Review your answers for each question.
+        </p>
       </header>
 
-      <div className="record-questions">
-        {record.items.map((item, index) => {
-          const isCorrect = item.correct;
+      <ol className="flex w-fit flex-col gap-5">
+        {record.items.map((item, index) => (
+          <li
+            key={index}
+            className="rounded-xl border border-white/10 bg-white/[0.035] p-5 w-fit min-w-100"
+          >
+            <header className="flex items-center justify-between gap-4">
+              <span className="text-xs font-medium uppercase tracking-wider text-primary">
+                Question {index + 1}
+              </span>
 
-          return (
-            <article
-              className={`record-question ${
-                isCorrect
-                  ? "record-question-correct"
-                  : "record-question-incorrect"
-              }`}
-              key={index}
-            >
-              {/* Question header */}
-              <header className="record-question-header">
-                <div className="record-question-status">
-                  {isCorrect ? (
-                    <CheckCircle className="correct-icon" />
-                  ) : (
-                    <XCircle className="incorrect-icon" />
-                  )}
-
-                  <span className="record-question-number">
-                    Question {index + 1}
-                  </span>
-                </div>
-
-                <span
-                  className={`record-result ${
-                    isCorrect ? "correct-answer" : "incorrect-answer"
-                  }`}
-                >
-                  {isCorrect ? "Correct" : "Incorrect"}
+              {item.correct ? (
+                <span className="flex items-center gap-2 text-sm font-semibold text-success">
+                  <CheckCircle />
+                  Correct
                 </span>
-              </header>
+              ) : (
+                <span className="flex items-center gap-2 text-sm font-semibold text-danger">
+                  <XCircle />
+                  Incorrect
+                </span>
+              )}
+            </header>
 
-              {/* Question */}
-              <div className="record-question-body">
-                <p className="record-question-text">{item.question}</p>
+            <h3 className="mt-4 text-base font-semibold leading-relaxed text-foreground">
+              {item.question}
+            </h3>
 
-                {/* User answer */}
-                <div className="record-answers">
-                  <div className="record-answer">
-                    <span className="record-answer-label">Your answer</span>
+            <div className="mt-5">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted">
+                Your Answer
+              </p>
 
-                    <span
-                      className={`record-answer-value ${
-                        isCorrect ? "correct-answer" : "incorrect-answer"
-                      }`}
-                    >
-                      {item.userAnswer}
-                    </span>
-                  </div>
+              <p
+                className={`mt-2 w-fit max-w-full rounded-xl border px-4 py-3 text-sm font-medium ${
+                  item.correct
+                    ? "border-success/20 bg-success/10 text-success"
+                    : "border-danger/20 bg-danger/10 text-danger"
+                }`}
+              >
+                {item.userAnswer}
+              </p>
+            </div>
 
-                  {!isCorrect && (
-                    <div className="record-answer">
-                      <span className="record-answer-label">Correct answer</span>
+            {!item.correct && (
+              <div className="mt-4">
+                <p className="text-xs font-medium uppercase tracking-wider text-muted">
+                  Correct Answer
+                </p>
 
-                      <span className="record-answer-value correct-answer">
-                        {item.answer}
-                      </span>
-                    </div>
-                  )}
-                </div>
+                <p className="mt-2 w-fit max-w-full rounded-xl border border-success/20 bg-success/10 px-4 py-3 text-sm font-medium text-success">
+                  {item.answer}
+                </p>
               </div>
-            </article>
-          );
-        })}
-      </div>
+            )}
+          </li>
+        ))}
+      </ol>
     </section>
   );
 };
