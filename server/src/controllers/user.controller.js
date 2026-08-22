@@ -30,38 +30,6 @@ const getProfileImg = asyncHandler(async (req, res) => {
   res.status(200).json(result);
 });
 
-const addOrUpdateEmail = asyncHandler(async (req, res) => {
-  const { newEmail } = req.body;
-
-  const result = await userService.addOrUpdateEmail(req.user._id, newEmail);
-
-  res.status(200).json(result);
-});
-
-const verifyEmail = asyncHandler(async (req, res) => {
-  const { userId, token } = req.body;
-
-  const result = await userService.verifyEmail(userId, token);
-
-  res.status(200).json(result);
-});
-
-const verifyToken = asyncHandler(async (req, res) => {
-  const { userId, token, type } = req.body;
-
-  const result = await userService.verifyToken(userId, token, type);
-
-  res.status(200).json(result);
-});
-
-const sendResetPassRequest = asyncHandler(async (req, res) => {
-  const { email } = req.body;
-
-  const result = await userService.sendResetPassRequest(email);
-
-  res.status(200).json(result);
-});
-
 const resetPass = asyncHandler(async (req, res) => {
   const { userId, newPassword } = req.body;
 
@@ -74,9 +42,5 @@ module.exports = {
   changePass,
   changeProfile,
   getProfileImg,
-  addOrUpdateEmail,
-  verifyEmail,
-  verifyToken,
-  sendResetPassRequest,
   resetPass,
 };

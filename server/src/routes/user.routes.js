@@ -17,14 +17,6 @@ router.post(
 
 router.get("/profileImg", verifyAuth, userController.getProfileImg);
 
-router.put("/email", verifyAuth, userController.addOrUpdateEmail);
-
-router.put("/verifyEmail", userController.verifyEmail);
-
-router.put("/verifyToken", userController.verifyToken);
-
-router.put("/sendResetPassRequest", userController.sendResetPassRequest);
-
 router.put("/resetPass", userController.resetPass);
 
 module.exports = router;
