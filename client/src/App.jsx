@@ -7,7 +7,7 @@ import useSessionChecker from "./hooks/useSessionChecker";
 function App() {
   const { isLoading } = useSessionChecker();
 
-  if (isLoading) {
+  if (true) {
     return (
       <div className="App">
         <LoadingPage />

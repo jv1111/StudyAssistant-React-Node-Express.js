@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { List, X } from "react-bootstrap-icons";
 
@@ -8,6 +8,8 @@ import { logout } from "../../redux/slice/authSlice";
 
 function Navigation() {
   const dispatch = useDispatch();
+  const location = useLocation();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const logoutHandler = async () => {
@@ -25,6 +27,29 @@ function Navigation() {
         : "text-muted hover:bg-white/5 hover:text-foreground"
     }`;
 
+  const isQuizSection =
+    location.pathname.startsWith("/quiz/") &&
+    !location.pathname.startsWith("/quiz/create") &&
+    !location.pathname.startsWith("/quiz/records");
+
+  const quizzesActive = location.pathname === "/" || isQuizSection;
+
+  const quizzesClassName = `
+    rounded-lg px-3 py-2 text-sm font-medium transition-colors
+    ${
+      quizzesActive
+        ? "bg-white/10 text-foreground"
+        : "text-muted hover:bg-white/5 hover:text-foreground"
+    }
+  `;
+
+  const handleQuizzesClick = () => {
+    setIsMenuOpen(false);
+
+    // Already inside the quiz browsing section.
+    if (isQuizSection) return;
+  };
+
   return (
     <nav className="border-b border-white/10 bg-white/[0.04] backdrop-blur-xl">
       <div className="mx-auto max-w-(--content-max-width) px-(--page-padding)">
@@ -40,9 +65,19 @@ function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="ml-10 hidden items-center gap-1 md:flex">
-            <NavLink to="/" className={navLinkStyles}>
-              Home
-            </NavLink>
+            {quizzesActive && isQuizSection ? (
+              <button
+                type="button"
+                className={quizzesClassName}
+                onClick={handleQuizzesClick}
+              >
+                Quizzes
+              </button>
+            ) : (
+              <NavLink to="/" className={quizzesClassName}>
+                Quizzes
+              </NavLink>
+            )}
 
             <NavLink to="/quiz/create" className={navLinkStyles}>
               Create quiz
@@ -100,13 +135,23 @@ function Navigation() {
         {isMenuOpen && (
           <div className="border-t border-white/10 py-4 md:hidden">
             <div className="flex flex-col gap-1">
-              <NavLink
-                to="/"
-                className={navLinkStyles}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </NavLink>
+              {isQuizSection ? (
+                <button
+                  type="button"
+                  className={`${quizzesClassName} text-left`}
+                  onClick={handleQuizzesClick}
+                >
+                  Quizzes
+                </button>
+              ) : (
+                <NavLink
+                  to="/"
+                  className={quizzesClassName}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Quizzes
+                </NavLink>
+              )}
 
               <NavLink
                 to="/quiz/create"
