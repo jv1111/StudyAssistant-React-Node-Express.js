@@ -5,6 +5,7 @@ const User = require("../models/user.model");
 const EmailVerification = require("../models/emailVerification.model");
 
 const AppError = require("../utils/AppError");
+
 const sendEmail = require("../utils/sendEmail");
 const verificationEmail = require("../emails/verificationEmail");
 
@@ -66,4 +67,81 @@ const createVerification = async (userId, email) => {
   return {
     email: normalizedEmail,
   };
+};
+
+const verifyEmail = async (userId, code) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  if (user.emailVerified) {
+    throw new AppError("Email is already verified", 400);
+  }
+
+  const verification = await EmailVerification.findOne({
+    user: user._id,
+  });
+
+  if (!verification) {
+    throw new AppError("Verification code is invalid or expired", 400);
+  }
+
+  if (verification.expiresAt < new Date()) {
+    await verification.deleteOne();
+
+    throw new AppError("Verification code has expired", 400);
+  }
+
+  if (verification.attempts >= MAX_ATTEMPTS) {
+    await verification.deleteOne();
+
+    throw new AppError("Too many verification attempts", 429);
+  }
+
+  const codeMatch = await bcrypt.compare(code, verification.codeHash);
+
+  if (!codeMatch) {
+    verification.attempts += 1;
+    await verification.save();
+
+    throw new AppError("Invalid verification code", 400);
+  }
+
+  user.email = verification.email;
+  user.emailVerified = true;
+
+  await user.save();
+  await verification.deleteOne();
+
+  return user;
+};
+
+const resendVerification = async (userId) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  if (user.emailVerified) {
+    throw new AppError("Email is already verified", 400);
+  }
+
+  const verification = await EmailVerification.findOne({
+    user: user._id,
+  });
+
+  if (!verification) {
+    throw new AppError("No email verification request found", 404);
+  }
+
+  return createVerification(user._id, verification.email);
+};
+
+module.exports = {
+  createVerification,
+  verifyEmail,
+  resendVerification,
 };

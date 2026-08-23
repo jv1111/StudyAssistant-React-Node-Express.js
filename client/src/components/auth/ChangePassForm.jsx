@@ -4,7 +4,6 @@ import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
 
 import ChangePassValidationSchema from "../../validation/ChangePassValidationSchema.js";
-import { changePasswordAPI } from "../../api/user.api.js";
 
 const ChangePassForm = () => {
   const initialValues = {
@@ -14,15 +13,7 @@ const ChangePassForm = () => {
   };
 
   const submitHandler = async (data, resetForm) => {
-    const response = await changePasswordAPI(data);
-
-    if (response.error) {
-      alert(response.error);
-      return;
-    }
-
-    alert("Password changed successfully.");
-    resetForm();
+    
   };
 
   return (

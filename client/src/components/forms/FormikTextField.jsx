@@ -18,7 +18,7 @@ const FormikTextField = ({ label, ...props }) => {
         <ErrorMessage
           component="p"
           name={field.name}
-          className="text-sm text-danger"
+          className="text-sm mx-auto text-danger"
         />
       )}
     </div>

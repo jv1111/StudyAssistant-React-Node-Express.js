@@ -1,17 +1,17 @@
 const emailVerificationService = require("../services/emailVerification.service");
+
 const asyncHandler = require("../utils/asyncHandler.js");
 
 const createVerification = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
-  const { email: verifiedEmail, code } =
+  const { email: verifiedEmail } =
     await emailVerificationService.createVerification(req.user._id, email);
 
   return res.status(200).json({
     success: true,
     message: "Verification code sent successfully",
     email: verifiedEmail,
-    code, // Remove this once email sending is implemented
   });
 });
 
@@ -33,7 +33,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
 });
 
 const resendVerification = asyncHandler(async (req, res) => {
-  const { email, code } = await emailVerificationService.resendVerification(
+  const { email } = await emailVerificationService.resendVerification(
     req.user._id,
   );
 
@@ -41,7 +41,6 @@ const resendVerification = asyncHandler(async (req, res) => {
     success: true,
     message: "Verification code sent successfully",
     email,
-    code, // Remove this once email sending is implemented
   });
 });
 

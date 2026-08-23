@@ -72,7 +72,6 @@ const ProfilePage = () => {
                   : "Add an email address to your account."}
               </p>
             </header>
-
             <EmailForm email={user.email} />
           </Card>
         </div>

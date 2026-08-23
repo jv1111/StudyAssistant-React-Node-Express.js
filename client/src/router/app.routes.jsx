@@ -7,6 +7,7 @@ import RecordPage from "../pages/RecordPage/RecordPage";
 import QuizzesPage from "../pages/QuizzesPage/QuizzesPage";
 import QuizPage from "../pages/QuizPage/QuizPage";
 import EnumQuizPage from "../pages/EnumQuizPage/EnumQuizPage";
+import VerifyEmailPage from "../pages/VerifyEmailPage/VerifyEmailPage";
 
 import ProtectedRoute from "./guards/ProtectedRoute";
 import AppLayout from "../layouts/AppLayout";
@@ -57,6 +58,10 @@ export const appRoutes = {
               element: <EnumQuizPage />,
             },
           ],
+        },
+        {
+          path: "/verify-email",
+          element: <VerifyEmailPage />,
         },
       ],
     },

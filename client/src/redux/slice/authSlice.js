@@ -8,17 +8,24 @@ export const authSlice = createSlice({
   },
   reducers: {
     login: (state, action) => {
-      console.log("login slice");
-      state.loggedIn = true; //set logged in to true
-      state.user = action.payload; //set user to passed user object
+      state.loggedIn = true;
+      state.user = action.payload;
     },
+
+    updateUser: (state, action) => {
+      state.user = {
+        ...state.user,
+        ...action.payload,
+      };
+    },
+
     logout: (state) => {
-      console.log("logout slice");
       state.loggedIn = false;
       state.user = {};
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, updateUser, logout } = authSlice.actions;
+
 export default authSlice.reducer;

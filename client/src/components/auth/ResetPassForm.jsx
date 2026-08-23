@@ -1,7 +1,6 @@
 import { Formik, Form } from "formik";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { resetPasswordAPI } from "../../api/user.api";
 import FormikTextField from "../forms/FormikTextField";
 import PassValidationSchema from "../../validation/PasswordValidation";
 
@@ -14,18 +13,7 @@ const ResetPassForm = () => {
     confirmPassword: "",
   };
 
-  const submitHandler = async (data) => {
-    const response = await resetPasswordAPI(data.userId, data.newPassword);
-
-    if (response.success) {
-      navigate("/");
-      return;
-    }
-
-    if (response.error) {
-      alert(response.error);
-    }
-  };
+  const submitHandler = async (data) => {};
 
   return (
     <Formik
