@@ -1,15 +1,24 @@
 require("dotenv").config();
 
 const sendEmail = require("../src/utils/sendEmail");
+const verificationEmail = require("../src/emails/verificationEmail");
 
 const testEmail = async () => {
+  const code = "482913";
+  const expirationMinutes = 10;
+
+  const html = verificationEmail(code, expirationMinutes);
+
   await sendEmail(
     "jeremyviterbo19@gmail.com",
-    "ChatForge Test Email",
-    "<h1>Hello!</h1><p>This email was sent through Brevo SMTP.</p>",
+    "Verify your QuizBuilder email",
+    html,
   );
 };
 
 testEmail()
-  .then(() => console.log("Email sent"))
-  .catch((error) => console.error("Email failed:", error));
+  .then(() => console.log("Email sent successfully"))
+  .catch((error) => {
+    console.error("Email failed:", error);
+    process.exit(1);
+  });
