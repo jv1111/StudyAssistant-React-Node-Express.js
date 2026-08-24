@@ -1,5 +1,4 @@
 const LocalStrategy = require("passport-local");
-const GoogleStrategy = require("passport-google-oauth20");
 
 const authService = require("../services/auth.service");
 
@@ -15,25 +14,6 @@ module.exports = (passport) => {
             usernameOrEmail,
             password,
           );
-
-          return done(null, user);
-        } catch (error) {
-          return done(error, false);
-        }
-      },
-    ),
-  );
-
-  passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `${process.env.BASE_URL}/auth/google/callback`,
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          const user = await authService.findOrCreateGoogleUser(profile._json);
 
           return done(null, user);
         } catch (error) {
