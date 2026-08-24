@@ -6,7 +6,7 @@ import Button from "../common/Button";
 import AuthFormLayout from "./AuthFormLayout";
 import AuthFormHeader from "./AuthFormHeader";
 
-import UserValidationSchema from "../../validation/UserValidationSchema";
+import UserValidationSchema from "../../validation/user.validationSchema";
 import { signUpAPI } from "../../api/auth.api";
 import { login } from "../../redux/slice/authSlice";
 

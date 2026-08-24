@@ -20,7 +20,7 @@ export const authRoutes = {
           element: <ForgotPassPage />,
         },
         {
-          path: "/verification/resetPassword/:userId/:token",
+          path: "/reset-password",
           element: <ResetPassPage />,
         },
       ],

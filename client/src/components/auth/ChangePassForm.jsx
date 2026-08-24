@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
 
-import ChangePassValidationSchema from "../../validation/ChangePassValidationSchema.js";
+import ChangePassValidationSchema from "../../validation/passwordChange.validationSchema.js";
 
 const ChangePassForm = () => {
   const initialValues = {
