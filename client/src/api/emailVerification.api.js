@@ -1,9 +1,10 @@
 import api from "./axios";
 
-const sendEmailVerificationAPI = async (email) => {
+const sendEmailVerificationAPI = async (email, type) => {
   try {
     const response = await api.post("/email-verification/send", {
       email,
+      type,
     });
 
     return response.data;

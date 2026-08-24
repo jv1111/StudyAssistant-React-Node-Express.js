@@ -3,10 +3,14 @@ const emailVerificationService = require("../services/emailVerification.service"
 const asyncHandler = require("../utils/asyncHandler.js");
 
 const createVerification = asyncHandler(async (req, res) => {
-  const { email } = req.body;
+  const { email, type } = req.body;
 
   const { email: verifiedEmail } =
-    await emailVerificationService.createVerification(req.user._id, email);
+    await emailVerificationService.createVerification(
+      req.user._id,
+      email,
+      type,
+    );
 
   return res.status(200).json({
     success: true,

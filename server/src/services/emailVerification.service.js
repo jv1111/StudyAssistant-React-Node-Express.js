@@ -16,14 +16,18 @@ const generateVerificationCode = () => {
   return crypto.randomInt(100000, 1000000).toString();
 };
 
-const createVerification = async (userId, email) => {
+const createVerification = async (userId, email, type) => {
   const user = await User.findById(userId);
 
   if (!user) {
     throw new AppError("User not found", 404);
   }
 
-  if (user.emailVerified) {
+  if (!["add", "update"].includes(type)) {
+    throw new AppError("Invalid email verification type", 400);
+  }
+
+  if (type === "add" && user.emailVerified) {
     throw new AppError("Email is already verified", 400);
   }
 
@@ -48,6 +52,7 @@ const createVerification = async (userId, email) => {
     {
       user: user._id,
       email: normalizedEmail,
+      type,
       codeHash,
       expiresAt,
       attempts: 0,
@@ -76,10 +81,6 @@ const verifyEmail = async (userId, code) => {
     throw new AppError("User not found", 404);
   }
 
-  if (user.emailVerified) {
-    throw new AppError("Email is already verified", 400);
-  }
-
   const verification = await EmailVerification.findOne({
     user: user._id,
   });
@@ -98,6 +99,10 @@ const verifyEmail = async (userId, code) => {
     await verification.deleteOne();
 
     throw new AppError("Too many verification attempts", 429);
+  }
+
+  if (verification.type === "add" && user.emailVerified) {
+    throw new AppError("Email is already verified", 400);
   }
 
   const codeMatch = await bcrypt.compare(code, verification.codeHash);

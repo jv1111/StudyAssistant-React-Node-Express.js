@@ -15,9 +15,14 @@ const EmailForm = ({ email }) => {
     email: "",
   };
 
-  const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
+  const handleSendVerification = async (
+    values,
+    { setSubmitting, setFieldError },
+  ) => {
     try {
-      const response = await sendEmailVerificationAPI(values.email);
+      const type = email ? "update" : "add";
+
+      const response = await sendEmailVerificationAPI(values.email, type);
 
       if (!response.success) {
         setFieldError("email", response.message);
@@ -35,7 +40,7 @@ const EmailForm = ({ email }) => {
   };
 
   return isEditing || !email ? (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+    <Formik initialValues={initialValues} onSubmit={handleSendVerification}>
       {({ isSubmitting }) => (
         <Form className="flex flex-col gap-5">
           <div className="flex flex-col gap-4">

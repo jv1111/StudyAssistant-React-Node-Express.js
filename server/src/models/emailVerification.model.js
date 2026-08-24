@@ -15,6 +15,12 @@ const emailVerificationSchema = new mongoose.Schema(
       trim: true,
     },
 
+    type: {
+      type: String,
+      enum: ["add", "update"],
+      required: true,
+    },
+
     codeHash: {
       type: String,
       required: true,
