@@ -1,5 +1,5 @@
 const AppError = require("../utils/AppError.js");
-const authService = require("../services/auth.service");
+const userService = require("../services/user.service");
 
 const verifyAuth = async (req, res, next) => {
   if (!req.session.userId) {
@@ -7,7 +7,7 @@ const verifyAuth = async (req, res, next) => {
   }
 
   try {
-    const user = await authService.getUserById(req.session.userId);
+    const user = await userService.getUserById(req.session.userId);
 
     req.user = user;
 

@@ -1,13 +1,13 @@
 const bcrypt = require("bcrypt");
 
-const User = require("../models/user.model");
+const userService = require("./user.service");
 
 const { generateUniqueUsername } = require("../utils/uniqueUsernameGenerator");
 
 const AppError = require("../utils/AppError");
 
 const register = async ({ username, password }) => {
-  const existingUser = await User.findOne({ username });
+  const existingUser = await userService.getUserByUsername(username);
 
   if (existingUser) {
     throw new AppError("Username is already taken", 409);
@@ -15,20 +15,14 @@ const register = async ({ username, password }) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = new User({
+  return userService.createUser({
     username,
     password: hashedPassword,
   });
-
-  await user.save();
-
-  return user;
 };
 
 const verifyCredentials = async (usernameOrEmail, password) => {
-  const user = await User.findOne({
-    $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
-  });
+  const user = await userService.getUserByUsernameOrEmail(usernameOrEmail);
 
   if (!user || !user.password) {
     throw new AppError("Invalid credentials", 401);
@@ -43,16 +37,6 @@ const verifyCredentials = async (usernameOrEmail, password) => {
   return user;
 };
 
-const getUserById = async (id) => {
-  const user = await User.findById(id);
-
-  if (!user) {
-    throw new AppError("User not found", 404);
-  }
-
-  return user;
-};
-
 const findOrCreateGoogleUser = async ({
   sub: googleId,
   given_name,
@@ -60,24 +44,21 @@ const findOrCreateGoogleUser = async ({
   email,
   email_verified: emailVerified,
 }) => {
-  let user = await User.findOne({ googleId });
+  let user = await userService.getUserByGoogleId(googleId);
 
   if (user) {
     return user;
   }
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await userService.getUserByEmail(email);
 
   if (existingUser) {
-    throw new AppError(
-      "An account with this email already exists. Please sign in using your existing account.",
-      409,
-    );
+    return existingUser;
   }
 
   const username = await generateUniqueUsername(given_name, User);
 
-  user = new User({
+  return userService.createUser({
     googleId,
     username,
     email,
@@ -88,15 +69,10 @@ const findOrCreateGoogleUser = async ({
       filePath: null,
     },
   });
-
-  await user.save();
-
-  return user;
 };
 
 module.exports = {
   register,
   verifyCredentials,
-  getUserById,
   findOrCreateGoogleUser,
 };

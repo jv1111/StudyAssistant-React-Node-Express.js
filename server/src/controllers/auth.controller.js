@@ -2,6 +2,7 @@ const asyncHandler = require("../utils/asyncHandler.js");
 const AppError = require("../utils/AppError.js");
 
 const authService = require("../services/auth.service");
+const userService = require("../services/user.service");
 const googleAuthService = require("../services/googleAuth.service");
 
 const createUserResponse = (user) => ({
@@ -63,7 +64,7 @@ const getMe = asyncHandler(async (req, res) => {
     throw new AppError("There is no active session", 401);
   }
 
-  const user = await authService.getUserById(req.session.userId);
+  const user = await userService.getUserById(req.session.userId);
 
   return res.status(200).json({
     success: true,
