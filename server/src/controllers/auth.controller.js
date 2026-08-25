@@ -1,5 +1,3 @@
-const passport = require("passport");
-
 const asyncHandler = require("../utils/asyncHandler.js");
 const AppError = require("../utils/AppError.js");
 
@@ -14,47 +12,29 @@ const createUserResponse = (user) => ({
   createdAt: user.createdAt,
 });
 
-const register = asyncHandler(async (req, res, next) => {
+const register = asyncHandler(async (req, res) => {
   const user = await authService.register(req.body);
 
-  req.login(user, (error) => {
-    if (error) {
-      return next(error);
-    }
+  req.session.userId = user._id;
 
-    return res.status(201).json({
-      success: true,
-      message: "Account created successfully",
-      user: createUserResponse(user),
-    });
+  return res.status(201).json({
+    success: true,
+    message: "Account created successfully",
+    user: createUserResponse(user),
   });
 });
 
-const login = asyncHandler(async (req, res, next) => {
-  await new Promise((resolve, reject) => {
-    passport.authenticate("local", (error, user) => {
-      if (error) {
-        return reject(error);
-      }
+const login = asyncHandler(async (req, res) => {
+  const { usernameOrEmail, password } = req.body;
 
-      if (!user) {
-        return reject(new AppError("Authentication failed", 401));
-      }
+  const user = await authService.verifyCredentials(usernameOrEmail, password);
 
-      req.login(user, (error) => {
-        if (error) {
-          return reject(error);
-        }
-
-        resolve();
-      });
-    })(req, res, next);
-  });
+  req.session.userId = user._id;
 
   return res.status(200).json({
     success: true,
     message: "Login successful",
-    user: createUserResponse(req.user),
+    user: createUserResponse(user),
   });
 });
 
@@ -69,38 +49,36 @@ const googleLogin = asyncHandler(async (req, res) => {
 
   const user = await authService.findOrCreateGoogleUser(googleUser);
 
+  req.session.userId = user._id;
+
   return res.status(200).json({
     success: true,
     message: "Google sign-in successful",
-    user,
+    user: createUserResponse(user),
   });
 });
 
-const getMe = asyncHandler((req, res) => {
-  if (!req.user) {
+const getMe = asyncHandler(async (req, res) => {
+  if (!req.session.userId) {
     throw new AppError("There is no active session", 401);
   }
 
+  const user = await authService.getUserById(req.session.userId);
+
   return res.status(200).json({
     success: true,
-    user: createUserResponse(req.user),
+    user: createUserResponse(user),
   });
 });
 
 const logout = asyncHandler(async (req, res) => {
   await new Promise((resolve, reject) => {
-    req.logout((error) => {
+    req.session.destroy((error) => {
       if (error) {
         return reject(error);
       }
 
-      req.session.destroy((error) => {
-        if (error) {
-          return reject(error);
-        }
-
-        resolve();
-      });
+      resolve();
     });
   });
 
