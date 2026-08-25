@@ -1,10 +1,8 @@
 const bcrypt = require("bcrypt");
 
 const User = require("../models/user.model");
-const GoogleUser = require("../models/googleUser.model");
 
 const { generateUniqueUsername } = require("../utils/uniqueUsernameGenerator");
-const { generateUniqueObjectId } = require("../utils/uniqueUserIdGenerator");
 
 const AppError = require("../utils/AppError");
 
@@ -32,7 +30,7 @@ const verifyCredentials = async (usernameOrEmail, password) => {
     $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
   });
 
-  if (!user) {
+  if (!user || !user.password) {
     throw new AppError("Invalid credentials", 401);
   }
 
@@ -48,37 +46,48 @@ const verifyCredentials = async (usernameOrEmail, password) => {
 const getUserById = async (id) => {
   const user = await User.findById(id);
 
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  return user;
+};
+
+const findOrCreateGoogleUser = async ({
+  sub: googleId,
+  given_name,
+  picture,
+  email,
+  email_verified: emailVerified,
+}) => {
+  let user = await User.findOne({ googleId });
+
   if (user) {
     return user;
   }
 
-  const googleUser = await GoogleUser.findById(id);
-
-  if (!googleUser) {
-    throw new AppError("User not found", 404);
-  }
-
-  return googleUser;
-};
-
-const findOrCreateGoogleUser = async ({ given_name, picture, email }) => {
-  const existingUser = await GoogleUser.findOne({ email });
+  const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    return existingUser;
+    throw new AppError(
+      "An account with this email already exists. Please sign in using your existing account.",
+      409,
+    );
   }
 
   const username = await generateUniqueUsername(given_name, User);
 
-  const user = new GoogleUser({
+  user = new User({
+    googleId,
     username,
     email,
+    emailVerified,
+    password: null,
     profileImg: {
-      url: picture,
+      url: picture || null,
+      filePath: null,
     },
   });
-
-  user._id = await generateUniqueObjectId(user._id, User);
 
   await user.save();
 

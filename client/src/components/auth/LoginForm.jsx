@@ -1,6 +1,8 @@
 import { Formik, Form } from "formik";
 import { useDispatch } from "react-redux";
 
+import env from "../../config/env";
+
 import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
 
@@ -8,6 +10,7 @@ import { loginAPI } from "../../api/auth.api";
 import { login } from "../../redux/slice/authSlice";
 import AuthFormLayout from "./AuthFormLayout";
 import AuthFormHeader from "./AuthFormHeader";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 const LoginForm = ({ onSignUp }) => {
   const dispatch = useDispatch();
@@ -56,7 +59,7 @@ const LoginForm = ({ onSignUp }) => {
 
             <div className="flex justify-end">
               <a
-                href={`${import.meta.env.VITE_API_URL}/auth/forgotPass`}
+                href={`${env.appUrl}/auth/forgotPass`}
                 className="text-sm text-muted transition-colors hover:text-foreground"
               >
                 Forgot password?
@@ -83,12 +86,7 @@ const LoginForm = ({ onSignUp }) => {
               <div className="h-px flex-1 bg-white/10" />
             </div>
 
-            <Button
-              href={`${import.meta.env.VITE_API_URL}/auth/google`}
-              variant="secondary"
-            >
-              Continue with Google
-            </Button>
+            <GoogleSignInButton />
           </div>
 
           <p className="text-center text-sm text-muted">

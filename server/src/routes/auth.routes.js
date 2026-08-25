@@ -13,6 +13,8 @@ router.post("/register", validateRegister, authController.register);
 
 router.post("/login", validateLogin, authController.login);
 
+router.post("/google", authController.googleLogin);
+
 router.get("/me", authController.getMe);
 
 router.post("/logout", authController.logout);

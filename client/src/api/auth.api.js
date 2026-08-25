@@ -29,6 +29,21 @@ const signUpAPI = async (userData) => {
   }
 };
 
+const googleLoginAPI = async (credential) => {
+  try {
+    const response = await api.post("/auth/google", {
+      credential,
+    });
+
+    return response.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Google sign-in failed",
+    };
+  }
+};
+
 const getMeAPI = async () => {
   try {
     const response = await api.get("/auth/me");
@@ -55,4 +70,4 @@ const logoutAPI = async () => {
   }
 };
 
-export { loginAPI, signUpAPI, getMeAPI, logoutAPI };
+export { loginAPI, signUpAPI, googleLoginAPI, getMeAPI, logoutAPI };

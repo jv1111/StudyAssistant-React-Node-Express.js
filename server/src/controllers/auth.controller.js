@@ -1,8 +1,10 @@
 const passport = require("passport");
 
-const authService = require("../services/auth.service");
 const asyncHandler = require("../utils/asyncHandler.js");
 const AppError = require("../utils/AppError.js");
+
+const authService = require("../services/auth.service");
+const googleAuthService = require("../services/googleAuth.service");
 
 const createUserResponse = (user) => ({
   id: user._id,
@@ -56,6 +58,24 @@ const login = asyncHandler(async (req, res, next) => {
   });
 });
 
+const googleLogin = asyncHandler(async (req, res) => {
+  const { credential } = req.body;
+
+  if (!credential) {
+    throw new AppError("Google credential is required", 400);
+  }
+
+  const googleUser = await googleAuthService.verifyGoogleToken(credential);
+
+  const user = await authService.findOrCreateGoogleUser(googleUser);
+
+  return res.status(200).json({
+    success: true,
+    message: "Google sign-in successful",
+    user,
+  });
+});
+
 const getMe = asyncHandler((req, res) => {
   if (!req.user) {
     throw new AppError("There is no active session", 401);
@@ -95,6 +115,7 @@ const logout = asyncHandler(async (req, res) => {
 module.exports = {
   register,
   login,
+  googleLogin,
   getMe,
   logout,
 };

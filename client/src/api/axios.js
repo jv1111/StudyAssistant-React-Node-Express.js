@@ -1,7 +1,8 @@
 import axios from "axios";
+import env from "../config/env";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_API_URL,
+  baseURL: env.apiUrl,
   withCredentials: true,
 });
 
