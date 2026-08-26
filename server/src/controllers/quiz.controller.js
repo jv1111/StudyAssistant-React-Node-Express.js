@@ -155,39 +155,6 @@ const deleteFile = asyncHandler(async (req, res) => {
   res.status(200).json(result);
 });
 
-const startQuiz = asyncHandler(async (req, res) => {
-  const { quizId, quizType, randomizeQuestions } = req.body;
-
-  const session = await quizService.startQuiz(
-    req.user._id,
-    quizId,
-    quizType,
-    randomizeQuestions,
-  );
-
-  res.status(201).json(session);
-});
-
-const submitAnswer = asyncHandler(async (req, res) => {
-  const { sessionId, answer } = req.body;
-
-  const result = await quizService.submitAnswer(
-    req.user._id,
-    sessionId,
-    answer,
-  );
-
-  res.status(200).json(result);
-});
-
-const nextQuestion = asyncHandler(async (req, res) => {
-  const { sessionId } = req.query;
-
-  const result = await quizService.nextQuestion(req.user._id, sessionId);
-
-  res.status(200).json(result);
-});
-
 module.exports = {
   createQuiz,
   getSubjects,
@@ -203,8 +170,5 @@ module.exports = {
   createPdf,
   getPdf,
   deleteFile,
-  startQuiz,
-  submitAnswer,
-  nextQuestion,
   previewQuiz,
 };

@@ -1,7 +1,7 @@
 const express = require("express");
 
 const quizController = require("../controllers/quiz.controller");
-const quizMiddleware = require("../middlewares/quiz.middleware");
+
 const { verifyAuth } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
@@ -37,11 +37,5 @@ router.put("/pdf", quizController.createPdf);
 router.get("/pdf", quizController.getPdf);
 
 router.delete("/file", quizController.deleteFile);
-
-router.post("/start", quizController.startQuiz);
-
-router.put("/submit", quizController.submitAnswer);
-
-router.get("/next", quizController.nextQuestion);
 
 module.exports = router;
