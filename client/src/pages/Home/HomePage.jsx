@@ -17,7 +17,7 @@ const HomePage = () => {
   return (
     <ListPageLayout
       title="Subjects"
-      description="Browse your quiz subjects"
+      description="Browse your quiz subjects and test your knowledge"
       searchInput={searchInput}
       onSearch={handleSearch}
       searchPlaceholder="Search subjects..."
@@ -25,11 +25,11 @@ const HomePage = () => {
       {subjects.length > 0 ? (
         <ul
           onScroll={handleScroll}
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {subjects.map((subject) => (
-            <li key={subject._id}>
-              <Card>
+            <li key={subject._id} className="h-full">
+              <Card className="h-full transition-all duration-200 hover:-translate-y-1 hover:shadow-(--shadow-card)">
                 <SubjectCardContent subject={subject} />
               </Card>
             </li>
@@ -38,7 +38,7 @@ const HomePage = () => {
       ) : (
         <EmptyState
           title="No subjects found"
-          description="There are no subjects matching your search."
+          description="There are no subjects matching your search. Try adjusting your query."
         />
       )}
     </ListPageLayout>

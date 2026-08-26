@@ -11,25 +11,29 @@ const ListPageLayout = ({
   return (
     <section
       aria-labelledby={`${title.toLowerCase()}-title`}
-      className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-10"
+      className="w-full"
     >
-      <header className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1
             id={`${title.toLowerCase()}-title`}
-            className="text-3xl font-bold tracking-tight text-foreground"
+            className="text-3xl font-extrabold tracking-tight text-foreground"
           >
             {title}
           </h1>
 
-          <p className="mt-2 text-sm text-muted">{description}</p>
+          {description && (
+            <p className="mt-1 text-sm font-medium text-muted">{description}</p>
+          )}
         </div>
 
-        <SearchInput
-          value={searchInput}
-          onChange={onSearch}
-          placeholder={searchPlaceholder}
-        />
+        <div className="w-full shrink-0 sm:w-72 md:w-80">
+          <SearchInput
+            value={searchInput}
+            onChange={onSearch}
+            placeholder={searchPlaceholder}
+          />
+        </div>
       </header>
 
       {children}
