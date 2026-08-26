@@ -5,21 +5,18 @@ const authService = require("../services/auth.service");
 const userService = require("../services/user.service");
 const googleAuthService = require("../services/googleAuth.service");
 
-const createUserResponse = (user) => ({
-  id: user._id,
-  email: user.email,
-  username: user.username,
-  emailVerified: user.emailVerified,
-  createdAt: user.createdAt,
-});
+const {
+  createUserResponse,
+} = require("../utils/responseFormatters/authResponse.js");
+
+const { successResponse } = require("../utils/response.js");
 
 const register = asyncHandler(async (req, res) => {
   const user = await authService.register(req.body);
 
   req.session.userId = user._id;
 
-  return res.status(201).json({
-    success: true,
+  successResponse(res, 201, {
     message: "Account created successfully",
     user: createUserResponse(user),
   });
@@ -32,8 +29,7 @@ const login = asyncHandler(async (req, res) => {
 
   req.session.userId = user._id;
 
-  return res.status(200).json({
-    success: true,
+  successResponse(res, 200, {
     message: "Login successful",
     user: createUserResponse(user),
   });
@@ -52,8 +48,7 @@ const googleLogin = asyncHandler(async (req, res) => {
 
   req.session.userId = user._id;
 
-  return res.status(200).json({
-    success: true,
+  successResponse(res, 200, {
     message: "Google sign-in successful",
     user: createUserResponse(user),
   });
@@ -66,8 +61,7 @@ const getMe = asyncHandler(async (req, res) => {
 
   const user = await userService.getUserById(req.session.userId);
 
-  return res.status(200).json({
-    success: true,
+  successResponse(res, 200, {
     user: createUserResponse(user),
   });
 });
@@ -85,8 +79,7 @@ const logout = asyncHandler(async (req, res) => {
 
   res.clearCookie("connect.sid");
 
-  return res.status(200).json({
-    success: true,
+  successResponse(res, 200, {
     message: "Logged out successfully",
   });
 });

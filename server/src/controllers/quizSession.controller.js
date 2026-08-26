@@ -2,6 +2,8 @@ const quizSessionService = require("../services/quizSession.service");
 
 const asyncHandler = require("../utils/asyncHandler");
 
+const { successResponse } = require("../utils/response");
+
 const startQuiz = asyncHandler(async (req, res) => {
   const { quizId, quizType, randomizeQuestions } = req.body;
 
@@ -12,7 +14,7 @@ const startQuiz = asyncHandler(async (req, res) => {
     randomizeQuestions,
   );
 
-  res.status(201).json(session);
+  successResponse(res, 201, session);
 });
 
 const submitAnswer = asyncHandler(async (req, res) => {
@@ -24,7 +26,7 @@ const submitAnswer = asyncHandler(async (req, res) => {
     answer,
   );
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 const nextQuestion = asyncHandler(async (req, res) => {
@@ -32,7 +34,7 @@ const nextQuestion = asyncHandler(async (req, res) => {
 
   const result = await quizSessionService.nextQuestion(req.user._id, sessionId);
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 module.exports = {

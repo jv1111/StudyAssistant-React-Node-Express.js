@@ -3,6 +3,8 @@ const {
   loginSchema,
 } = require("../validations/auth.validation.js");
 
+const { errorResponse } = require("../utils/response");
+
 const validateRegister = async (req, res, next) => {
   try {
     req.body = await registerSchema.validate(req.body, {
@@ -12,14 +14,15 @@ const validateRegister = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message: "Validation failed",
-      errors: error.inner.map((validationError) => ({
+    return errorResponse(
+      res,
+      400,
+      "Validation failed",
+      error.inner.map((validationError) => ({
         field: validationError.path,
         message: validationError.message,
       })),
-    });
+    );
   }
 };
 
@@ -32,14 +35,15 @@ const validateLogin = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(400).json({
-      success: false,
-      message: "Validation failed",
-      errors: error.inner.map((validationError) => ({
+    return errorResponse(
+      res,
+      400,
+      "Validation failed",
+      error.inner.map((validationError) => ({
         field: validationError.path,
         message: validationError.message,
       })),
-    });
+    );
   }
 };
 

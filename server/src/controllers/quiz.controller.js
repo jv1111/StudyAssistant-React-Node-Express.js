@@ -5,13 +5,18 @@ const quizService = require("../services/quiz.service");
 const { fileDelete } = require("../utils/pdfHandler");
 
 const asyncHandler = require("../utils/asyncHandler");
+const { successResponse, errorResponse } = require("../utils/response");
+const {
+  createRecordResponse,
+  createQuizResponse,
+} = require("../utils/responseFormatters/quizResponse");
 
 const previewQuiz = asyncHandler(async (req, res) => {
   const { subject, quizName, items } = req.body;
 
   const preview = await quizService.previewQuiz(subject, quizName, items);
 
-  res.status(200).json(preview);
+  successResponse(res, 200, preview);
 });
 
 const createQuiz = asyncHandler(async (req, res) => {
@@ -24,7 +29,7 @@ const createQuiz = asyncHandler(async (req, res) => {
     items,
   );
 
-  res.status(201).json(quiz);
+  successResponse(res, 201, createQuizResponse(quiz));
 });
 
 const getSubjects = asyncHandler(async (req, res) => {
@@ -36,7 +41,7 @@ const getSubjects = asyncHandler(async (req, res) => {
     skipCount,
   );
 
-  res.status(200).json(subjects);
+  successResponse(res, 200, subjects);
 });
 
 const getQuizzes = asyncHandler(async (req, res) => {
@@ -49,7 +54,7 @@ const getQuizzes = asyncHandler(async (req, res) => {
     skipCount,
   );
 
-  res.status(200).json(quizzes);
+  successResponse(res, 200, quizzes);
 });
 
 const saveQuizRecord = asyncHandler(async (req, res) => {
@@ -57,7 +62,7 @@ const saveQuizRecord = asyncHandler(async (req, res) => {
 
   const record = await quizService.saveRecordQuizResult(quizId, req.user._id);
 
-  res.status(201).json(record);
+  successResponse(res, 201, createRecordResponse(record));
 });
 
 const getQuizRecords = asyncHandler(async (req, res) => {
@@ -65,7 +70,7 @@ const getQuizRecords = asyncHandler(async (req, res) => {
 
   const records = await quizService.getRecords(req.user._id, searchQuery);
 
-  res.status(200).json(records);
+  successResponse(res, 200, records.map(createRecordResponse));
 });
 
 const getQuizRecord = asyncHandler(async (req, res) => {
@@ -73,7 +78,7 @@ const getQuizRecord = asyncHandler(async (req, res) => {
 
   const record = await quizService.getRecord(recordId);
 
-  res.status(200).json(record);
+  successResponse(res, 200, record);
 });
 
 const saveData = asyncHandler(async (req, res) => {
@@ -81,7 +86,7 @@ const saveData = asyncHandler(async (req, res) => {
 
   const result = await quizService.saveData(req.user._id, key, data, quizId);
 
-  res.status(201).json(result);
+  successResponse(res, 201, result);
 });
 
 const getSavedData = asyncHandler(async (req, res) => {
@@ -89,7 +94,7 @@ const getSavedData = asyncHandler(async (req, res) => {
 
   const savedData = await quizService.getSavedData(req.user._id, key, quizId);
 
-  res.status(200).json(savedData);
+  successResponse(res, 200, savedData);
 });
 
 const deleteSavedData = asyncHandler(async (req, res) => {
@@ -97,7 +102,7 @@ const deleteSavedData = asyncHandler(async (req, res) => {
 
   const result = await quizService.deleteSavedData(req.user._id, key, quizId);
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 const getItems = asyncHandler(async (req, res) => {
@@ -105,7 +110,7 @@ const getItems = asyncHandler(async (req, res) => {
 
   const result = await quizService.getItems(quizId);
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 const updateQuiz = asyncHandler(async (req, res) => {
@@ -119,7 +124,7 @@ const updateQuiz = asyncHandler(async (req, res) => {
     items,
   );
 
-  res.status(200).json(result);
+  successResponse(res, 200, createQuizResponse(result));
 });
 
 const createPdf = asyncHandler(async (req, res) => {
@@ -127,7 +132,7 @@ const createPdf = asyncHandler(async (req, res) => {
 
   const result = await quizService.createPdf(quizId);
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 const getPdf = asyncHandler(async (req, res) => {
@@ -144,15 +149,12 @@ const deleteFile = asyncHandler(async (req, res) => {
   const { filePath } = req.query;
 
   if (!filePath) {
-    return res.status(400).json({
-      success: false,
-      error: "filePath is required",
-    });
+    return errorResponse(res, 400, "filePath is required");
   }
 
   const result = await fileDelete(filePath);
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 module.exports = {

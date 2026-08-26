@@ -1,6 +1,10 @@
 const userService = require("../services/user.service.js");
+
 const AppError = require("../utils/AppError.js");
+
 const asyncHandler = require("../utils/asyncHandler.js");
+
+const { successResponse } = require("../utils/response");
 
 const changePass = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
@@ -11,7 +15,7 @@ const changePass = asyncHandler(async (req, res) => {
     newPassword,
   );
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 const changeProfile = asyncHandler(async (req, res) => {
@@ -21,13 +25,13 @@ const changeProfile = asyncHandler(async (req, res) => {
 
   const result = await userService.changeProfile(req.user._id, req.file.path);
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 const getProfileImg = asyncHandler(async (req, res) => {
   const result = await userService.getProfileImg(req.user._id);
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 const resetPass = asyncHandler(async (req, res) => {
@@ -35,7 +39,7 @@ const resetPass = asyncHandler(async (req, res) => {
 
   const result = await userService.resetPass(userId, newPassword);
 
-  res.status(200).json(result);
+  successResponse(res, 200, result);
 });
 
 module.exports = {
