@@ -153,6 +153,16 @@ const deleteFile = async (filePath) => {
   return response.data;
 };
 
+const previewQuiz = async (subject, quizName, items) => {
+  const response = await api.post("/quiz/preview", {
+    subject,
+    quizName,
+    items,
+  });
+
+  return response.data;
+};
+
 export {
   deleteFile,
   getSubjects,
@@ -163,6 +173,7 @@ export {
   getRecords,
   getRecord,
   createQuiz,
+  previewQuiz,
   saveData,
   getSavedData,
   deleteSavedData,

@@ -1,26 +1,29 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import QuizEditor from "../../components/quiz/QuizEditor";
-import { createQuiz, deleteSavedData } from "../../api/quiz.api";
+import { previewQuiz } from "../../api/quiz.api";
 import useSavedDataFetcher from "../../hooks/useSavedDataFetcher";
 import autoSave from "../../helper/autoSave";
 
-const MIN_QUESTIONS = 4;
+const DEFAULT_ITEM = {
+  question: "",
+  answer: "",
+  generationMethod: "random",
+  choices: ["", "", "", ""],
+};
 
-const onLoad_items = [
-  { question: "", answer: "" },
-  { question: "", answer: "" },
-  { question: "", answer: "" },
-  { question: "", answer: "" },
+const INITIAL_ITEMS = [
+  { ...DEFAULT_ITEM },
+  { ...DEFAULT_ITEM },
+  { ...DEFAULT_ITEM },
+  { ...DEFAULT_ITEM },
 ];
 
 const CreateQuizPage = () => {
-  const [items, setItems] = useState(onLoad_items);
+  const [items, setItems] = useState(INITIAL_ITEMS);
   const [subject, setSubject] = useState("");
   const [quizName, setQuizName] = useState("");
-
-  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useSavedDataFetcher("createQuiz", setItems, setSubject, setQuizName);
 
@@ -29,7 +32,7 @@ const CreateQuizPage = () => {
   };
 
   const addQuestion = () => {
-    const newItems = [...items, { question: "", answer: "" }];
+    const newItems = [...items, { ...DEFAULT_ITEM }];
 
     setItems(newItems);
     saveData({ items: newItems, subject, quizName });
@@ -42,33 +45,52 @@ const CreateQuizPage = () => {
     saveData({ items: newItems, subject, quizName });
   };
 
-  const itemOnChangeHandler = (event, index) => {
+  const handleItemChange = (event, index) => {
+    const { name, value } = event.target;
     const newItems = items.map((item, itemIndex) =>
-      itemIndex === index
-        ? { ...item, [event.target.name]: event.target.value }
-        : item,
+      itemIndex === index ? { ...item, [name]: value } : item,
     );
 
     setItems(newItems);
     saveData({ items: newItems, subject, quizName });
   };
 
-  const submitHandler = async (event) => {
+  const handleChoiceChange = (choiceValue, choiceIndex, questionIndex) => {
+    const newItems = items.map((item, itemIndex) => {
+      if (itemIndex !== questionIndex) return item;
+
+      const currentChoices = item.choices || ["", "", "", ""];
+      const updatedChoices = [...currentChoices];
+      updatedChoices[choiceIndex] = choiceValue;
+
+      return { ...item, choices: updatedChoices };
+    });
+
+    setItems(newItems);
+    saveData({ items: newItems, subject, quizName });
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await createQuiz(subject, quizName, items);
+    setIsSubmitting(true);
 
-    if (response.error) {
-      alert(response.error);
-      return;
+    try {
+      const response = await previewQuiz(subject, quizName, items);
+
+      if (response.error) {
+        alert(response.error);
+        return;
+      }
+
+      console.log(response);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    await deleteSavedData("createQuiz");
-    navigate("/");
   };
 
   return (
-    <main className="layout-container py-10">
+    <div className="layout-container py-10">
       <header className="mb-8">
         <span className="badge-primary">Quiz Builder</span>
 
@@ -78,7 +100,7 @@ const CreateQuizPage = () => {
 
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
           Design your quiz by specifying a subject, providing a title, and
-          adding your question set.
+          adding your question set with flexible distractor generation.
         </p>
       </header>
 
@@ -88,23 +110,27 @@ const CreateQuizPage = () => {
         items={items}
         onSubjectChange={(event) => {
           const value = event.target.value;
+
           setSubject(value);
           saveData({ items, subject: value, quizName });
         }}
         onQuizNameChange={(event) => {
           const value = event.target.value;
+
           setQuizName(value);
           saveData({ items, subject, quizName: value });
         }}
-        onItemChange={itemOnChangeHandler}
+        onItemChange={handleItemChange}
+        onChoiceChange={handleChoiceChange}
         onDeleteQuestion={deleteQuestion}
         onAddQuestion={addQuestion}
-        onSubmit={submitHandler}
-        submitLabel="Publish Quiz"
-        quizInfoDescription="Set up basic subject & title information."
-        questionsDescription="Input question prompts and target answers."
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        submitLabel="Preview Quiz"
+        quizInfoDescription="Set up basic subject and title information."
+        questionsDescription="Input question prompts, target answers, and distractor generation methods."
       />
-    </main>
+    </div>
   );
 };
 

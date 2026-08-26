@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { X, CheckCircleFill, PlusCircle, Trash3 } from "react-bootstrap-icons";
+import {
+  X,
+  CheckCircleFill,
+  PlusCircle,
+  Trash3,
+  Shuffle,
+  Magic,
+  PencilSquare,
+} from "react-bootstrap-icons";
 
 import Card from "../common/Card";
 import Button from "../common/Button";
@@ -9,6 +17,27 @@ import SubjectSelectorModal from "../quiz/SubjectSelectorModal";
 
 const MIN_QUESTIONS = 4;
 
+const GENERATION_METHODS = [
+  {
+    id: "random",
+    label: "Random",
+    icon: Shuffle,
+    description: "Sample wrong answers from other items",
+  },
+  {
+    id: "ai",
+    label: "AI Generated",
+    icon: Magic,
+    description: "Generate contextual distractors automatically",
+  },
+  {
+    id: "custom",
+    label: "Custom Choices",
+    icon: PencilSquare,
+    description: "Manually specify 4 choice options",
+  },
+];
+
 const QuizEditor = ({
   subject,
   quizName,
@@ -16,9 +45,11 @@ const QuizEditor = ({
   onSubjectChange,
   onQuizNameChange,
   onItemChange,
+  onChoiceChange,
   onDeleteQuestion,
   onAddQuestion,
   onSubmit,
+  isSubmitting,
   submitLabel,
   quizInfoDescription,
   questionsDescription,
@@ -253,66 +284,165 @@ const QuizEditor = ({
               </span>
             </header>
 
-            <div className="flex flex-col gap-5">
-              {items.map((item, index) => (
-                <article
-                  key={index}
-                  className="group rounded-xl border border-border bg-surface-hover p-5 transition-all duration-200 hover:border-primary/40 hover:shadow-sm"
-                >
-                  <header className="mb-4 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-2.5">
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
-                        {index + 1}
-                      </span>
-                      <h3 className="text-sm font-semibold text-foreground">
-                        Question #{index + 1}
-                      </h3>
+            <div className="flex flex-col gap-6">
+              {items.map((item, index) => {
+                const generationMethod = item.generationMethod || "random";
+                const choices = item.choices || ["", "", "", ""];
+
+                return (
+                  <article
+                    key={index}
+                    className="group rounded-xl border border-border bg-surface-hover p-5 transition-all duration-200 hover:border-primary/40 hover:shadow-sm"
+                  >
+                    <header className="mb-4 flex items-center justify-between gap-4 border-b border-border/60 pb-3">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
+                          {index + 1}
+                        </span>
+                        <h3 className="text-sm font-semibold text-foreground">
+                          Question #{index + 1}
+                        </h3>
+                      </div>
+
+                      <Button
+                        type="button"
+                        variant="danger"
+                        fit
+                        onClick={() => onDeleteQuestion(index)}
+                        disabled={items.length <= MIN_QUESTIONS}
+                        title={
+                          items.length <= MIN_QUESTIONS
+                            ? `A quiz must contain at least ${MIN_QUESTIONS} questions`
+                            : "Delete question"
+                        }
+                        className="opacity-80 transition-opacity hover:opacity-100"
+                      >
+                        <Trash3 size={15} />
+                      </Button>
+                    </header>
+
+                    {/* Question Prompt and Correct Answer */}
+                    <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
+                      <div className="lg:col-span-3">
+                        <AutoAdjustingInput
+                          id={`question-${index}`}
+                          name="question"
+                          label="Question Prompt"
+                          value={item.question}
+                          placeholder="Write your question..."
+                          onChange={(event) => onItemChange(event, index)}
+                          required
+                        />
+                      </div>
+
+                      <div className="lg:col-span-2">
+                        <AutoAdjustingInput
+                          id={`answer-${index}`}
+                          name="answer"
+                          label="Correct Answer"
+                          value={item.answer}
+                          placeholder="Expected answer..."
+                          onChange={(event) => onItemChange(event, index)}
+                          required
+                        />
+                      </div>
                     </div>
 
-                    <Button
-                      type="button"
-                      variant="danger"
-                      fit
-                      onClick={() => onDeleteQuestion(index)}
-                      disabled={items.length <= MIN_QUESTIONS}
-                      title={
-                        items.length <= MIN_QUESTIONS
-                          ? `A quiz must contain at least ${MIN_QUESTIONS} questions`
-                          : "Delete question"
-                      }
-                      className="opacity-80 transition-opacity hover:opacity-100"
-                    >
-                      <Trash3 size={15} />
-                    </Button>
-                  </header>
+                    {/* Choice Generation Method Selector */}
+                    <div className="mt-5 flex flex-col gap-2 rounded-lg border border-border/70 bg-background/40 p-3.5">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-muted">
+                        Generation Method
+                      </label>
 
-                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
-                    <div className="lg:col-span-3">
-                      <AutoAdjustingInput
-                        id={`question-${index}`}
-                        name="question"
-                        label="Question Prompt"
-                        value={item.question}
-                        placeholder="Write your question..."
-                        onChange={(event) => onItemChange(event, index)}
-                        required
-                      />
-                    </div>
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                        {GENERATION_METHODS.map((method) => {
+                          const Icon = method.icon;
+                          const isSelected = generationMethod === method.id;
 
-                    <div className="lg:col-span-2">
-                      <AutoAdjustingInput
-                        id={`answer-${index}`}
-                        name="answer"
-                        label="Correct Answer"
-                        value={item.answer}
-                        placeholder="Expected answer..."
-                        onChange={(event) => onItemChange(event, index)}
-                        required
-                      />
+                          return (
+                            <button
+                              key={method.id}
+                              type="button"
+                              onClick={() =>
+                                onItemChange(
+                                  {
+                                    target: {
+                                      name: "generationMethod",
+                                      value: method.id,
+                                    },
+                                  },
+                                  index,
+                                )
+                              }
+                              className={`flex items-start gap-2.5 rounded-lg border p-2.5 text-left transition-all duration-200 hover:cursor-pointer ${
+                                isSelected
+                                  ? "border-primary bg-primary-light/50 text-foreground shadow-xs"
+                                  : "border-border/80 bg-surface text-muted hover:border-primary/40 hover:text-foreground"
+                              }`}
+                            >
+                              <Icon
+                                size={16}
+                                className={`mt-0.5 shrink-0 ${
+                                  isSelected ? "text-primary" : "text-muted"
+                                }`}
+                              />
+                              <div className="flex flex-col">
+                                <span className="text-xs font-bold leading-tight">
+                                  {method.label}
+                                </span>
+                                <span className="mt-0.5 text-[11px] leading-tight text-muted">
+                                  {method.description}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Expandable Custom Choices (Shows when "custom" is selected) */}
+                      {generationMethod === "custom" && (
+                        <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                          <div className="rounded-xl border border-primary/20 bg-surface p-4 shadow-2xs">
+                            <div className="mb-3 flex items-center justify-between">
+                              <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                                Custom Choice Options
+                              </span>
+                              <span className="text-[11px] text-muted">
+                                Provide 4 multiple-choice options
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                              {choices.map((choice, choiceIndex) => (
+                                <Input
+                                  key={choiceIndex}
+                                  id={`choice-${index}-${choiceIndex}`}
+                                  name={`choice-${choiceIndex}`}
+                                  label={`Option ${String.fromCharCode(
+                                    65 + choiceIndex,
+                                  )}`}
+                                  value={choice}
+                                  placeholder={`Enter option ${String.fromCharCode(
+                                    65 + choiceIndex,
+                                  )}`}
+                                  onChange={(event) =>
+                                    onChoiceChange(
+                                      event.target.value,
+                                      choiceIndex,
+                                      index,
+                                    )
+                                  }
+                                  required={generationMethod === "custom"}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
 
               {items.length === 0 && (
                 <div className="rounded-xl border border-dashed border-border py-12 text-center text-sm text-muted">
@@ -341,9 +471,10 @@ const QuizEditor = ({
           <Button
             type="submit"
             fit
+            disabled={isSubmitting}
             className="px-8 font-semibold shadow-(--shadow-button)"
           >
-            {submitLabel}
+            {isSubmitting ? "Loading..." : submitLabel}
           </Button>
         </footer>
       </form>
