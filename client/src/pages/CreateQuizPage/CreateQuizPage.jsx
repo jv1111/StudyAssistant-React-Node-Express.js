@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import QuizEditor from "../../components/quiz/QuizEditor";
 import { previewQuiz } from "../../api/quiz.api";
@@ -24,6 +25,8 @@ const CreateQuizPage = () => {
   const [subject, setSubject] = useState("");
   const [quizName, setQuizName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const navigate = useNavigate();
 
   useSavedDataFetcher("createQuiz", setItems, setSubject, setQuizName);
 
@@ -76,6 +79,12 @@ const CreateQuizPage = () => {
     setIsSubmitting(true);
 
     try {
+      console.log("Preview payload:", {
+        subject,
+        quizName,
+        items,
+      });
+
       const response = await previewQuiz(subject, quizName, items);
 
       if (response.error) {
@@ -83,7 +92,9 @@ const CreateQuizPage = () => {
         return;
       }
 
-      console.log(response);
+      navigate("/quiz/create/preview", {
+        state: response,
+      });
     } finally {
       setIsSubmitting(false);
     }

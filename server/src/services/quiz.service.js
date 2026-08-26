@@ -15,8 +15,9 @@ const previewQuiz = async (subject, quizName, items) => {
 
   const previewItems = items.map((item) => {
     let choices = item.choices || [];
+    const generationMethod = item.generationMethod || "random";
 
-    if (item.choiceGeneration === "random") {
+    if (generationMethod === "random") {
       const otherAnswers = answers.filter((answer) => answer !== item.answer);
 
       const shuffledAnswers = [...otherAnswers].sort(() => Math.random() - 0.5);
@@ -30,7 +31,7 @@ const previewQuiz = async (subject, quizName, items) => {
       question: item.question,
       answer: item.answer,
       choices,
-      choiceGeneration: item.choiceGeneration || "disabled",
+      generationMethod,
     };
   });
 
