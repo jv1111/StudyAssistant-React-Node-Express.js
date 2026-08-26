@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getItemsApi } from "../api/QuizApi";
+import { getItemsApi } from "../api/quiz.api";
 
 const useItemsLoader = (quizId, setSubject, setQuizName, setItems) => {
   const [isLoading, setIsLoading] = useState(true);

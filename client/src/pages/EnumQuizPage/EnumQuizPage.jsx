@@ -2,8 +2,8 @@ import React, { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import useQuestionFetcher from "../../hooks/useQuestionFetcher";
 import LoadingPage from "../Loading/LoadingPage";
-import { submitAnswer } from "../../api/QuizApi";
-import { saveQuizRecord } from "../../api/QuizApi";
+import { submitAnswer } from "../../api/quiz.api";
+import { saveQuizRecord } from "../../api/quiz.api";
 
 const EnumQuizPage = () => {
   // todo make keys insensitive in the server in answer submittion e.g b === B

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getQuestion } from "../api/QuizApi";
+import { getQuestion } from "../api/quiz.api";
 
 const useQuestionFetcher = (quizId, numAnswered) => {
   const [isLoading, setLoading] = useState(true);

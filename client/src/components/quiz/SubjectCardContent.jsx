@@ -13,7 +13,7 @@ const SubjectCardContent = ({ subject }) => {
         </span>
 
         <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
-          {subject._id}
+          {subject.name}
         </h2>
       </div>
 

@@ -44,7 +44,7 @@ const findOrCreateGoogleUser = async ({
   email,
   email_verified: emailVerified,
 }) => {
-  let user = await userService.getUserByGoogleId(googleId);
+  const user = await userService.getUserByGoogleId(googleId);
 
   if (user) {
     return user;
@@ -56,7 +56,10 @@ const findOrCreateGoogleUser = async ({
     return existingUser;
   }
 
-  const username = await generateUniqueUsername(given_name, User);
+  const username = await generateUniqueUsername(
+    given_name,
+    userService.isUsernameAvailable,
+  );
 
   return userService.createUser({
     googleId,

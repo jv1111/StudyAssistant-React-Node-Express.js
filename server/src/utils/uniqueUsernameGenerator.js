@@ -1,45 +1,26 @@
-const generateUniqueUsername = async (username, UserModel) => {
-  let uniqueUsername = username;
-  if (usernameIsAvailable(uniqueUsername, UserModel)) {
-    uniqueUsername = await makeUsernameUnique(username, UserModel);
+const generateUniqueUsername = async (username, isAvailable) => {
+  if (await isAvailable(username)) {
+    return username;
   }
-  return uniqueUsername;
+
+  const maxAttempts = 10;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const suffix = generateRandomDigits(4);
+    const candidate = `${username}${suffix}`;
+
+    if (await isAvailable(candidate)) {
+      return candidate;
+    }
+  }
+
+  throw new AppError("Unable to generate a unique username", 500);
 };
 
-const usernameIsAvailable = async (username, UserModel) => {
-  const userExist = await UserModel.findOne({ username: username });
-  if (userExist) {
-    return false;
-  } else {
-    return true;
-  }
-};
-
-const makeUsernameUnique = async (username, UserModel) => {
-  let uniqueUsername = "";
-  let strBuilder = [];
-  strBuilder.push(username);
-  while (true) {
-    const randomDigits = generateRandomDigits(2);
-    strBuilder.push(randomDigits);
-    uniqueUsername = strBuilder.join("");
-    if (await usernameIsAvailable(uniqueUsername, UserModel)) break;
-  }
-  return uniqueUsername;
-};
-
-const generateRandomDigits = (numOfDigits) => {
-  let numberOfDigits = numOfDigits;
-  let loopCount = 0;
-  let strBuilder = [];
-  while (loopCount < numberOfDigits) {
-    let randomNum = Math.floor(Math.random() * 10); //random number from 0 -9
-    strBuilder.push(randomNum);
-    loopCount++;
-  }
-  const randomDigits = strBuilder.join("");
-  return randomDigits;
-};
+const generateRandomDigits = (numOfDigits) =>
+  Math.floor(Math.random() * 10 ** numOfDigits)
+    .toString()
+    .padStart(numOfDigits, "0");
 
 module.exports = {
   generateUniqueUsername,

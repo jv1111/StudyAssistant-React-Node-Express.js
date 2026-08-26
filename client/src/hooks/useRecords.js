@@ -3,7 +3,7 @@ import { useState } from "react";
 import useDebounce from "./useDebounce";
 import useItemFetcher from "./useItemFetcher";
 
-import { getRecords } from "../api/QuizApi";
+import { getRecords } from "../api/quiz.api";
 
 import infinitScroller from "../helper/infinitScroller";
 

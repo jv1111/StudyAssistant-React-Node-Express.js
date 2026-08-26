@@ -21,10 +21,10 @@ const getSubjects = async ({ searchVal, skipCount }) => {
   return response.data;
 };
 
-const getQuizzes = async ({ subject, searchVal, skipCount }) => {
+const getQuizzes = async ({ subjectId, searchVal, skipCount }) => {
   const response = await api.get("/quiz/quizList", {
     params: {
-      subject,
+      subjectId,
       searchQuery: searchVal,
       skipCount,
     },

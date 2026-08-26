@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getSavedData } from "../api/QuizApi";
+import { getSavedData } from "../api/quiz.api";
 
 const useSavedDataFetcher = (
   key,

@@ -1,4 +1,4 @@
-import { saveData } from "../api/QuizApi";
+import { saveData } from "../api/quiz.api";
 let timeoutId;
 
 const autoSave = (key, data, quizId) => {

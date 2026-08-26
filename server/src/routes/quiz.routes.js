@@ -14,14 +14,6 @@ router.get("/subjectsList", quizController.getSubjects);
 
 router.get("/quizList", quizController.getQuizzes);
 
-router.get(
-  "/startQuiz",
-  quizMiddleware.finishedQuizChecker,
-  quizController.startQuiz,
-);
-
-router.put("/submitAnswer", quizController.submitAnswer);
-
 router.put("/saveRecord", quizController.saveQuizRecord);
 
 router.get("/records", quizController.getQuizRecords);
@@ -43,5 +35,11 @@ router.put("/pdf", quizController.createPdf);
 router.get("/pdf", quizController.getPdf);
 
 router.delete("/file", quizController.deleteFile);
+
+router.post("/start", quizController.startQuiz);
+
+router.put("/submit", quizController.submitAnswer);
+
+router.get("/next", quizController.nextQuestion);
 
 module.exports = router;

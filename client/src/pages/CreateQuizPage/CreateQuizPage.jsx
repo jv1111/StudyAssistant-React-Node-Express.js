@@ -5,7 +5,7 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 
-import { createQuiz, deleteSavedData } from "../../api/QuizApi";
+import { createQuiz, deleteSavedData } from "../../api/quiz.api";
 import useSavedDataFetcher from "../../hooks/useSavedDataFetcher";
 import autoSave from "../../helper/autoSave";
 import QuizEditor from "../../components/quiz/QuizEditor";

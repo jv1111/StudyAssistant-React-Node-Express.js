@@ -1,7 +1,9 @@
 const path = require("path");
 
 const quizService = require("../services/quiz.service");
+
 const { fileDelete } = require("../utils/pdfHandler");
+
 const asyncHandler = require("../utils/asyncHandler");
 
 const createQuiz = asyncHandler(async (req, res) => {
@@ -30,32 +32,16 @@ const getSubjects = asyncHandler(async (req, res) => {
 });
 
 const getQuizzes = asyncHandler(async (req, res) => {
-  const { subject, searchQuery, skipCount } = req.query;
+  const { subjectId, searchQuery, skipCount } = req.query;
 
   const quizzes = await quizService.getQuizzes(
     req.user._id,
-    subject,
+    subjectId,
     searchQuery,
     skipCount,
   );
 
   res.status(200).json(quizzes);
-});
-
-const startQuiz = asyncHandler(async (req, res) => {
-  const { quizId } = req.query;
-
-  const quizItem = await quizService.startQuiz(req.user._id, quizId);
-
-  res.status(200).json(quizItem);
-});
-
-const submitAnswer = asyncHandler(async (req, res) => {
-  const { questionId, answer } = req.body;
-
-  const result = await quizService.submitAnswer(questionId, answer);
-
-  res.status(200).json(result);
 });
 
 const saveQuizRecord = asyncHandler(async (req, res) => {
@@ -117,7 +103,13 @@ const getItems = asyncHandler(async (req, res) => {
 const updateQuiz = asyncHandler(async (req, res) => {
   const { quizId, subject, quizName, items } = req.body;
 
-  const result = await quizService.updateQuiz(quizId, subject, quizName, items);
+  const result = await quizService.updateQuiz(
+    quizId,
+    req.user._id,
+    subject,
+    quizName,
+    items,
+  );
 
   res.status(200).json(result);
 });
@@ -155,12 +147,42 @@ const deleteFile = asyncHandler(async (req, res) => {
   res.status(200).json(result);
 });
 
+const startQuiz = asyncHandler(async (req, res) => {
+  const { quizId, randomizeQuestions } = req.body;
+
+  const session = await quizService.startQuiz(
+    req.user._id,
+    quizId,
+    randomizeQuestions,
+  );
+
+  res.status(201).json(session);
+});
+
+const submitAnswer = asyncHandler(async (req, res) => {
+  const { sessionId, answer } = req.body;
+
+  const result = await quizService.submitAnswer(
+    req.user._id,
+    sessionId,
+    answer,
+  );
+
+  res.status(200).json(result);
+});
+
+const nextQuestion = asyncHandler(async (req, res) => {
+  const { sessionId } = req.query;
+
+  const result = await quizService.nextQuestion(req.user._id, sessionId);
+
+  res.status(200).json(result);
+});
+
 module.exports = {
   createQuiz,
   getSubjects,
   getQuizzes,
-  startQuiz,
-  submitAnswer,
   saveQuizRecord,
   getQuizRecords,
   getQuizRecord,
@@ -172,4 +194,7 @@ module.exports = {
   createPdf,
   getPdf,
   deleteFile,
+  startQuiz,
+  submitAnswer,
+  nextQuestion,
 };

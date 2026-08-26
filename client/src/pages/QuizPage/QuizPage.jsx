@@ -6,7 +6,7 @@ import Button from "../../components/common/Button";
 
 import useQuestionFetcher from "../../hooks/useQuestionFetcher";
 import LoadingPage from "../Loading/LoadingPage";
-import { submitAnswer, saveQuizRecord } from "../../api/QuizApi";
+import { submitAnswer, saveQuizRecord } from "../../api/quiz.api";
 
 const QuizPage = () => {
   const [numAnswered, setNumAnswered] = useState(0);

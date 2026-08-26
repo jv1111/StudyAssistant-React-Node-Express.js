@@ -10,7 +10,7 @@ import Modal from "../../components/common/Modal";
 
 import useQuizzes from "../../hooks/useQuizzes";
 
-import { deleteFile, getPdf, setPDFOnServer } from "../../api/QuizApi";
+import { deleteFile, getPdf, setPDFOnServer } from "../../api/quiz.api";
 
 import LoadingPage from "../Loading/LoadingPage";
 import ListPageLayout from "../../components/common/ListPageLayout";

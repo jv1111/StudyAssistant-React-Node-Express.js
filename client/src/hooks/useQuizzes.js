@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import useDebounce from "./useDebounce";
 import useItemFetcher from "./useItemFetcher";
 
-import { getQuizzes } from "../api/QuizApi";
+import { getQuizzes } from "../api/quiz.api";
 
 import infinitScroller from "../helper/infinitScroller";
 

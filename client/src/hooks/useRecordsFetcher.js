@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getRecords } from "../api/QuizApi";
+import { getRecords } from "../api/quiz.api";
 
 const useRecordsFetcher = (subject, searchVal) => {
   const [isLoading, setLoading] = useState(true);

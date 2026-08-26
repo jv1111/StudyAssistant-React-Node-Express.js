@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getQuizzes } from "../api/QuizApi.js";
+import { getQuizzes } from "../api/quiz.api";
 
 const useQuizzesFetcher = (
   subject,

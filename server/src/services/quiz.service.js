@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-
 const Quiz = require("../models/quiz.model");
+const Subject = require("../models/subject.model");
 const QuizSession = require("../models/quizSession.model");
 
 const Records = require("../models/records.model");
@@ -12,203 +11,85 @@ const { savePDF } = require("../utils/pdfHandler");
 const AppError = require("../utils/AppError");
 
 const createQuiz = async (userId, subject, quizName, items) => {
+  let subjectDocument = await Subject.findOne({
+    userId,
+    name: subject,
+  });
+
+  if (!subjectDocument) {
+    subjectDocument = await Subject.create({
+      userId,
+      name: subject,
+    });
+  }
+
+  const existingQuiz = await Quiz.findOne({
+    userId,
+    subjectId: subjectDocument._id,
+    quizName,
+  });
+
+  if (existingQuiz) {
+    throw new AppError(
+      "Quiz with the same name already exists in this subject",
+      400,
+    );
+  }
+
   const quiz = new Quiz({
-    userId: userId,
-    subject: subject,
-    quizName: quizName,
-    items: items,
+    userId,
+    subjectId: subjectDocument._id,
+    quizName,
+    items,
     numberOfItems: items.length,
   });
+
   await quiz.save();
-  return quiz;
-};
-
-const getSubjects = async (userId, searchQuery, skipCount) => {
-  let filter = { userId: new mongoose.Types.ObjectId(userId) }; //return all subjects with userId:userId
-
-  // generate new filter if there is a search query
-  if (searchQuery) filter.subject = { $regex: new RegExp(searchQuery, "i") };
-
-  if (!skipCount) skipCount = 0;
-
-  const subjects = await Quiz.aggregate()
-    .match(filter)
-    .group({ _id: "$subject" })
-    .sort({ _id: 1 }) //sort accending
-    .skip(parseInt(skipCount)) // number of items to skip starting from index 0
-    .limit(10); //number of data to get
-  return subjects;
-};
-
-const getQuizzes = async (userId, subject, searchQuery, skipCount) => {
-  let filter = {
-    userId: new mongoose.Types.ObjectId(userId),
-    subject: subject,
-  };
-
-  if (!skipCount) skipCount = 0;
-
-  if (searchQuery) filter.quizName = { $regex: new RegExp(searchQuery, "i") };
-
-  // const quiz = await Quiz.find(filter).select("subject quizName numberOfItems");//select only subject and quizName
-  const quiz = await Quiz.aggregate()
-    .match(filter)
-    .project({ subject: 1, quizName: 1, numberOfItems: 1 }) //get only specific field
-    .sort({ _id: 1 }) //sort accending
-    .skip(parseInt(skipCount)) // number of items to skip starting from index 0
-    .limit(10); //number of data to get
 
   return quiz;
 };
 
-const startQuiz = async (userId, quizId) => {
-  let session = await QuizSession.find({
+const getSubjects = async (userId, searchQuery, skipCount = 0) => {
+  const filter = {
     userId,
-    quizId,
-  });
-
-  if (session.length === 0) {
-    session = await createQuizSession(userId, quizId);
-  }
-
-  const unansweredItems = session.filter((item) => !item.answered);
-
-  if (unansweredItems.length === 0) {
-    throw new AppError("Quiz has already been completed", 400);
-  }
-
-  const randomItem = getRandomItem(unansweredItems);
-  const score = getScore(session);
-  const choices = generateRandomChoices(randomItem.answer, session);
-  const questionNumber = session.length - unansweredItems.length + 1;
-
-  return {
-    _id: randomItem._id,
-    subject: randomItem.subject,
-    quizName: randomItem.quizName,
-    question: randomItem.question,
-    score,
-    choices,
-    questionNumber,
-    numberOfItems: session.length,
   };
-};
 
-const createQuizSession = async (userId, quizId) => {
-  const quiz = await Quiz.findById(quizId);
-
-  if (!quiz) {
-    throw new AppError("Quiz not found", 404);
+  if (searchQuery) {
+    filter.name = {
+      $regex: new RegExp(searchQuery, "i"),
+    };
   }
 
-  const sessionData = quiz.items.map((quizItem) => ({
+  return Subject.find(filter)
+    .sort({ name: 1 })
+    .skip(parseInt(skipCount))
+    .limit(10);
+};
+
+const getQuizzes = async (userId, subjectId, searchQuery, skipCount = 0) => {
+  const filter = {
     userId,
-    quizId,
-    subject: quiz.subject,
-    quizName: quiz.quizName,
-    question: quizItem.question,
-    answer: quizItem.answer,
-  }));
-
-  return QuizSession.insertMany(sessionData);
-};
-
-const getRandomItem = (unansweredItems) => {
-  const randomIndex = Math.floor(Math.random() * unansweredItems.length);
-  const randomItem = unansweredItems[randomIndex];
-  return randomItem;
-};
-
-const getScore = (session) => {
-  let score = 0;
-  session.forEach((item) => {
-    if (item.correct) {
-      score++;
-    }
-  });
-  return score;
-};
-
-const generateRandomChoices = (correctAnswer, allItems) => {
-  const choices = [correctAnswer];
-
-  const incorrectAnswers = [
-    ...new Set(
-      allItems
-        .map((item) => item.answer)
-        .filter(
-          (answer) => answer !== correctAnswer && !choices.includes(answer),
-        ),
-    ),
-  ];
-
-  while (choices.length < 4 && incorrectAnswers.length > 0) {
-    const randomIndex = Math.floor(Math.random() * incorrectAnswers.length);
-
-    choices.push(incorrectAnswers[randomIndex]);
-    incorrectAnswers.splice(randomIndex, 1);
-  }
-
-  // Randomize the position of the correct answer
-  return choices.sort(() => Math.random() - 0.5);
-};
-
-const submitAnswer = async (questionId, answer) => {
-  const sessionItem = await QuizSession.findById(questionId);
-
-  if (!sessionItem) {
-    throw new AppError("Quiz question not found", 404);
-  }
-
-  if (!answer) {
-    throw new AppError("Answer is required", 400);
-  }
-
-  const isCorrect = sessionItem.answer.toLowerCase() === answer.toLowerCase();
-
-  await QuizSession.findByIdAndUpdate(questionId, {
-    userAnswer: answer,
-    answered: true,
-    correct: isCorrect,
-  });
-
-  return {
-    correctAns: sessionItem.answer,
-    correct: isCorrect,
+    subjectId,
   };
-};
 
-const saveRecordQuizResult = async (quizId, userId) => {
-  const quizSession = await QuizSession.find({
-    quizId,
-    userId,
-  });
-
-  if (quizSession.length === 0) {
-    throw new AppError("Quiz session not found", 404);
+  if (searchQuery) {
+    filter.quizName = {
+      $regex: new RegExp(searchQuery, "i"),
+    };
   }
 
-  const record = new Records({
-    userId,
-    subject: quizSession[0].subject,
-    quizName: quizSession[0].quizName,
-    score: getScore(quizSession),
-    numberOfItems: quizSession.length,
-    items: quizSession,
-  });
-
-  await record.save();
-
-  await QuizSession.deleteMany({
-    quizId,
-    userId,
-  });
-
-  return record;
+  return Quiz.find(filter)
+    .select("subjectId quizName numberOfItems")
+    .populate("subjectId", "name")
+    .sort({ createdAt: -1 })
+    .skip(parseInt(skipCount))
+    .limit(10);
 };
 
 const getRecords = async (userId, searchQuery) => {
-  const filter = { userId };
+  const filter = {
+    userId,
+  };
 
   if (searchQuery) {
     filter.quizName = {
@@ -249,18 +130,22 @@ const saveData = async (userId, key, data, quizId) => {
   const savedData = await getSavedData(userId, key, quizId);
 
   if (savedData) {
-    // update the data if there is an existing data
     await AutoSave.findOneAndUpdate(
-      { userId: userId, key: key, quizId: quizId },
-      { data: data },
+      {
+        userId,
+        key,
+        quizId,
+      },
+      {
+        data,
+      },
     );
   } else {
-    // create new data
     const saveData = new AutoSave({
-      userId: userId,
-      key: key,
-      data: data,
-      quizId: quizId,
+      userId,
+      key,
+      data,
+      quizId,
     });
 
     await saveData.save();
@@ -294,7 +179,7 @@ const deleteSavedData = async (userId, key, quizId) => {
 };
 
 const getItems = async (quizId) => {
-  const quiz = await Quiz.findById(quizId);
+  const quiz = await Quiz.findById(quizId).populate("subjectId", "name");
 
   if (!quiz) {
     throw new AppError("Quiz not found", 404);
@@ -303,16 +188,27 @@ const getItems = async (quizId) => {
   return quiz;
 };
 
-const updateQuiz = async (quizId, subject, quizName, items) => {
+const updateQuiz = async (quizId, userId, subject, quizName, items) => {
+  const subjectDocument = await Subject.findOne({
+    userId,
+    name: subject,
+  });
+
+  if (!subjectDocument) {
+    throw new AppError("Subject not found", 404);
+  }
+
   const updatedQuiz = await Quiz.findByIdAndUpdate(
     quizId,
     {
-      subject,
+      subjectId: subjectDocument._id,
       quizName,
       items,
       numberOfItems: items.length,
     },
-    { new: true },
+    {
+      new: true,
+    },
   );
 
   if (!updatedQuiz) {
@@ -323,7 +219,7 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
 };
 
 const createPdf = async (quizId) => {
-  const quiz = await Quiz.findById(quizId);
+  const quiz = await Quiz.findById(quizId).populate("subjectId", "name");
 
   if (!quiz) {
     throw new AppError("Quiz not found", 404);
@@ -337,7 +233,7 @@ const createPdf = async (quizId) => {
 
   const data = {
     _id: quizId,
-    subject: quiz.subject,
+    subject: quiz.subjectId.name,
     quizName: quiz.quizName,
     questions,
   };
@@ -345,15 +241,195 @@ const createPdf = async (quizId) => {
   return savePDF(data);
 };
 
+const startQuiz = async (userId, quizId, randomizeQuestions = false) => {
+  const quiz = await Quiz.findOne({
+    _id: quizId,
+    userId,
+  });
+
+  if (!quiz) {
+    throw new AppError("Quiz not found", 404);
+  }
+
+  let session = await QuizSession.findOne({
+    userId,
+    quizId,
+    status: { $in: ["in_progress", "paused"] },
+  });
+
+  if (!session) {
+    let itemOrder = quiz.items.map((item) => item._id);
+
+    if (randomizeQuestions) {
+      itemOrder.sort(() => Math.random() - 0.5);
+    }
+
+    session = await QuizSession.create({
+      userId,
+      quizId,
+      randomizeQuestions,
+      currentItem: 0,
+      itemOrder,
+      score: 0,
+      answeredItems: 0,
+      answers: quiz.items.map((item) => ({
+        itemId: item._id,
+        answer: null,
+        correct: false,
+        answeredAt: null,
+      })),
+    });
+  }
+
+  const currentItemId = session.itemOrder[session.currentItem];
+
+  const currentQuizItem = quiz.items.id(currentItemId);
+
+  if (!currentQuizItem) {
+    throw new AppError("Quiz item not found", 404);
+  }
+
+  return {
+    sessionId: session._id,
+    quizId: quiz._id,
+    quizName: quiz.quizName,
+    currentItem: session.currentItem,
+    numberOfItems: quiz.numberOfItems,
+    question: currentQuizItem.question,
+    score: session.score,
+    answeredItems: session.answeredItems,
+    status: session.status,
+    randomizeQuestions: session.randomizeQuestions,
+  };
+};
+
+const submitAnswer = async (userId, sessionId, answer) => {
+  const session = await QuizSession.findOne({
+    _id: sessionId,
+    userId,
+  });
+
+  if (!session) {
+    throw new AppError("Quiz session not found", 404);
+  }
+
+  if (session.status !== "in_progress") {
+    throw new AppError("Quiz session is not in progress", 400);
+  }
+
+  const quiz = await Quiz.findOne({
+    _id: session.quizId,
+    userId,
+  });
+
+  if (!quiz) {
+    throw new AppError("Quiz not found", 404);
+  }
+
+  const currentItemId = session.itemOrder[session.currentItem];
+
+  const currentQuizItem = quiz.items.id(currentItemId);
+
+  if (!currentQuizItem) {
+    throw new AppError("Quiz item not found", 404);
+  }
+
+  if (!answer || !answer.trim()) {
+    throw new AppError("Answer is required", 400);
+  }
+
+  const trimmedAnswer = answer.trim();
+
+  const isCorrect =
+    currentQuizItem.answer.trim().toLowerCase() === trimmedAnswer.toLowerCase();
+
+  const sessionAnswer = session.answers.find(
+    (item) => item.itemId.toString() === currentQuizItem._id.toString(),
+  );
+
+  if (!sessionAnswer) {
+    throw new AppError("Quiz answer record not found", 404);
+  }
+
+  sessionAnswer.answer = trimmedAnswer;
+  sessionAnswer.correct = isCorrect;
+  sessionAnswer.answeredAt = new Date();
+
+  session.answeredItems += 1;
+
+  if (isCorrect) {
+    session.score += 1;
+  }
+
+  session.currentItem += 1;
+
+  if (session.currentItem >= quiz.items.length) {
+    session.status = "completed";
+    session.completedAt = new Date();
+  }
+
+  await session.save();
+
+  return {
+    correct: isCorrect,
+    correctAnswer: currentQuizItem.answer,
+    score: session.score,
+    answeredItems: session.answeredItems,
+    currentItem: session.currentItem,
+    numberOfItems: quiz.numberOfItems,
+    status: session.status,
+  };
+};
+
+const nextQuestion = async (userId, sessionId) => {
+  const session = await QuizSession.findOne({
+    _id: sessionId,
+    userId,
+  });
+
+  if (!session) {
+    throw new AppError("Quiz session not found", 404);
+  }
+
+  if (session.status === "completed") {
+    throw new AppError("Quiz has already been completed", 400);
+  }
+
+  const quiz = await Quiz.findOne({
+    _id: session.quizId,
+    userId,
+  });
+
+  if (!quiz) {
+    throw new AppError("Quiz not found", 404);
+  }
+
+  const currentItemId = session.itemOrder[session.currentItem];
+
+  const currentQuizItem = quiz.items.id(currentItemId);
+
+  if (!currentQuizItem) {
+    throw new AppError("Quiz item not found", 404);
+  }
+
+  return {
+    sessionId: session._id,
+    quizId: quiz._id,
+    quizName: quiz.quizName,
+    currentItem: session.currentItem,
+    numberOfItems: quiz.numberOfItems,
+    question: currentQuizItem.question,
+    score: session.score,
+    answeredItems: session.answeredItems,
+    status: session.status,
+  };
+};
+
 module.exports = {
   createPdf,
   createQuiz,
   getSubjects,
   getQuizzes,
-  startQuiz,
-  submitAnswer,
-  getScore,
-  saveRecordQuizResult,
   getRecords,
   getRecord,
   saveData,
@@ -361,4 +437,7 @@ module.exports = {
   deleteSavedData,
   getItems,
   updateQuiz,
+  startQuiz,
+  submitAnswer,
+  nextQuestion,
 };
