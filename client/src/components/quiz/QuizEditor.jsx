@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { X } from "react-bootstrap-icons";
+import {
+  X,
+  CheckCircleFill,
+  PlusCircle,
+  Trash3,
+  Magic,
+} from "react-bootstrap-icons";
 
 import Card from "../common/Card";
 import Button from "../common/Button";
@@ -32,14 +38,10 @@ const QuizEditor = ({
 
   const handleCreateSubject = () => {
     const trimmedSubject = newSubject.trim();
-
     if (!trimmedSubject) return;
 
     onSubjectChange({
-      target: {
-        name: "subject",
-        value: trimmedSubject,
-      },
+      target: { name: "subject", value: trimmedSubject },
     });
 
     setNewSubject(trimmedSubject);
@@ -48,22 +50,17 @@ const QuizEditor = ({
 
   const handleSubjectSelect = (selectedSubject) => {
     onSubjectChange({
-      target: {
-        name: "subject",
-        value: selectedSubject.name,
-      },
+      target: { name: "subject", value: selectedSubject.name },
     });
 
     setNewSubject(selectedSubject.name);
+    setIsSubjectLocked(true);
     setIsSubjectModalOpen(false);
   };
 
   const handleRemoveSubject = () => {
     onSubjectChange({
-      target: {
-        name: "subject",
-        value: "",
-      },
+      target: { name: "subject", value: "" },
     });
 
     setNewSubject("");
@@ -76,14 +73,10 @@ const QuizEditor = ({
 
   const handleCreateQuizName = () => {
     const trimmedQuizName = newQuizName.trim();
-
     if (!trimmedQuizName) return;
 
     onQuizNameChange({
-      target: {
-        name: "quizName",
-        value: trimmedQuizName,
-      },
+      target: { name: "quizName", value: trimmedQuizName },
     });
 
     setNewQuizName(trimmedQuizName);
@@ -92,10 +85,7 @@ const QuizEditor = ({
 
   const handleRemoveQuizName = () => {
     onQuizNameChange({
-      target: {
-        name: "quizName",
-        value: "",
-      },
+      target: { name: "quizName", value: "" },
     });
 
     setNewQuizName("");
@@ -106,14 +96,12 @@ const QuizEditor = ({
     onSubjectChange({
       target: { name: "subject", value: "Mathematics" },
     });
-
     setNewSubject("Mathematics");
     setIsSubjectLocked(true);
 
     onQuizNameChange({
       target: { name: "quizName", value: "Basic Algebra Quiz" },
     });
-
     setNewQuizName("Basic Algebra Quiz");
     setIsQuizNameLocked(true);
 
@@ -133,43 +121,52 @@ const QuizEditor = ({
       <form
         autoComplete="off"
         onSubmit={onSubmit}
-        className="flex flex-col gap-6"
+        className="flex flex-col gap-8"
       >
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={handleFillSampleData}
-        >
-          Fill Sample Data
-        </Button>
-        <Card>
+        {/* Sample Data Utility Bar */}
+        <div className="flex items-center justify-between rounded-card border border-primary/20 bg-primary-light/50 px-5 py-3">
+          <span className="text-xs font-semibold text-primary">
+            Quick Setup Utility
+          </span>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleFillSampleData}
+            className="inline-flex items-center gap-2 text-xs"
+          >
+            <Magic size={14} />
+            Fill Sample Data
+          </Button>
+        </div>
+
+        {/* Section 1: Quiz Information */}
+        <Card className="card-base">
           <section aria-labelledby="quiz-info-title">
-            <header className="mb-6">
+            <header className="mb-6 border-b border-border pb-4">
               <h2
                 id="quiz-info-title"
-                className="text-lg font-semibold text-foreground"
+                className="text-lg font-bold text-foreground"
               >
-                Quiz Information
+                Quiz Details
               </h2>
-
               <p className="mt-1 text-sm text-muted">{quizInfoDescription}</p>
             </header>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {/* Subject */}
-              <div className="flex flex-col gap-3">
-                <label className="text-sm font-medium text-foreground">
-                  Subject
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              {/* Subject Field */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted">
+                  Subject Name
                 </label>
 
-                <div className="flex flex-col gap-3 rounded-xl border border-dashed border-white/10 p-4">
-                  <div className="flex items-end gap-3">
+                <div className="rounded-xl border border-border bg-background/50 p-4 transition-all duration-200 hover:border-border-hover">
+                  <div className="flex items-center gap-3">
                     <div className="min-w-0 flex-1">
                       <Input
                         id="newSubject"
                         name="newSubject"
                         value={newSubject}
-                        placeholder="e.g. Mathematics"
+                        placeholder="e.g. Mathematics, Science"
                         onChange={(event) => setNewSubject(event.target.value)}
                         disabled={isSubjectLocked}
                       />
@@ -182,9 +179,9 @@ const QuizEditor = ({
                         fit
                         onClick={handleRemoveSubject}
                         aria-label="Remove subject"
-                        title="Remove subject"
+                        title="Change subject"
                       >
-                        <X size={16} />
+                        <X size={18} />
                       </Button>
                     ) : (
                       <Button
@@ -193,44 +190,55 @@ const QuizEditor = ({
                         disabled={!newSubject.trim()}
                         onClick={handleCreateSubject}
                       >
-                        OK
+                        Confirm
                       </Button>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="h-px flex-1 bg-white/10" />
+                  {!subject && (
+                    <>
+                      <div className="my-3 flex items-center gap-3">
+                        <div className="h-px flex-1 bg-border" />
+                        <span className="shrink-0 text-[11px] font-bold text-muted">
+                          OR
+                        </span>
+                        <div className="h-px flex-1 bg-border" />
+                      </div>
 
-                    <span className="shrink-0 text-xs text-muted">OR</span>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        disabled={Boolean(subject)}
+                        onClick={() => setIsSubjectModalOpen(true)}
+                        className="w-full text-xs font-medium"
+                      >
+                        Select Existing Subject
+                      </Button>
+                    </>
+                  )}
 
-                    <div className="h-px flex-1 bg-white/10" />
-                  </div>
-
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    disabled={Boolean(subject)}
-                    onClick={() => setIsSubjectModalOpen(true)}
-                  >
-                    Select Subject
-                  </Button>
+                  {subject && (
+                    <p className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-primary">
+                      <CheckCircleFill size={13} /> Saved to {subject}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              {/* Quiz Name */}
-              <div className="flex flex-col gap-3">
-                <label className="text-sm font-medium text-foreground">
-                  Quiz Name
+              {/* Quiz Name Field */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted">
+                  Quiz Title
                 </label>
 
-                <div className="flex flex-col gap-3 rounded-xl border border-dashed border-white/10 p-4">
-                  <div className="flex items-end gap-3">
+                <div className="rounded-xl border border-border bg-background/50 p-4 transition-all duration-200 hover:border-border-hover">
+                  <div className="flex items-center gap-3">
                     <div className="min-w-0 flex-1">
                       <Input
                         id="quizName"
                         name="quizName"
                         value={newQuizName}
-                        placeholder="e.g. Algebra Quiz"
+                        placeholder="e.g. Midterm Examination"
                         onChange={handleQuizNameChange}
                         disabled={isQuizNameLocked}
                       />
@@ -243,9 +251,9 @@ const QuizEditor = ({
                         fit
                         onClick={handleRemoveQuizName}
                         aria-label="Remove quiz name"
-                        title="Remove quiz name"
+                        title="Change quiz name"
                       >
-                        <X size={16} />
+                        <X size={18} />
                       </Button>
                     ) : (
                       <Button
@@ -254,54 +262,56 @@ const QuizEditor = ({
                         disabled={!newQuizName.trim()}
                         onClick={handleCreateQuizName}
                       >
-                        OK
+                        Confirm
                       </Button>
                     )}
                   </div>
+
+                  {quizName && (
+                    <p className="mt-2.5 flex items-center gap-1.5 text-xs font-semibold text-primary">
+                      <CheckCircleFill size={13} /> Quiz title confirmed
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
           </section>
         </Card>
 
+        {/* Section 2: Questions Editor */}
         <section aria-labelledby="questions-title">
-          <Card>
-            <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <Card className="card-base">
+            <header className="mb-6 flex flex-col gap-4 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2
                   id="questions-title"
-                  className="text-lg font-semibold text-foreground"
+                  className="text-lg font-bold text-foreground"
                 >
-                  Questions
+                  Questions & Answers
                 </h2>
-
                 <p className="mt-1 text-sm text-muted">
                   {questionsDescription}
                 </p>
               </div>
 
-              <div className="flex items-center gap-3">
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
-                  {items.length} question
-                  {items.length !== 1 ? "s" : ""}
-                </span>
-              </div>
+              <span className="badge-primary self-start sm:self-auto">
+                {items.length} {items.length === 1 ? "Question" : "Questions"}
+              </span>
             </header>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5">
               {items.map((item, index) => (
                 <article
                   key={index}
-                  className="rounded-xl border border-white/10 bg-white/[0.035] p-5 transition-colors duration-200 hover:border-white/15 hover:bg-white/5"
+                  className="group rounded-xl border border-border bg-surface-hover p-5 transition-all duration-200 hover:border-primary/40 hover:shadow-sm"
                 >
-                  <header className="mb-5 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/15 text-xs font-semibold text-primary">
+                  <header className="mb-4 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
                         {index + 1}
                       </span>
-
-                      <h3 className="text-sm font-medium text-foreground">
-                        Question {index + 1}
+                      <h3 className="text-sm font-semibold text-foreground">
+                        Question #{index + 1}
                       </h3>
                     </div>
 
@@ -316,8 +326,9 @@ const QuizEditor = ({
                           ? `A quiz must contain at least ${MIN_QUESTIONS} questions`
                           : "Delete question"
                       }
+                      className="opacity-80 transition-opacity hover:opacity-100"
                     >
-                      <X size={16} />
+                      <Trash3 size={15} />
                     </Button>
                   </header>
 
@@ -326,9 +337,9 @@ const QuizEditor = ({
                       <AutoAdjustingInput
                         id={`question-${index}`}
                         name="question"
-                        label="Question"
+                        label="Question Prompt"
                         value={item.question}
-                        placeholder="Enter your question..."
+                        placeholder="Write your question..."
                         onChange={(event) => onItemChange(event, index)}
                         required
                       />
@@ -338,9 +349,9 @@ const QuizEditor = ({
                       <AutoAdjustingInput
                         id={`answer-${index}`}
                         name="answer"
-                        label="Answer"
+                        label="Correct Answer"
                         value={item.answer}
-                        placeholder="Enter the correct answer..."
+                        placeholder="Expected answer..."
                         onChange={(event) => onItemChange(event, index)}
                         required
                       />
@@ -350,27 +361,34 @@ const QuizEditor = ({
               ))}
 
               {items.length === 0 && (
-                <div className="rounded-xl border border-dashed border-white/10 py-10 text-center text-sm text-muted">
-                  No questions yet — add your first one below.
+                <div className="rounded-xl border border-dashed border-border py-12 text-center text-sm text-muted">
+                  No questions created yet. Click below to add your first
+                  question.
                 </div>
               )}
             </div>
 
-            <div className="mt-6 flex justify-center border-t border-white/10 pt-6">
+            <div className="mt-8 flex justify-center border-t border-border pt-6">
               <Button
                 type="button"
                 variant="secondary"
-                fit
                 onClick={onAddQuestion}
+                className="inline-flex items-center gap-2 border-primary/30 text-primary hover:bg-primary-light"
               >
-                + Add Question
+                <PlusCircle size={16} />
+                Add New Question
               </Button>
             </div>
           </Card>
         </section>
 
-        <footer className="sticky bottom-4 flex justify-end">
-          <Button type="submit" fit>
+        {/* Floating Action Footer */}
+        <footer className="sticky bottom-6 flex justify-end rounded-card border border-border bg-surface/90 p-4 shadow-lg backdrop-blur-md">
+          <Button
+            type="submit"
+            fit
+            className="px-8 font-semibold shadow-(--shadow-button)"
+          >
             {submitLabel}
           </Button>
         </footer>

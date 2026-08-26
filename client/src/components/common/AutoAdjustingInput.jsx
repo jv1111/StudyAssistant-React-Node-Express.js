@@ -28,10 +28,15 @@ const AutoAdjustingInput = ({
   }, [value]);
 
   return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm font-medium text-foreground">
-        {label}
-      </label>
+    <div className="group flex flex-col gap-1.5">
+      {label && (
+        <label
+          htmlFor={id}
+          className="text-xs font-semibold uppercase tracking-wider text-muted transition-colors group-focus-within:text-primary"
+        >
+          {label}
+        </label>
+      )}
 
       <textarea
         ref={textareaRef}
@@ -45,7 +50,7 @@ const AutoAdjustingInput = ({
         }}
         required={required}
         rows={1}
-        className={`w-full resize-none overflow-hidden rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm leading-relaxed text-foreground placeholder:text-muted outline-none backdrop-blur-xl transition-all duration-200 focus:border-primary/50 focus:bg-white/8 focus:ring-2 focus:ring-primary/10 ${className}`}
+        className={`w-full resize-none overflow-hidden border-b border-border bg-transparent px-1 py-2 text-sm font-medium text-foreground placeholder:text-muted/70 outline-none transition-all duration-200 hover:border-border-hover focus:border-primary ${className}`}
       />
     </div>
   );
