@@ -7,6 +7,7 @@ const Input = ({
   placeholder,
   onChange,
   required = false,
+  disabled = false,
   className = "",
 }) => {
   return (
@@ -23,7 +24,8 @@ const Input = ({
         placeholder={placeholder}
         onChange={onChange}
         required={required}
-        className={`w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-muted outline-none backdrop-blur-xl transition-all duration-200 focus:border-primary/50 focus:bg-white/8 focus:ring-2 focus:ring-primary/10 ${className}`}
+        disabled={disabled}
+        className={`w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-muted outline-none backdrop-blur-xl transition-all duration-200 focus:border-primary/50 focus:bg-white/8 focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
       />
     </div>
   );

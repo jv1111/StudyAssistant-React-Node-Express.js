@@ -25,6 +25,8 @@ const QuizEditor = ({
 }) => {
   const [newSubject, setNewSubject] = useState("");
   const [newQuizName, setNewQuizName] = useState(quizName || "");
+  const [isSubjectLocked, setIsSubjectLocked] = useState(Boolean(subject));
+  const [isQuizNameLocked, setIsQuizNameLocked] = useState(Boolean(quizName));
 
   const [isSubjectModalOpen, setIsSubjectModalOpen] = useState(false);
 
@@ -41,6 +43,7 @@ const QuizEditor = ({
     });
 
     setNewSubject(trimmedSubject);
+    setIsSubjectLocked(true);
   };
 
   const handleSubjectSelect = (selectedSubject) => {
@@ -62,6 +65,9 @@ const QuizEditor = ({
         value: "",
       },
     });
+
+    setNewSubject("");
+    setIsSubjectLocked(false);
   };
 
   const handleQuizNameChange = (event) => {
@@ -81,6 +87,7 @@ const QuizEditor = ({
     });
 
     setNewQuizName(trimmedQuizName);
+    setIsQuizNameLocked(true);
   };
 
   const handleRemoveQuizName = () => {
@@ -92,6 +99,33 @@ const QuizEditor = ({
     });
 
     setNewQuizName("");
+    setIsQuizNameLocked(false);
+  };
+
+  const handleFillSampleData = () => {
+    onSubjectChange({
+      target: { name: "subject", value: "Mathematics" },
+    });
+
+    setNewSubject("Mathematics");
+    setIsSubjectLocked(true);
+
+    onQuizNameChange({
+      target: { name: "quizName", value: "Basic Algebra Quiz" },
+    });
+
+    setNewQuizName("Basic Algebra Quiz");
+    setIsQuizNameLocked(true);
+
+    [
+      ["What is 5 + 7?", "12"],
+      ["What is 10 × 3?", "30"],
+      ["What is 2x = 10?", "5"],
+      ["What is the square root of 64?", "8"],
+    ].forEach(([question, answer], index) => {
+      onItemChange({ target: { name: "question", value: question } }, index);
+      onItemChange({ target: { name: "answer", value: answer } }, index);
+    });
   };
 
   return (
@@ -101,6 +135,13 @@ const QuizEditor = ({
         onSubmit={onSubmit}
         className="flex flex-col gap-6"
       >
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={handleFillSampleData}
+        >
+          Fill Sample Data
+        </Button>
         <Card>
           <section aria-labelledby="quiz-info-title">
             <header className="mb-6">
@@ -130,6 +171,7 @@ const QuizEditor = ({
                         value={newSubject}
                         placeholder="e.g. Mathematics"
                         onChange={(event) => setNewSubject(event.target.value)}
+                        disabled={isSubjectLocked}
                       />
                     </div>
 
@@ -190,6 +232,7 @@ const QuizEditor = ({
                         value={newQuizName}
                         placeholder="e.g. Algebra Quiz"
                         onChange={handleQuizNameChange}
+                        disabled={isQuizNameLocked}
                       />
                     </div>
 

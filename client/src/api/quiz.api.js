@@ -1,7 +1,7 @@
 import api from "./axios";
 
 const createQuiz = async (subject, quizName, items) => {
-  const response = await api.put("/quiz/create", {
+  const response = await api.post("/quiz/create", {
     subject,
     quizName,
     items,
