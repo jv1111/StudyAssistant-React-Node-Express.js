@@ -5,7 +5,7 @@ const AppLayout = () => {
   return (
     <>
       <Navbar />
-      <main className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-8">
+      <main className="layout-container py-8">
         <Outlet />
       </main>
     </>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { List, X } from "react-bootstrap-icons";
+import { List, X, Person, BoxArrowRight } from "react-bootstrap-icons";
 
 import { logoutAPI } from "../../api/auth.api";
 import { logout } from "../../redux/slice/authSlice";
@@ -21,10 +21,10 @@ function Navigation() {
   };
 
   const navLinkStyles = ({ isActive }) =>
-    `rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+    `select-none outline-none focus:outline-none rounded-lg px-3.5 py-2 text-sm font-semibold transition-all duration-200 border ${
       isActive
-        ? "bg-white/10 text-foreground"
-        : "text-muted hover:bg-white/5 hover:text-foreground"
+        ? "bg-primary-light text-primary border-primary/20 shadow-2xs"
+        : "border-transparent text-muted hover:bg-background-secondary hover:text-foreground active:bg-primary-light/50"
     }`;
 
   const isQuizSection =
@@ -35,36 +35,40 @@ function Navigation() {
   const quizzesActive = location.pathname === "/" || isQuizSection;
 
   const quizzesClassName = `
-    rounded-lg px-3 py-2 text-sm font-medium transition-colors
+    select-none outline-none focus:outline-none rounded-lg px-3.5 py-2 text-sm font-semibold transition-all duration-200 border
     ${
       quizzesActive
-        ? "bg-white/10 text-foreground"
-        : "text-muted hover:bg-white/5 hover:text-foreground"
+        ? "bg-primary-light text-primary border-primary/20 shadow-2xs"
+        : "border-transparent text-muted hover:bg-background-secondary hover:text-foreground active:bg-primary-light/50"
     }
   `;
 
   const handleQuizzesClick = () => {
     setIsMenuOpen(false);
 
-    // Already inside the quiz browsing section.
     if (isQuizSection) return;
   };
 
   return (
-    <nav className="border-b border-white/10 bg-white/[0.04] backdrop-blur-xl">
-      <div className="mx-auto max-w-(--content-max-width) px-(--page-padding)">
-        <div className="flex min-h-16 items-center">
+    <nav className="sticky top-0 z-40 w-full border-b border-border bg-surface/85 backdrop-blur-md select-none">
+      <div className="layout-container">
+        <div className="flex h-16 items-center justify-between md:justify-start">
           {/* Logo */}
           <Link
             to="/"
-            className="text-lg font-bold tracking-tight text-foreground"
+            className="flex items-center gap-2 text-xl font-extrabold tracking-tight text-foreground transition-opacity hover:opacity-90 outline-none focus:outline-none shrink-0"
             onClick={() => setIsMenuOpen(false)}
           >
-            Quiz<span className="text-primary">Builder</span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-light text-primary font-black text-base border border-primary/20">
+              Q
+            </span>
+            <span>
+              Quiz<span className="text-primary">Builder</span>
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="ml-10 hidden items-center gap-1 md:flex">
+          {/* Navigation Links */}
+          <div className="ml-8 hidden items-center gap-1.5 md:flex">
             {quizzesActive && isQuizSection ? (
               <button
                 type="button"
@@ -88,32 +92,37 @@ function Navigation() {
             </NavLink>
           </div>
 
-          {/* Desktop Account */}
+          {/* Account Dropdown (Pushed to far right) */}
           <div className="ml-auto hidden md:block">
             <details className="group relative">
-              <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-white/5 hover:text-foreground">
-                Account
-                <span className="text-xs transition-transform group-open:rotate-180">
+              <summary className="flex cursor-pointer list-none items-center gap-2 rounded-xl border border-border bg-background-secondary px-3.5 py-1.5 text-sm font-semibold text-foreground transition-all hover:border-border-hover hover:bg-surface outline-none focus:outline-none select-none">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+                  A
+                </div>
+                <span>Account</span>
+                <span className="text-[10px] text-muted transition-transform duration-200 group-open:rotate-180">
                   ▼
                 </span>
               </summary>
 
-              <div className="absolute right-0 top-full z-50 mt-2 w-40 rounded-xl border border-white/10 bg-(--color-background-secondary)/95 p-1 shadow-(--shadow-glass) backdrop-blur-xl">
+              <div className="absolute right-0 top-full z-50 mt-2 w-48 rounded-xl border border-border bg-surface p-1.5 shadow-(--shadow-card) animate-in fade-in zoom-in-95 duration-100">
                 <Link
                   to="/profile"
-                  className="block rounded-lg px-3 py-2 text-sm text-muted transition-colors hover:bg-white/5 hover:text-foreground"
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-primary-light hover:text-primary outline-none focus:outline-none"
                 >
-                  Profile
+                  <Person size={16} />
+                  <span>Profile</span>
                 </Link>
 
-                <div className="my-1 h-px bg-white/10" />
+                <div className="my-1 h-px bg-border" />
 
                 <button
                   type="button"
                   onClick={logoutHandler}
-                  className="w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm text-muted transition-colors hover:bg-white/5 hover:text-danger"
+                  className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-muted transition-colors hover:bg-danger/10 hover:text-danger outline-none focus:outline-none"
                 >
-                  Logout
+                  <BoxArrowRight size={16} />
+                  <span>Logout</span>
                 </button>
               </div>
             </details>
@@ -125,20 +134,20 @@ function Navigation() {
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="ml-auto flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-muted transition-colors hover:bg-white/10 hover:text-foreground md:hidden"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-border bg-background-secondary text-foreground transition-all hover:bg-surface active:scale-95 outline-none focus:outline-none md:hidden"
           >
-            {isMenuOpen ? <X size={21} /> : <List size={22} />}
+            {isMenuOpen ? <X size={22} /> : <List size={22} />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation Dropdown */}
         {isMenuOpen && (
-          <div className="border-t border-white/10 py-4 md:hidden">
-            <div className="flex flex-col gap-1">
+          <div className="border-t border-border py-4 md:hidden">
+            <div className="flex flex-col gap-1.5">
               {isQuizSection ? (
                 <button
                   type="button"
-                  className={`${quizzesClassName} text-left`}
+                  className={`${quizzesClassName} text-left w-full`}
                   onClick={handleQuizzesClick}
                 >
                   Quizzes
@@ -169,22 +178,27 @@ function Navigation() {
                 Records
               </NavLink>
 
-              <div className="my-2 h-px bg-white/10" />
+              <div className="my-2 h-px bg-border" />
 
               <NavLink
                 to="/profile"
-                className={navLinkStyles}
+                className={`${navLinkStyles({ isActive: location.pathname === "/profile" })} flex items-center gap-2`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Profile
+                <Person size={16} />
+                <span>Profile</span>
               </NavLink>
 
               <button
                 type="button"
-                onClick={logoutHandler}
-                className="w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm font-medium text-muted transition-colors hover:bg-white/5 hover:text-danger"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  logoutHandler();
+                }}
+                className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3.5 py-2 text-left text-sm font-semibold text-muted transition-colors hover:bg-danger/10 hover:text-danger outline-none focus:outline-none"
               >
-                Logout
+                <BoxArrowRight size={18} />
+                <span>Logout</span>
               </button>
             </div>
           </div>

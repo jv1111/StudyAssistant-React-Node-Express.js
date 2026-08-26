@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@utility layout-container {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
 @theme {
   /* --- Warm Light Gold Palette --- */
   --color-background: #faf8f3; /* Soft warm ivory */
