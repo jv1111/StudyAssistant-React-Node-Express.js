@@ -10,23 +10,23 @@ const Button = ({
 }) => {
   const baseStyles =
     variant === "link"
-      ? "cursor-pointer border-0 bg-transparent p-0 text-sm text-primary hover:text-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+      ? "cursor-pointer border-0 bg-transparent p-0 text-sm font-semibold text-primary hover:text-primary-hover disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
       : `flex min-h-12 ${
           fit ? "w-fit" : "w-full"
-        } cursor-pointer items-center justify-center rounded-xl border px-4 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50`;
+        } cursor-pointer items-center justify-center rounded-(--radius-input) px-5 text-sm font-bold transition-all duration-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50`;
 
   const variants = {
     primary:
-      "border-primary/40 bg-primary/15 text-foreground hover:border-primary/60 hover:bg-primary/25",
+      "bg-primary text-white shadow-(--shadow-button) hover:bg-primary-hover border border-primary/20",
 
     secondary:
-      "border-accent/30 bg-accent/10 text-accent hover:border-accent/50 hover:bg-accent/15 hover:text-foreground",
+      "border border-border bg-background-secondary text-foreground hover:bg-border/40 hover:border-border",
 
     danger:
-      "border-danger/40 bg-danger/10 text-danger hover:border-danger/60 hover:bg-danger/20",
+      "border border-danger/20 bg-danger/10 text-danger hover:bg-danger/20",
 
     ghost:
-      "border-transparent bg-transparent text-muted hover:bg-white/5 hover:text-foreground",
+      "border-transparent bg-transparent text-muted hover:bg-primary-light hover:text-primary",
 
     link: "",
   };

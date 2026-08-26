@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import Card from "../../components/common/Card";
 import LoginForm from "../../components/auth/LoginForm";
 import SignUpForm from "../../components/auth/SignUpForm";
@@ -11,51 +10,51 @@ const AuthPage = () => {
 
   return (
     <>
-      <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+      <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
         <section aria-labelledby="app-title">
           <div className="max-w-2xl">
             <Eyebrow>QUIZ CREATION MADE SIMPLE</Eyebrow>
 
             <h1
               id="app-title"
-              className="mt-3 text-6xl font-extrabold tracking-tighter sm:text-7xl"
+              className="mt-4 text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl lg:text-7xl"
             >
               Quiz<span className="text-primary">Builder</span>
             </h1>
 
-            <p className="text-muted mt-6 max-w-xl text-base leading-relaxed">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
               Create and practice multiple-choice quizzes, review your
               knowledge, track your learning progress, and generate quizzes as
               PDF documents.
             </p>
 
-            <div className="mt-8 flex flex-col gap-5">
-              <div className="flex gap-4">
-                <span className="text-accent text-lg">✦</span>
-
+            <div className="mt-10 flex flex-col gap-6">
+              <div className="flex gap-4 rounded-xl border border-border/60 bg-surface/60 p-4 shadow-sm backdrop-blur-xs">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary font-bold">
+                  ✦
+                </div>
                 <div>
-                  <strong className="text-foreground block font-semibold">
+                  <strong className="block font-semibold text-foreground">
                     Create and practice quizzes
                   </strong>
-
-                  <p className="text-muted mt-1 text-sm leading-relaxed">
-                    Build multiple-choice quizzes and use them for review and
-                    practice.
+                  <p className="mt-1 text-sm leading-relaxed text-muted">
+                    Build multiple-choice quizzes easily and use them for quick
+                    self-assessment and exam prep.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <span className="text-accent text-lg">✓</span>
-
+              <div className="flex gap-4 rounded-xl border border-border/60 bg-surface/60 p-4 shadow-sm backdrop-blur-xs">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary font-bold">
+                  ✓
+                </div>
                 <div>
-                  <strong className="text-foreground block font-semibold">
-                    Track your progress
+                  <strong className="block font-semibold text-foreground">
+                    Track your learning progress
                   </strong>
-
-                  <p className="text-muted mt-1 text-sm leading-relaxed">
-                    Review your quiz results and monitor your learning progress
-                    over time.
+                  <p className="mt-1 text-sm leading-relaxed text-muted">
+                    Review detailed quiz results, identify weak spots, and
+                    monitor growth over time.
                   </p>
                 </div>
               </div>
@@ -64,14 +63,14 @@ const AuthPage = () => {
         </section>
 
         <section aria-label="Login">
-          <Card className="max-w-md">
+          <Card className="max-w-md mx-auto w-full">
             <LoginForm onSignUp={() => setIsSignUpOpen(true)} />
           </Card>
         </section>
       </div>
 
       <Modal isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
-        <Card className="max-w-md">
+        <Card className="max-w-md w-full">
           <SignUpForm />
         </Card>
       </Modal>

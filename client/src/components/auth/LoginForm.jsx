@@ -1,11 +1,9 @@
-import { Formik, Form } from "formik";
+import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 
 import env from "../../config/env";
-
 import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
-
 import { loginAPI } from "../../api/auth.api";
 import { login } from "../../redux/slice/authSlice";
 import AuthFormLayout from "./AuthFormLayout";
@@ -23,11 +21,9 @@ const LoginForm = ({ onSignUp }) => {
   const handleSubmit = async (values, { setSubmitting, setStatus }) => {
     try {
       setStatus("");
-
       const response = await loginAPI(values.usernameOrEmail, values.password);
 
       if (!response.success) {
-        console.log("error: ", response.success);
         setStatus(response.message);
         return;
       }
@@ -45,7 +41,7 @@ const LoginForm = ({ onSignUp }) => {
           <AuthFormHeader
             eyebrow="WELCOME BACK"
             title="Sign in"
-            description="Sign in to continue to your RevBot account."
+            description="Sign in to continue to your QuizBuilder account."
           />
 
           <div className="flex flex-col gap-4">
@@ -60,14 +56,16 @@ const LoginForm = ({ onSignUp }) => {
             <div className="flex justify-end">
               <a
                 href={`${env.appUrl}/auth/forgotPass`}
-                className="text-sm text-muted transition-colors hover:text-foreground"
+                className="text-xs font-semibold text-muted transition-colors hover:text-primary"
               >
                 Forgot password?
               </a>
             </div>
 
             {status && (
-              <p className="text-center text-sm text-danger">{status}</p>
+              <p className="rounded-lg bg-danger/10 p-2 text-center text-xs font-semibold text-danger">
+                {status}
+              </p>
             )}
           </div>
 
@@ -76,14 +74,12 @@ const LoginForm = ({ onSignUp }) => {
               {isSubmitting ? "Logging in..." : "Login"}
             </Button>
 
-            <div className="flex items-center gap-4">
-              <div className="h-px flex-1 bg-white/10" />
-
-              <span className="text-xs font-medium tracking-wider text-muted">
+            <div className="flex items-center gap-4 my-1">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs font-bold tracking-wider text-muted/70">
                 OR
               </span>
-
-              <div className="h-px flex-1 bg-white/10" />
+              <div className="h-px flex-1 bg-border" />
             </div>
 
             <GoogleSignInButton />

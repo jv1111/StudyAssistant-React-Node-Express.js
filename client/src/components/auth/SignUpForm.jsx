@@ -1,4 +1,4 @@
-import { Formik, Form } from "formik";
+import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 
 import FormikTextField from "../forms/FormikTextField";
@@ -21,7 +21,6 @@ const SignUpForm = () => {
   const handleSubmit = async (userData, { setSubmitting, setStatus }) => {
     try {
       setStatus("");
-
       const response = await signUpAPI(userData);
 
       if (!response.success) {
@@ -46,16 +45,17 @@ const SignUpForm = () => {
           <AuthFormHeader
             eyebrow="GET STARTED"
             title="Create account"
-            description="Create your RevBot account to start making quizzes."
+            description="Create your QuizBuilder account to start making quizzes."
           />
 
           <div className="flex flex-col gap-4">
             <FormikTextField type="text" name="username" label="Username" />
-
             <FormikTextField type="password" name="password" label="Password" />
 
             {status && (
-              <p className="text-center text-sm text-danger">{status}</p>
+              <p className="rounded-lg bg-danger/10 p-2 text-center text-xs font-semibold text-danger">
+                {status}
+              </p>
             )}
           </div>
 

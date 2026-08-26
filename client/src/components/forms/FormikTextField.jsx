@@ -4,21 +4,27 @@ const FormikTextField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1.5">
+      <label
+        htmlFor={field.name}
+        className="text-xs font-bold tracking-wide text-[var(--color-text-label)]"
+      >
+        {label}
+      </label>
       <input
         id={field.name}
         placeholder={label}
         required
         {...props}
         {...field}
-        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-foreground placeholder:text-muted outline-none backdrop-blur-xl transition-all duration-200 focus:border-primary/50 focus:bg-white/[0.08] focus:ring-2 focus:ring-primary/10"
+        className="w-full rounded-xl border border-[var(--color-border-input)] bg-[var(--color-bg-input)] px-4 py-3 text-sm text-[var(--color-text-main)] placeholder:text-[var(--color-text-placeholder)] transition-all duration-200 outline-none focus:outline-none focus:border-[var(--color-border-focus)] focus:bg-[var(--color-bg-input-focus)] focus:ring-1 focus:ring-[var(--color-ring-focus)]"
       />
 
       {meta.touched && meta.error && (
         <ErrorMessage
           component="p"
           name={field.name}
-          className="text-sm mx-auto text-danger"
+          className="mt-0.5 text-xs font-medium text-[var(--color-danger)]"
         />
       )}
     </div>
