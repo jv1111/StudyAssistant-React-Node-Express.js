@@ -20,6 +20,12 @@ const QuizSessionSchema = mongoose.Schema(
       default: "in_progress",
     },
 
+    quizType: {
+      type: String,
+      enum: ["enumeration", "multiple_choice"],
+      required: true,
+    },
+
     randomizeQuestions: {
       type: Boolean,
       default: false,
@@ -90,8 +96,9 @@ const QuizSessionSchema = mongoose.Schema(
         },
 
         answer: {
-          type: mongoose.Schema.Types.Mixed,
+          type: String,
           default: null,
+          trim: true,
         },
 
         correct: {

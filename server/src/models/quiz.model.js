@@ -29,6 +29,15 @@ const QuizSchema = mongoose.Schema(
             trim: true,
           },
 
+          choices: {
+            type: [String],
+            required: true,
+            validate: {
+              validator: (choices) => choices.length === 4,
+              message: "Each question must have exactly 4 choices",
+            },
+          },
+
           answer: {
             type: String,
             required: true,

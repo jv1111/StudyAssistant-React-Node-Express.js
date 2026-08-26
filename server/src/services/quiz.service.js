@@ -10,7 +10,66 @@ const { savePDF } = require("../utils/pdfHandler");
 
 const AppError = require("../utils/AppError");
 
+const previewQuiz = async (subject, quizName, items) => {
+  if (!subject || !subject.trim()) {
+    throw new AppError("Subject is required", 400);
+  }
+
+  if (!quizName || !quizName.trim()) {
+    throw new AppError("Quiz name is required", 400);
+  }
+
+  if (!items || items.length < 4) {
+    throw new AppError("Quiz must have at least 4 items", 400);
+  }
+
+  const answers = items.map((item) => item.answer);
+
+  const previewItems = items.map((item) => {
+    let choices = item.choices || [];
+
+    if (item.choiceGeneration === "random") {
+      const otherAnswers = answers.filter((answer) => answer !== item.answer);
+
+      const shuffledAnswers = [...otherAnswers].sort(() => Math.random() - 0.5);
+
+      choices = [item.answer, ...shuffledAnswers.slice(0, 3)].sort(
+        () => Math.random() - 0.5,
+      );
+    }
+
+    return {
+      question: item.question,
+      answer: item.answer,
+      choices,
+      choiceGeneration: item.choiceGeneration || "disabled",
+    };
+  });
+
+  return {
+    subject: subject.trim(),
+    quizName: quizName.trim(),
+    numberOfItems: previewItems.length,
+    items: previewItems,
+  };
+};
+
 const createQuiz = async (userId, subject, quizName, items) => {
+  if (!subject || !subject.trim()) {
+    throw new AppError("Subject is required", 400);
+  }
+
+  if (!quizName || !quizName.trim()) {
+    throw new AppError("Quiz name is required", 400);
+  }
+
+  if (!items || items.length < 4) {
+    throw new AppError("Quiz must have at least 4 items", 400);
+  }
+
+  subject = subject.trim();
+  quizName = quizName.trim();
+
   let subjectDocument = await Subject.findOne({
     userId,
     name: subject,
@@ -34,6 +93,16 @@ const createQuiz = async (userId, subject, quizName, items) => {
       "Quiz with the same name already exists in this subject",
       400,
     );
+  }
+
+  for (const item of items) {
+    if (!item.choices || item.choices.length !== 4) {
+      throw new AppError("Each question must have exactly 4 choices", 400);
+    }
+
+    if (!item.choices.includes(item.answer)) {
+      throw new AppError("The correct answer must be one of the choices", 400);
+    }
   }
 
   const quiz = new Quiz({
@@ -241,7 +310,12 @@ const createPdf = async (quizId) => {
   return savePDF(data);
 };
 
-const startQuiz = async (userId, quizId, randomizeQuestions = false) => {
+const startQuiz = async (
+  userId,
+  quizId,
+  quizType,
+  randomizeQuestions = false,
+) => {
   const quiz = await Quiz.findOne({
     _id: quizId,
     userId,
@@ -249,6 +323,13 @@ const startQuiz = async (userId, quizId, randomizeQuestions = false) => {
 
   if (!quiz) {
     throw new AppError("Quiz not found", 404);
+  }
+
+  if (!["enumeration", "multiple_choice"].includes(quizType)) {
+    throw new AppError(
+      "Quiz type must be either enumeration or multiple_choice",
+      400,
+    );
   }
 
   let session = await QuizSession.findOne({
@@ -267,6 +348,7 @@ const startQuiz = async (userId, quizId, randomizeQuestions = false) => {
     session = await QuizSession.create({
       userId,
       quizId,
+      quizType,
       randomizeQuestions,
       currentItem: 0,
       itemOrder,
@@ -293,9 +375,14 @@ const startQuiz = async (userId, quizId, randomizeQuestions = false) => {
     sessionId: session._id,
     quizId: quiz._id,
     quizName: quiz.quizName,
+    quizType: session.quizType,
     currentItem: session.currentItem,
     numberOfItems: quiz.numberOfItems,
     question: currentQuizItem.question,
+    choices:
+      session.quizType === "multiple_choice"
+        ? currentQuizItem.choices
+        : undefined,
     score: session.score,
     answeredItems: session.answeredItems,
     status: session.status,
@@ -416,9 +503,14 @@ const nextQuestion = async (userId, sessionId) => {
     sessionId: session._id,
     quizId: quiz._id,
     quizName: quiz.quizName,
+    quizType: session.quizType,
     currentItem: session.currentItem,
     numberOfItems: quiz.numberOfItems,
     question: currentQuizItem.question,
+    choices:
+      session.quizType === "multiple_choice"
+        ? currentQuizItem.choices
+        : undefined,
     score: session.score,
     answeredItems: session.answeredItems,
     status: session.status,
@@ -426,7 +518,7 @@ const nextQuestion = async (userId, sessionId) => {
 };
 
 module.exports = {
-  createPdf,
+  previewQuiz,
   createQuiz,
   getSubjects,
   getQuizzes,
@@ -440,4 +532,5 @@ module.exports = {
   startQuiz,
   submitAnswer,
   nextQuestion,
+  createPdf,
 };

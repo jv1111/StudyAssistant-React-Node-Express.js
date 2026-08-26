@@ -6,6 +6,14 @@ const { fileDelete } = require("../utils/pdfHandler");
 
 const asyncHandler = require("../utils/asyncHandler");
 
+const previewQuiz = asyncHandler(async (req, res) => {
+  const { subject, quizName, items } = req.body;
+
+  const preview = await quizService.previewQuiz(subject, quizName, items);
+
+  res.status(200).json(preview);
+});
+
 const createQuiz = asyncHandler(async (req, res) => {
   const { subject, quizName, items } = req.body;
 
@@ -148,11 +156,12 @@ const deleteFile = asyncHandler(async (req, res) => {
 });
 
 const startQuiz = asyncHandler(async (req, res) => {
-  const { quizId, randomizeQuestions } = req.body;
+  const { quizId, quizType, randomizeQuestions } = req.body;
 
   const session = await quizService.startQuiz(
     req.user._id,
     quizId,
+    quizType,
     randomizeQuestions,
   );
 
@@ -197,4 +206,5 @@ module.exports = {
   startQuiz,
   submitAnswer,
   nextQuestion,
+  previewQuiz,
 };

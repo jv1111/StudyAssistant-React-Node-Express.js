@@ -8,7 +8,9 @@ const router = express.Router();
 
 router.use(verifyAuth);
 
-router.put("/create", quizController.createQuiz);
+router.post("/preview", quizController.previewQuiz);
+
+router.post("/create", quizController.createQuiz);
 
 router.get("/subjectsList", quizController.getSubjects);
 
