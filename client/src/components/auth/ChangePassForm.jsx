@@ -12,9 +12,7 @@ const ChangePassForm = () => {
     confirmPassword: "",
   };
 
-  const submitHandler = async (data, resetForm) => {
-    
-  };
+  const submitHandler = async (data, resetForm) => {};
 
   return (
     <Formik
@@ -31,25 +29,28 @@ const ChangePassForm = () => {
             <FormikTextField
               type="password"
               name="oldPassword"
-              label="Old password"
+              label="Current Password"
+              placeholder="••••••••"
             />
 
             <FormikTextField
               type="password"
               name="newPassword"
-              label="New password"
+              label="New Password"
+              placeholder="••••••••"
             />
 
             <FormikTextField
               type="password"
               name="confirmPassword"
-              label="Confirm password"
+              label="Confirm New Password"
+              placeholder="••••••••"
             />
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end border-t border-border pt-4">
             <Button type="submit" fit disabled={isSubmitting}>
-              {isSubmitting ? "Changing..." : "Change Password"}
+              {isSubmitting ? "Updating..." : "Update Password"}
             </Button>
           </div>
         </Form>

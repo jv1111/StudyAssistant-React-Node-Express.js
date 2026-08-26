@@ -9,70 +9,75 @@ const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
 
   return (
-    <main className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-10">
+    <main className="layout-container py-10">
+      {/* Page Header */}
       <header className="mb-8">
-        <span className="text-xs font-medium uppercase tracking-wider text-primary">
-          Account Settings
-        </span>
+        <span className="badge-primary">Account Settings</span>
 
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
-          Profile
+        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          Profile Settings
         </h1>
 
-        <p className="mt-2 text-sm leading-relaxed text-muted">
-          Manage your profile information and account security.
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+          Manage your personal details, profile picture, and account
+          credentials.
         </p>
       </header>
 
-      <div className="flex flex-col gap-5">
-        <Card>
-          <div className="flex flex-col items-center gap-6 sm:flex-row">
+      <div className="flex flex-col gap-6">
+        {/* User Identity Banner Card */}
+        <Card className="card-base">
+          <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
             <ProfileImage />
 
-            <div>
-              <span className="text-xs font-medium uppercase tracking-wider text-primary">
-                Username
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                Active Account
               </span>
 
-              <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
-                {user.username}
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                {user?.username}
               </h2>
 
-              <p className="mt-1 text-sm text-muted">
-                Manage your account information below.
+              <p className="text-sm text-muted">
+                Manage your credentials and security details below.
               </p>
             </div>
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <Card>
-            <header className="mb-6">
-              <h2 className="text-lg font-semibold text-foreground">
+        {/* Account Credentials Grid */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Security / Password Section */}
+          <Card className="card-base">
+            <header className="mb-6 border-b border-border pb-4">
+              <h2 className="text-lg font-bold text-foreground">
                 Change Password
               </h2>
 
               <p className="mt-1 text-sm leading-relaxed text-muted">
-                Update your password to keep your account secure.
+                Update your security password to keep your account safe.
               </p>
             </header>
 
             <ChangePassForm />
           </Card>
 
-          <Card className="h-fit">
-            <header className="mb-6">
-              <h2 className="text-lg font-semibold text-foreground">
+          {/* Email Address Section */}
+          <Card className="card-base h-fit">
+            <header className="mb-6 border-b border-border pb-4">
+              <h2 className="text-lg font-bold text-foreground">
                 Email Address
               </h2>
 
               <p className="mt-1 text-sm leading-relaxed text-muted">
-                {user.email
-                  ? "Update the email address associated with your account."
-                  : "Add an email address to your account."}
+                {user?.email
+                  ? "Manage the verified email address linked to your account."
+                  : "Add an email address to secure recovery access."}
               </p>
             </header>
-            <EmailForm email={user.email} />
+
+            <EmailForm email={user?.email} />
           </Card>
         </div>
       </div>

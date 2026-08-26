@@ -45,12 +45,12 @@ const EmailForm = ({ email }) => {
         <Form className="flex flex-col gap-5">
           <div className="flex flex-col gap-4">
             {email && (
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wider text-muted">
-                  Current email
+              <div className="rounded-xl border border-border bg-background-secondary/60 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                  Current Email
                 </p>
 
-                <p className="mt-1 break-all text-sm text-foreground">
+                <p className="mt-1 break-all text-sm font-medium text-foreground">
                   {email}
                 </p>
               </div>
@@ -59,16 +59,16 @@ const EmailForm = ({ email }) => {
             <FormikTextField
               type="email"
               name="email"
-              label={email ? "New email" : "Email"}
-              placeholder="Enter your email address"
+              label={email ? "New Email" : "Email Address"}
+              placeholder="e.g. name@example.com"
             />
 
-            <p className="text-xs leading-relaxed text-muted">
-              A verification code will be sent to this email address.
+            <p className="text-xs text-muted">
+              A verification code will be dispatched to this email address.
             </p>
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-3 border-t border-border pt-4">
             {email && (
               <Button
                 type="button"
@@ -94,9 +94,9 @@ const EmailForm = ({ email }) => {
     </Formik>
   ) : (
     <div className="flex flex-col gap-5">
-      <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-4">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted">
-          Current email
+      <div className="rounded-xl border border-border bg-background-secondary/60 p-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+          Current Email
         </p>
 
         <p className="mt-1 break-all text-sm font-medium text-foreground">
@@ -104,7 +104,7 @@ const EmailForm = ({ email }) => {
         </p>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end border-t border-border pt-4">
         <Button type="button" fit onClick={() => setIsEditing(true)}>
           Change Email
         </Button>

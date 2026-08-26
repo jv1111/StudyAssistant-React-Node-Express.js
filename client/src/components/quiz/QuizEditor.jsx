@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  X,
-  CheckCircleFill,
-  PlusCircle,
-  Trash3,
-  Magic,
-} from "react-bootstrap-icons";
+import { X, CheckCircleFill, PlusCircle, Trash3 } from "react-bootstrap-icons";
 
 import Card from "../common/Card";
 import Button from "../common/Button";
@@ -92,30 +86,6 @@ const QuizEditor = ({
     setIsQuizNameLocked(false);
   };
 
-  const handleFillSampleData = () => {
-    onSubjectChange({
-      target: { name: "subject", value: "Mathematics" },
-    });
-    setNewSubject("Mathematics");
-    setIsSubjectLocked(true);
-
-    onQuizNameChange({
-      target: { name: "quizName", value: "Basic Algebra Quiz" },
-    });
-    setNewQuizName("Basic Algebra Quiz");
-    setIsQuizNameLocked(true);
-
-    [
-      ["What is 5 + 7?", "12"],
-      ["What is 10 × 3?", "30"],
-      ["What is 2x = 10?", "5"],
-      ["What is the square root of 64?", "8"],
-    ].forEach(([question, answer], index) => {
-      onItemChange({ target: { name: "question", value: question } }, index);
-      onItemChange({ target: { name: "answer", value: answer } }, index);
-    });
-  };
-
   return (
     <>
       <form
@@ -123,22 +93,6 @@ const QuizEditor = ({
         onSubmit={onSubmit}
         className="flex flex-col gap-8"
       >
-        {/* Sample Data Utility Bar */}
-        <div className="flex items-center justify-between rounded-card border border-primary/20 bg-primary-light/50 px-5 py-3">
-          <span className="text-xs font-semibold text-primary">
-            Quick Setup Utility
-          </span>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleFillSampleData}
-            className="inline-flex items-center gap-2 text-xs"
-          >
-            <Magic size={14} />
-            Fill Sample Data
-          </Button>
-        </div>
-
         {/* Section 1: Quiz Information */}
         <Card className="card-base">
           <section aria-labelledby="quiz-info-title">
