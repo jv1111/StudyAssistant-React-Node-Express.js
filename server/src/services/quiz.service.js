@@ -1,7 +1,6 @@
 const Quiz = require("../models/quiz.model");
 const Subject = require("../models/subject.model");
 const Records = require("../models/records.model");
-const AutoSave = require("../models/autoSave.model");
 
 const dateFormatter = require("../utils/dateFormatter");
 const { savePDF } = require("../utils/pdfHandler");
@@ -165,58 +164,6 @@ const getRecord = async (recordId) => {
   };
 };
 
-const saveData = async (userId, key, data, quizId) => {
-  const savedData = await getSavedData(userId, key, quizId);
-
-  if (savedData) {
-    await AutoSave.findOneAndUpdate(
-      {
-        userId,
-        key,
-        quizId,
-      },
-      {
-        data,
-      },
-    );
-  } else {
-    const saveData = new AutoSave({
-      userId,
-      key,
-      data,
-      quizId,
-    });
-
-    await saveData.save();
-  }
-
-  return {
-    success: true,
-    message: "data saved",
-  };
-};
-
-const getSavedData = async (userId, key, quizId) => {
-  return AutoSave.findOne({
-    userId,
-    key,
-    quizId,
-  });
-};
-
-const deleteSavedData = async (userId, key, quizId) => {
-  await AutoSave.findOneAndDelete({
-    userId,
-    key,
-    quizId,
-  });
-
-  return {
-    success: true,
-    message: "Saved data is successfully deleted",
-  };
-};
-
 const getItems = async (quizId) => {
   const quiz = await Quiz.findById(quizId).populate("subjectId", "name");
 
@@ -319,9 +266,6 @@ module.exports = {
   getQuizzes,
   getRecords,
   getRecord,
-  saveData,
-  getSavedData,
-  deleteSavedData,
   getItems,
   updateQuiz,
   createPdf,

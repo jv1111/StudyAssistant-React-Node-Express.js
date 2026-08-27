@@ -50,7 +50,11 @@ const SubjectSelectorModal = ({ isOpen, onClose, onSelect }) => {
             ) : subjects.length > 0 ? (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 py-2">
                 {subjects.map((subject) => (
-                  <Button variant="card" onClick={() => handleSelect(subject)}>
+                  <Button
+                    key={subject._id}
+                    variant="card"
+                    onClick={() => handleSelect(subject)}
+                  >
                     <div>
                       <div className="flex items-center justify-between gap-2">
                         <h3 className="font-bold text-foreground transition-colors group-hover:text-primary-hover">

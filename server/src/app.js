@@ -12,6 +12,7 @@ const quizSessionRoutes = require("./routes/quizSession.routes");
 const userRoutes = require("./routes/user.routes");
 const emailVerificationRoutes = require("./routes/emailVerification.routes");
 const passwordResetRoutes = require("./routes/passwordReset.routes");
+const quizDraftRoutes = require("./routes/quizDraft.routes");
 
 const app = express();
 
@@ -35,8 +36,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/auth", authRoutes);
+
 app.use("/quiz", quizRoutes);
+app.use("/quiz/draft", quizDraftRoutes);
 app.use("/quiz-session", quizSessionRoutes);
+
 app.use("/user", userRoutes);
 app.use("/email-verification", emailVerificationRoutes);
 app.use("/password-reset", passwordResetRoutes);

@@ -3,77 +3,57 @@ import { useNavigate } from "react-router-dom";
 
 import QuizEditor from "../../components/quiz/QuizEditor";
 import { previewQuiz } from "../../api/quiz.api";
+import useQuizDraft from "../../hooks/useQuizDraft";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 
-const DEFAULT_ITEM = {
-  question: "",
-  answer: "",
-  generationMethod: "random",
-  choices: ["", "", "", ""],
-};
-
-const INITIAL_ITEMS = Array.from({ length: 4 }, () => ({
-  ...DEFAULT_ITEM,
-  choices: [...DEFAULT_ITEM.choices],
-}));
-
 const CreateQuizPage = () => {
-  const [items, setItems] = useState(INITIAL_ITEMS);
-  const [subject, setSubject] = useState("");
-  const [quizName, setQuizName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
-  const addQuestion = () => {
-    setItems((currentItems) => [...currentItems, { ...DEFAULT_ITEM }]);
-  };
-
-  const deleteQuestion = (index) => {
-    setItems((currentItems) =>
-      currentItems.filter((_, itemIndex) => itemIndex !== index),
-    );
-  };
-
-  const handleItemChange = (event, index) => {
-    const { name, value } = event.target;
-
-    setItems((currentItems) =>
-      currentItems.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, [name]: value } : item,
-      ),
-    );
-  };
-
-  const handleChoiceChange = (choiceValue, choiceIndex, questionIndex) => {
-    setItems((currentItems) =>
-      currentItems.map((item, index) =>
-        index === questionIndex
-          ? {
-              ...item,
-              choices: item.choices.map((choice, index) =>
-                index === choiceIndex ? choiceValue : choice,
-              ),
-            }
-          : item,
-      ),
-    );
-  };
+  const {
+    subject,
+    setSubject,
+    quizName,
+    setQuizName,
+    items,
+    isLoadingDraft,
+    addQuestion,
+    deleteQuestion,
+    handleItemChange,
+    handleChoiceChange,
+    clearDraft,
+  } = useQuizDraft();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (isSubmitting) return;
+
     setIsSubmitting(true);
 
     try {
       const response = await previewQuiz(subject, quizName, items);
 
+      await clearDraft();
+
       navigate("/quiz/create/preview", {
         state: response,
       });
+    } catch (error) {
+      console.error("Failed to preview quiz:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoadingDraft) {
+    return (
+      <div className="flex min-h-64 items-center justify-center text-sm text-muted">
+        Loading quiz draft...
+      </div>
+    );
+  }
 
   return (
     <>
