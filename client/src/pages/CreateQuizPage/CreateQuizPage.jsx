@@ -5,6 +5,7 @@ import QuizEditor from "../../components/quiz/QuizEditor";
 import { previewQuiz } from "../../api/quiz.api";
 import useSavedDataFetcher from "../../hooks/useSavedDataFetcher";
 import autoSave from "../../helper/autoSave";
+import Badge from "../../components/common/Badge";
 
 const DEFAULT_ITEM = {
   question: "",
@@ -103,7 +104,9 @@ const CreateQuizPage = () => {
   return (
     <div className="layout-container py-10">
       <header className="mb-8">
-        <span className="badge-primary">Quiz Builder</span>
+        <Badge variant="primary" shape="rounded">
+          Quiz Builder
+        </Badge>
 
         <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
           Create New Quiz

@@ -17,6 +17,7 @@ import Button from "../common/Button";
 import Input from "../common/Input";
 import AutoAdjustingInput from "../common/AutoAdjustingInput";
 import SubjectSelectorModal from "../quiz/SubjectSelectorModal";
+import Badge from "../common/Badge";
 
 const MIN_QUESTIONS = 4;
 
@@ -342,9 +343,9 @@ const QuizEditor = ({
                 </p>
               </div>
 
-              <span className="badge-primary self-start sm:self-auto">
+              <Badge variant="primary" shape="rounded">
                 {items.length} {items.length === 1 ? "Question" : "Questions"}
-              </span>
+              </Badge>
             </header>
 
             {/* Lock Warning Banner */}

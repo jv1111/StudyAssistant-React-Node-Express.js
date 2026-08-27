@@ -9,6 +9,7 @@ import QuizPreviewItem from "../../components/quiz/QuizPreviewItem";
 import FeedbackModal from "../../components/common/FeedbackModal";
 
 import { createQuiz } from "../../api/quiz.api";
+import Badge from "../../components/common/Badge";
 
 const QuizPreviewPage = () => {
   const location = useLocation();
@@ -134,7 +135,9 @@ const QuizPreviewPage = () => {
     <div className="layout-container py-10">
       <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <span className="badge-primary">Preview & Review</span>
+          <Badge variant="primary" shape="rounded">
+            Preview & Review
+          </Badge>
 
           <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
             Quiz Preview
@@ -177,9 +180,13 @@ const QuizPreviewPage = () => {
                 </p>
               </div>
 
-              <span className="badge-primary self-start sm:self-auto">
+              <Badge
+                variant="primary"
+                shape="rounded"
+                className="self-start sm:self-auto"
+              >
                 {items.length} {items.length === 1 ? "Question" : "Questions"}
-              </span>
+              </Badge>
             </header>
 
             <div className="flex flex-col gap-6">

@@ -4,6 +4,7 @@ import Card from "../../components/common/Card";
 import ProfileImage from "../../components/profile/ProfileImage";
 import ChangePassForm from "../../components/auth/ChangePassForm";
 import EmailForm from "../../components/auth/EmailForm";
+import Badge from "../../components/common/Badge";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -12,7 +13,9 @@ const ProfilePage = () => {
     <main className="layout-container py-10">
       {/* Page Header */}
       <header className="mb-8">
-        <span className="badge-primary">Account Settings</span>
+        <Badge variant="primary" shape="rounded">
+          Account Settings
+        </Badge>
 
         <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
           Profile Settings
