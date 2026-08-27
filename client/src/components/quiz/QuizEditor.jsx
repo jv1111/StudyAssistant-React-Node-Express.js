@@ -18,6 +18,7 @@ import Input from "../common/Input";
 import AutoAdjustingInput from "../common/AutoAdjustingInput";
 import SubjectSelectorModal from "../quiz/SubjectSelectorModal";
 import Badge from "../common/Badge";
+import SelectableOption from "../common/SelectableOption";
 
 const MIN_QUESTIONS = 4;
 
@@ -454,16 +455,15 @@ const QuizEditor = ({
 
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                           {GENERATION_METHODS.map((method) => {
-                            const Icon = method.icon;
                             const isSelected = generationMethod === method.id;
                             const isCustomAndDisabled =
                               !isInfoConfirmed ||
                               (method.id === "custom" && !isAnswerFilled);
 
                             return (
-                              <button
+                              <SelectableOption
                                 key={method.id}
-                                type="button"
+                                selected={isSelected}
                                 disabled={isCustomAndDisabled}
                                 title={
                                   !isInfoConfirmed
@@ -472,6 +472,9 @@ const QuizEditor = ({
                                       ? "Fill in the Correct Answer above to enable Custom Choices"
                                       : ""
                                 }
+                                icon={method.icon}
+                                label={method.label}
+                                description={method.description}
                                 onClick={() =>
                                   onItemChange(
                                     {
@@ -483,31 +486,7 @@ const QuizEditor = ({
                                     index,
                                   )
                                 }
-                                className={`flex items-start gap-2.5 rounded-lg border p-2.5 text-left transition-all duration-200 ${
-                                  isCustomAndDisabled
-                                    ? "cursor-not-allowed opacity-50 border-border/40 bg-surface/50"
-                                    : isSelected
-                                      ? "border-primary bg-primary-light/50 text-foreground shadow-xs hover:cursor-pointer"
-                                      : "border-border/80 bg-surface text-muted hover:border-primary/40 hover:text-foreground hover:cursor-pointer"
-                                }`}
-                              >
-                                <Icon
-                                  size={16}
-                                  className={`mt-0.5 shrink-0 ${
-                                    isSelected && !isCustomAndDisabled
-                                      ? "text-primary"
-                                      : "text-muted"
-                                  }`}
-                                />
-                                <div className="flex flex-col">
-                                  <span className="text-xs font-bold leading-tight">
-                                    {method.label}
-                                  </span>
-                                  <span className="mt-0.5 text-[11px] leading-tight text-muted">
-                                    {method.description}
-                                  </span>
-                                </div>
-                              </button>
+                              />
                             );
                           })}
                         </div>

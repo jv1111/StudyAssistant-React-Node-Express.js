@@ -11,9 +11,11 @@ const Button = ({
   const baseStyles =
     variant === "link"
       ? "cursor-pointer border-0 bg-transparent p-0 text-sm font-semibold text-primary hover:text-primary-hover disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
-      : `flex min-h-12 ${
-          fit ? "w-fit" : "w-full"
-        } cursor-pointer items-center justify-center rounded-(--radius-input) px-5 text-sm font-bold transition-all duration-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50`;
+      : variant === "card"
+        ? "group flex flex-col justify-between rounded-xl border border-border bg-background-secondary/40 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:bg-primary-light/40 hover:shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+        : `flex min-h-12 ${
+            fit ? "w-fit" : "w-full"
+          } cursor-pointer items-center justify-center rounded-(--radius-input) px-5 text-sm font-bold transition-all duration-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50`;
 
   const variants = {
     primary:
@@ -29,6 +31,8 @@ const Button = ({
       "border-transparent bg-transparent text-muted hover:bg-primary-light hover:text-primary",
 
     link: "",
+
+    card: "", // styles are fully defined in baseStyles
   };
 
   const buttonClassName = `${baseStyles} ${variants[variant]} ${className}`;

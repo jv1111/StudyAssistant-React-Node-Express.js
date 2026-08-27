@@ -12,12 +12,10 @@ const DEFAULT_ITEM = {
   choices: ["", "", "", ""],
 };
 
-const INITIAL_ITEMS = [
-  { ...DEFAULT_ITEM },
-  { ...DEFAULT_ITEM },
-  { ...DEFAULT_ITEM },
-  { ...DEFAULT_ITEM },
-];
+const INITIAL_ITEMS = Array.from({ length: 4 }, () => ({
+  ...DEFAULT_ITEM,
+  choices: [...DEFAULT_ITEM.choices],
+}));
 
 const CreateQuizPage = () => {
   const [items, setItems] = useState(INITIAL_ITEMS);
@@ -49,23 +47,21 @@ const CreateQuizPage = () => {
 
   const handleChoiceChange = (choiceValue, choiceIndex, questionIndex) => {
     setItems((currentItems) =>
-      currentItems.map((item, itemIndex) => {
-        if (itemIndex !== questionIndex) return item;
-
-        const choices = [...item.choices];
-        choices[choiceIndex] = choiceValue;
-
-        return {
-          ...item,
-          choices,
-        };
-      }),
+      currentItems.map((item, index) =>
+        index === questionIndex
+          ? {
+              ...item,
+              choices: item.choices.map((choice, index) =>
+                index === choiceIndex ? choiceValue : choice,
+              ),
+            }
+          : item,
+      ),
     );
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     setIsSubmitting(true);
 
     try {
