@@ -1,5 +1,4 @@
 import EmptyState from "../../components/common/EmptyState";
-import ListPageLayout from "../../components/common/ListPageLayout";
 import RecordCardContent from "../../components/records/RecordCardContent";
 import Card from "../../components/common/Card";
 
@@ -15,13 +14,7 @@ const RecordsPage = () => {
   }
 
   return (
-    <ListPageLayout
-      title="Records"
-      description="Review your previous quiz results"
-      searchInput={searchInput}
-      onSearch={handleSearch}
-      searchPlaceholder="Search records..."
-    >
+    <>
       {records.length > 0 ? (
         <ul
           onScroll={handleScroll}
@@ -41,7 +34,7 @@ const RecordsPage = () => {
           description="Complete a quiz to see your results here."
         />
       )}
-    </ListPageLayout>
+    </>
   );
 };
 

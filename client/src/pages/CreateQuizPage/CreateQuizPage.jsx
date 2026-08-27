@@ -6,6 +6,7 @@ import { previewQuiz } from "../../api/quiz.api";
 import useSavedDataFetcher from "../../hooks/useSavedDataFetcher";
 import autoSave from "../../helper/autoSave";
 import Badge from "../../components/common/Badge";
+import AppHeaderContent from "../../components/common/AppHeaderContent";
 
 const DEFAULT_ITEM = {
   question: "",
@@ -102,20 +103,13 @@ const CreateQuizPage = () => {
   };
 
   return (
-    <div className="layout-container py-10">
-      <header className="mb-8">
-        <Badge variant="primary" shape="rounded">
-          Quiz Builder
-        </Badge>
-
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-          Create New Quiz
-        </h1>
-
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-          Design your quiz by specifying a subject, providing a title, and
-          adding your question set with flexible distractor generation.
-        </p>
+    <>
+      <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <AppHeaderContent
+          eyebrow="Quiz Builder"
+          title="Create New Quiz"
+          description="Design your quiz by specifying a subject, providing a title, and adding your question set with flexible distractor generation."
+        />
       </header>
 
       <QuizEditor
@@ -144,7 +138,7 @@ const CreateQuizPage = () => {
         quizInfoDescription="Set up basic subject and title information."
         questionsDescription="Input question prompts, target answers, and distractor generation methods."
       />
-    </div>
+    </>
   );
 };
 

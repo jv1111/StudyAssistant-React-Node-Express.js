@@ -4,16 +4,15 @@ import { saveAs } from "file-saver";
 import EmptyState from "../../components/common/EmptyState";
 import QuizCardContent from "../../components/quiz/QuizCardContent";
 import QuizOptionBox from "../../components/quiz/QuizOptionBox";
-import SearchInput from "../../components/common/SearchInput";
 import Card from "../../components/common/Card";
 import Modal from "../../components/common/Modal";
+import AppHeaderContent from "../../components/common/AppHeaderContent";
+import SearchInput from "../../components/common/SearchInput";
 
 import useQuizzes from "../../hooks/useQuizzes";
-
 import { deleteFile, getPdf, setPDFOnServer } from "../../api/quiz.api";
 
 import LoadingPage from "../Loading/LoadingPage";
-import ListPageLayout from "../../components/common/ListPageLayout";
 
 const QuizPage = () => {
   const { quizzes, isLoading, searchInput, handleSearch, handleScroll } =
@@ -45,21 +44,31 @@ const QuizPage = () => {
   }
 
   return (
-    <ListPageLayout
-      title="Quizzes"
-      description="Choose a quiz to get started"
-      searchInput={searchInput}
-      onSearch={handleSearch}
-      searchPlaceholder="Search quizzes..."
-    >
+    <div>
+      <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <AppHeaderContent
+          eyebrow="Overview"
+          title="Quizzes"
+          description="Choose a quiz to get started"
+        />
+
+        <div className="w-full shrink-0 sm:w-72 md:w-80">
+          <SearchInput
+            value={searchInput}
+            onChange={handleSearch}
+            placeholder="Search quizzes..."
+          />
+        </div>
+      </header>
+
       {quizzes.length > 0 ? (
         <ul
           onScroll={handleScroll}
-          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {quizzes.map((quiz) => (
-            <li key={quiz._id}>
-              <Card>
+            <li key={quiz._id} className="h-full">
+              <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
                 <QuizCardContent
                   quiz={quiz}
                   onSelect={handleQuizSelect}
@@ -84,7 +93,7 @@ const QuizPage = () => {
           />
         </Card>
       </Modal>
-    </ListPageLayout>
+    </div>
   );
 };
 

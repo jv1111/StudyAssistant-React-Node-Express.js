@@ -67,7 +67,7 @@ const QuizPage = () => {
   const progress = (item.questionNumber / item.numberOfItems) * 100;
 
   return (
-    <main className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-10">
+    <div className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-10">
       <header className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <span className="text-xs font-medium uppercase tracking-wider text-primary">
@@ -184,7 +184,7 @@ const QuizPage = () => {
           </div>
         </section>
       </Card>
-    </main>
+    </div>
   );
 };
 

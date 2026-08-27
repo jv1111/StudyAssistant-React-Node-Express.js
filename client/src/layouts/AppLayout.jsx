@@ -5,7 +5,7 @@ const AppLayout = () => {
   return (
     <>
       <Navbar />
-      <main className="layout-container py-8">
+      <main className="layout-container py-12">
         <Outlet />
       </main>
     </>

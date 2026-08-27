@@ -11,9 +11,8 @@ const SearchInput = ({
       <Search
         aria-hidden="true"
         size={16}
-        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
+        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted transition-colors group-focus-within:text-primary"
       />
-
       <input
         id={id}
         type="search"
@@ -22,7 +21,7 @@ const SearchInput = ({
         onChange={onChange}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="input-base py-2.5 pl-10 pr-4"
+        className="input-base w-full py-2.5 pl-10 pr-4 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
       />
     </div>
   );

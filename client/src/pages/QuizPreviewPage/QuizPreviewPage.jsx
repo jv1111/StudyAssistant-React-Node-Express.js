@@ -10,6 +10,7 @@ import FeedbackModal from "../../components/common/FeedbackModal";
 
 import { createQuiz } from "../../api/quiz.api";
 import Badge from "../../components/common/Badge";
+import AppHeaderContent from "../../components/common/AppHeaderContent";
 
 const QuizPreviewPage = () => {
   const location = useLocation();
@@ -57,12 +58,12 @@ const QuizPreviewPage = () => {
   };
 
   const handleDeleteItem = (index) => {
-    if (items.length <= 1) {
+    if (items.length <= 4) {
       setFeedback({
         isOpen: true,
         type: "warning",
         title: "Cannot Delete",
-        message: "A quiz must contain at least one question.",
+        message: "A quiz must contain at least 4 questions.",
         onConfirm: null,
       });
       return;
@@ -132,33 +133,13 @@ const QuizPreviewPage = () => {
   }
 
   return (
-    <div className="layout-container py-10">
-      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Badge variant="primary" shape="rounded">
-            Preview & Review
-          </Badge>
-
-          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Quiz Preview
-          </h1>
-
-          <p className="mt-1 text-sm text-muted">
-            Review your generated quiz. Click "Edit" on any question to modify
-            details.
-          </p>
-        </div>
-
-        <Button
-          type="button"
-          variant="secondary"
-          fit
-          onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 self-start sm:self-auto"
-        >
-          <ArrowLeft size={15} />
-          Back to Editor
-        </Button>
+    <>
+      <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <AppHeaderContent
+          eyebrow="Preview & Review"
+          title="Quiz Preview"
+          description='Review your generated quiz. Click "Edit" on any question to modify details.'
+        />
       </header>
 
       <div className="flex flex-col gap-8">
@@ -197,7 +178,7 @@ const QuizPreviewPage = () => {
                   index={index}
                   isEditing={editingIndex === index}
                   editBuffer={editBuffer}
-                  isDeleteDisabled={items.length <= 1}
+                  isDeleteDisabled={items.length <= 4}
                   onStartEdit={() => handleStartEdit(index)}
                   onCancelEdit={handleCancelEdit}
                   onSaveEdit={handleSaveEdit}
@@ -236,7 +217,7 @@ const QuizPreviewPage = () => {
         message={feedback.message}
         onConfirm={feedback.onConfirm}
       />
-    </div>
+    </>
   );
 };
 
