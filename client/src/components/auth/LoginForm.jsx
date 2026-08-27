@@ -21,14 +21,12 @@ const LoginForm = ({ onSignUp }) => {
   const handleSubmit = async (values, { setSubmitting, setStatus }) => {
     try {
       setStatus("");
+
       const response = await loginAPI(values.usernameOrEmail, values.password);
 
-      if (!response.success) {
-        setStatus(response.message);
-        return;
-      }
-
       dispatch(login(response.user));
+    } catch (error) {
+      setStatus(error.response?.data?.message || "Login failed");
     } finally {
       setSubmitting(false);
     }

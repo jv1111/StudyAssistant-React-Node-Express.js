@@ -1,73 +1,38 @@
 import api from "./axios";
 
 const loginAPI = async (usernameOrEmail, password) => {
-  try {
-    const response = await api.post("/auth/login", {
-      usernameOrEmail,
-      password,
-    });
+  const response = await api.post("/auth/login", {
+    usernameOrEmail,
+    password,
+  });
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Login failed",
-    };
-  }
+  return response.data;
 };
 
 const signUpAPI = async (userData) => {
-  try {
-    const response = await api.post("/auth/register", userData);
+  const response = await api.post("/auth/register", userData);
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Registration failed",
-    };
-  }
+  return response.data;
 };
 
 const googleLoginAPI = async (credential) => {
-  try {
-    const response = await api.post("/auth/google", {
-      credential,
-    });
+  const response = await api.post("/auth/google", {
+    credential,
+  });
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Google sign-in failed",
-    };
-  }
+  return response.data;
 };
 
 const getMeAPI = async () => {
-  try {
-    const response = await api.get("/auth/me");
+  const response = await api.get("/auth/me");
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Failed to get user",
-    };
-  }
+  return response.data;
 };
 
 const logoutAPI = async () => {
-  try {
-    const response = await api.post("/auth/logout");
+  const response = await api.post("/auth/logout");
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Logout failed",
-    };
-  }
+  return response.data;
 };
 
 export { loginAPI, signUpAPI, googleLoginAPI, getMeAPI, logoutAPI };

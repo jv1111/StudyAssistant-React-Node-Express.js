@@ -51,11 +51,11 @@ export const appRoutes = {
               element: <RecordPage />,
             },
             {
-              path: ":subject",
+              path: ":subjectId",
               element: <QuizzesPage />,
             },
             {
-              path: ":subject/:quizId",
+              path: ":subjectId/:quizId",
               element: <QuizPage />,
             },
             {

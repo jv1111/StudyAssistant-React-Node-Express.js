@@ -9,14 +9,14 @@ import { getQuizzes } from "../api/quiz.api";
 import infinitScroller from "../helper/infinitScroller";
 
 const useQuizzes = () => {
-  const { subject } = useParams();
+  const { subjectId } = useParams();
 
   const [quizzes, setQuizzes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
   const searchVal = useDebounce(searchInput, 400);
 
-  const queryParams = useMemo(() => ({ subject }), [subject]);
+  const queryParams = useMemo(() => ({ subjectId }), [subjectId]);
 
   const { isLoading, setSkipCount } = useItemFetcher(
     setQuizzes,

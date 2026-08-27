@@ -21,14 +21,12 @@ const SignUpForm = () => {
   const handleSubmit = async (userData, { setSubmitting, setStatus }) => {
     try {
       setStatus("");
+
       const response = await signUpAPI(userData);
 
-      if (!response.success) {
-        setStatus(response.message);
-        return;
-      }
-
       dispatch(login(response.user));
+    } catch (error) {
+      setStatus(error.response?.data?.message || "Registration failed");
     } finally {
       setSubmitting(false);
     }

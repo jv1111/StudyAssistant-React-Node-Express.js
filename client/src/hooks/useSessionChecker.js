@@ -15,11 +15,7 @@ const useSessionChecker = () => {
       try {
         const response = await getMeAPI();
 
-        if (response.success) {
-          dispatch(login(response.user));
-        } else {
-          dispatch(logout());
-        }
+        dispatch(login(response.user));
       } catch (error) {
         dispatch(logout());
       } finally {

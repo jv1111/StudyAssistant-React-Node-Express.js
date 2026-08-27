@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { JournalBookmark, ArrowRight } from "react-bootstrap-icons";
 import Button from "../common/Button";
+import Badge from "../common/Badge";
 
 const SubjectCardContent = ({ subject }) => {
   const navigate = useNavigate();
@@ -9,10 +10,9 @@ const SubjectCardContent = ({ subject }) => {
     <div className="flex h-full min-h-48 flex-col justify-between p-1">
       <div>
         <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary-light px-2.5 py-1 text-xs font-bold uppercase tracking-wider text-primary">
-            <JournalBookmark size={13} />
+          <Badge icon={JournalBookmark} variant="primary" shape="rounded">
             Subject
-          </span>
+          </Badge>
         </div>
 
         <h2 className="mt-3.5 text-xl font-bold tracking-tight text-foreground line-clamp-1">
