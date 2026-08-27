@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import QuizEditor from "../../components/quiz/QuizEditor";
 import { previewQuiz } from "../../api/quiz.api";
-import useSavedDataFetcher from "../../hooks/useSavedDataFetcher";
-import autoSave from "../../helper/autoSave";
-import Badge from "../../components/common/Badge";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 
 const DEFAULT_ITEM = {
@@ -30,49 +27,40 @@ const CreateQuizPage = () => {
 
   const navigate = useNavigate();
 
-  useSavedDataFetcher("createQuiz", setItems, setSubject, setQuizName);
-
-  const saveData = (data) => {
-    autoSave("createQuiz", data);
-  };
-
   const addQuestion = () => {
-    const newItems = [...items, { ...DEFAULT_ITEM }];
-
-    setItems(newItems);
-    saveData({ items: newItems, subject, quizName });
+    setItems((currentItems) => [...currentItems, { ...DEFAULT_ITEM }]);
   };
 
   const deleteQuestion = (index) => {
-    const newItems = items.filter((_, itemIndex) => itemIndex !== index);
-
-    setItems(newItems);
-    saveData({ items: newItems, subject, quizName });
+    setItems((currentItems) =>
+      currentItems.filter((_, itemIndex) => itemIndex !== index),
+    );
   };
 
   const handleItemChange = (event, index) => {
     const { name, value } = event.target;
-    const newItems = items.map((item, itemIndex) =>
-      itemIndex === index ? { ...item, [name]: value } : item,
-    );
 
-    setItems(newItems);
-    saveData({ items: newItems, subject, quizName });
+    setItems((currentItems) =>
+      currentItems.map((item, itemIndex) =>
+        itemIndex === index ? { ...item, [name]: value } : item,
+      ),
+    );
   };
 
   const handleChoiceChange = (choiceValue, choiceIndex, questionIndex) => {
-    const newItems = items.map((item, itemIndex) => {
-      if (itemIndex !== questionIndex) return item;
+    setItems((currentItems) =>
+      currentItems.map((item, itemIndex) => {
+        if (itemIndex !== questionIndex) return item;
 
-      const currentChoices = item.choices || ["", "", "", ""];
-      const updatedChoices = [...currentChoices];
-      updatedChoices[choiceIndex] = choiceValue;
+        const choices = [...item.choices];
+        choices[choiceIndex] = choiceValue;
 
-      return { ...item, choices: updatedChoices };
-    });
-
-    setItems(newItems);
-    saveData({ items: newItems, subject, quizName });
+        return {
+          ...item,
+          choices,
+        };
+      }),
+    );
   };
 
   const handleSubmit = async (event) => {
@@ -81,18 +69,7 @@ const CreateQuizPage = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("Preview payload:", {
-        subject,
-        quizName,
-        items,
-      });
-
       const response = await previewQuiz(subject, quizName, items);
-
-      if (response.error) {
-        alert(response.error);
-        return;
-      }
 
       navigate("/quiz/create/preview", {
         state: response,
@@ -116,18 +93,8 @@ const CreateQuizPage = () => {
         subject={subject}
         quizName={quizName}
         items={items}
-        onSubjectChange={(event) => {
-          const value = event.target.value;
-
-          setSubject(value);
-          saveData({ items, subject: value, quizName });
-        }}
-        onQuizNameChange={(event) => {
-          const value = event.target.value;
-
-          setQuizName(value);
-          saveData({ items, subject, quizName: value });
-        }}
+        onSubjectChange={(event) => setSubject(event.target.value)}
+        onQuizNameChange={(event) => setQuizName(event.target.value)}
         onItemChange={handleItemChange}
         onChoiceChange={handleChoiceChange}
         onDeleteQuestion={deleteQuestion}
