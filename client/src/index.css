@@ -45,9 +45,14 @@
   --color-border: #e8e2d5; /* Warm neutral border */
   --color-border-hover: #d4af37;
 
-  /* Status Colors */
+  /* --- Status & Generation Method Colors --- */
   --color-danger: #dc2626;
   --color-success: #16a34a;
+  --color-info: #2563eb;
+  --color-warning: #f59e0b;
+
+  --color-ai: #9333ea;
+  --color-random: #059669;
 
   /* --- Elevation & Shadows --- */
   --shadow-gold-glow: 0 20px 50px -10px rgba(197, 155, 39, 0.15);

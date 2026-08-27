@@ -1,0 +1,236 @@
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ArrowLeft, Save } from "react-bootstrap-icons";
+
+import Card from "../../components/common/Card";
+import Button from "../../components/common/Button";
+import QuizDetails from "../../components/quiz/QuizDetails";
+import QuizPreviewItem from "../../components/quiz/QuizPreviewItem";
+import FeedbackModal from "../../components/common/FeedbackModal";
+
+import { createQuiz } from "../../api/quiz.api";
+
+const QuizPreviewPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { subject, quizName, items: initialItems } = location.state || {};
+
+  const [items, setItems] = useState(initialItems || []);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editBuffer, setEditBuffer] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const [feedback, setFeedback] = useState({
+    isOpen: false,
+    type: "success",
+    title: "",
+    message: "",
+    onConfirm: null,
+  });
+
+  const closeFeedback = () => {
+    setFeedback((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const handleStartEdit = (index) => {
+    setEditingIndex(index);
+    setEditBuffer(structuredClone(items[index]));
+  };
+
+  const handleCancelEdit = () => {
+    setEditingIndex(null);
+    setEditBuffer(null);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editBuffer || editingIndex === null) return;
+
+    setItems((currentItems) =>
+      currentItems.map((item, index) =>
+        index === editingIndex ? editBuffer : item,
+      ),
+    );
+
+    handleCancelEdit();
+  };
+
+  const handleDeleteItem = (index) => {
+    if (items.length <= 1) {
+      setFeedback({
+        isOpen: true,
+        type: "warning",
+        title: "Cannot Delete",
+        message: "A quiz must contain at least one question.",
+        onConfirm: null,
+      });
+      return;
+    }
+
+    setItems((currentItems) =>
+      currentItems.filter((_, itemIndex) => itemIndex !== index),
+    );
+
+    if (editingIndex === index) {
+      handleCancelEdit();
+    }
+  };
+
+  const handleFinalSubmit = async () => {
+    if (isSaving) return;
+
+    try {
+      setIsSaving(true);
+      await createQuiz(subject, quizName, items);
+
+      setFeedback({
+        isOpen: true,
+        type: "success",
+        title: "Quiz Saved!",
+        message: "Your quiz has been created and saved successfully.",
+        onConfirm: () => navigate("/"),
+      });
+    } catch (error) {
+      console.error("Failed to save quiz:", error);
+
+      setFeedback({
+        isOpen: true,
+        type: "error",
+        title: "Submission Failed",
+        message:
+          error.response?.data?.message ||
+          "Failed to save quiz. Please try again.",
+        onConfirm: null,
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (!location.state) {
+    return (
+      <div className="layout-container py-16 text-center">
+        <h2 className="text-xl font-bold text-foreground">
+          No Preview Data Found
+        </h2>
+
+        <p className="mt-2 text-sm text-muted">
+          Please generate or create a quiz first.
+        </p>
+
+        <Button
+          fit
+          className="mt-6 inline-flex items-center gap-2"
+          onClick={() => navigate("/quiz/create")}
+        >
+          <ArrowLeft size={16} />
+          Go to Quiz Creator
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="layout-container py-10">
+      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <span className="badge-primary">Preview & Review</span>
+
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            Quiz Preview
+          </h1>
+
+          <p className="mt-1 text-sm text-muted">
+            Review your generated quiz. Click "Edit" on any question to modify
+            details.
+          </p>
+        </div>
+
+        <Button
+          type="button"
+          variant="secondary"
+          fit
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 self-start sm:self-auto"
+        >
+          <ArrowLeft size={15} />
+          Back to Editor
+        </Button>
+      </header>
+
+      <div className="flex flex-col gap-8">
+        <QuizDetails subject={subject} quizName={quizName} />
+
+        <section aria-labelledby="preview-questions-title">
+          <Card className="card-base">
+            <header className="mb-6 flex flex-col gap-2 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2
+                  id="preview-questions-title"
+                  className="text-lg font-bold text-foreground"
+                >
+                  Question Set
+                </h2>
+
+                <p className="text-sm text-muted">
+                  Questions and choices can be edited individually below.
+                </p>
+              </div>
+
+              <span className="badge-primary self-start sm:self-auto">
+                {items.length} {items.length === 1 ? "Question" : "Questions"}
+              </span>
+            </header>
+
+            <div className="flex flex-col gap-6">
+              {items.map((item, index) => (
+                <QuizPreviewItem
+                  key={index}
+                  item={item}
+                  index={index}
+                  isEditing={editingIndex === index}
+                  editBuffer={editBuffer}
+                  isDeleteDisabled={items.length <= 1}
+                  onStartEdit={() => handleStartEdit(index)}
+                  onCancelEdit={handleCancelEdit}
+                  onSaveEdit={handleSaveEdit}
+                  onDelete={() => handleDeleteItem(index)}
+                  onEditBufferChange={setEditBuffer}
+                />
+              ))}
+            </div>
+          </Card>
+        </section>
+
+        <footer className="sticky bottom-6 flex items-center justify-between gap-4 rounded-card border border-border bg-surface/90 p-4 shadow-lg backdrop-blur-md">
+          <span className="text-xs text-muted">
+            Review complete? Save your quiz to finalize.
+          </span>
+
+          <Button
+            type="button"
+            fit
+            onClick={handleFinalSubmit}
+            disabled={editingIndex !== null || isSaving}
+            className="ml-auto inline-flex items-center gap-2 px-8 font-semibold shadow-(--shadow-button)"
+          >
+            <Save size={16} />
+            {isSaving ? "Saving..." : "Save Quiz"}
+          </Button>
+        </footer>
+      </div>
+
+      {/* Feedback Popup Modal */}
+      <FeedbackModal
+        isOpen={feedback.isOpen}
+        onClose={closeFeedback}
+        type={feedback.type}
+        title={feedback.title}
+        message={feedback.message}
+        onConfirm={feedback.onConfirm}
+      />
+    </div>
+  );
+};
+
+export default QuizPreviewPage;

@@ -1,6 +1,7 @@
 import HomePage from "../pages/Home/HomePage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import CreateQuizPage from "../pages/CreateQuizPage/CreateQuizPage.jsx";
+import QuizPreviewPage from "../pages/QuizPreviewPage/QuizPreviewPage";
 import UpdateQuizPage from "../pages/UpdateQuizPage/UpdateQuizPage";
 import RecordsPage from "../pages/RecordsPage/RecordsPage";
 import RecordPage from "../pages/RecordPage/RecordPage";
@@ -32,6 +33,10 @@ export const appRoutes = {
             {
               path: "create",
               element: <CreateQuizPage />,
+            },
+            {
+              path: "create/preview",
+              element: <QuizPreviewPage />,
             },
             {
               path: "update/:quizId",
