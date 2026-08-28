@@ -116,6 +116,23 @@ const useQuizDraft = () => {
     }
   };
 
+  const updateItem = (index, updatedItem) => {
+    setItems((currentItems) =>
+      currentItems.map((item, itemIndex) =>
+        itemIndex === index ? updatedItem : item,
+      ),
+    );
+  };
+
+  const saveCurrentDraft = async (updatedItems = items) => {
+    try {
+      await saveDraft(subject, quizName, updatedItems);
+    } catch (error) {
+      console.error("Failed to save quiz draft:", error);
+      throw error;
+    }
+  };
+
   return {
     subject,
     setSubject,
@@ -125,8 +142,10 @@ const useQuizDraft = () => {
     isLoadingDraft,
     addQuestion,
     deleteQuestion,
+    updateItem,
     handleItemChange,
     handleChoiceChange,
+    saveCurrentDraft,
     clearDraft,
   };
 };

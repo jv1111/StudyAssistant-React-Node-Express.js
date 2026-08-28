@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save } from "react-bootstrap-icons";
 
 import Card from "../../components/common/Card";
@@ -7,18 +7,27 @@ import Button from "../../components/common/Button";
 import QuizDetails from "../../components/quiz/QuizDetails";
 import QuizPreviewItem from "../../components/quiz/QuizPreviewItem";
 import FeedbackModal from "../../components/common/FeedbackModal";
-
-import { createQuiz } from "../../api/quiz.api";
 import Badge from "../../components/common/Badge";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 
+import { createQuiz } from "../../api/quiz.api";
+import useQuizDraft from "../../hooks/useQuizDraft";
+
+const MIN_QUESTIONS = 4;
+
 const QuizPreviewPage = () => {
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const { subject, quizName, items: initialItems } = location.state || {};
+  const {
+    subject,
+    quizName,
+    items,
+    isLoadingDraft,
+    deleteQuestion,
+    updateItem,
+    clearDraft,
+  } = useQuizDraft();
 
-  const [items, setItems] = useState(initialItems || []);
   const [editingIndex, setEditingIndex] = useState(null);
   const [editBuffer, setEditBuffer] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,7 +41,10 @@ const QuizPreviewPage = () => {
   });
 
   const closeFeedback = () => {
-    setFeedback((prev) => ({ ...prev, isOpen: false }));
+    setFeedback((prev) => ({
+      ...prev,
+      isOpen: false,
+    }));
   };
 
   const handleStartEdit = (index) => {
@@ -48,30 +60,25 @@ const QuizPreviewPage = () => {
   const handleSaveEdit = () => {
     if (!editBuffer || editingIndex === null) return;
 
-    setItems((currentItems) =>
-      currentItems.map((item, index) =>
-        index === editingIndex ? editBuffer : item,
-      ),
-    );
+    updateItem(editingIndex, editBuffer);
 
     handleCancelEdit();
   };
 
   const handleDeleteItem = (index) => {
-    if (items.length <= 4) {
+    if (items.length <= MIN_QUESTIONS) {
       setFeedback({
         isOpen: true,
         type: "warning",
         title: "Cannot Delete",
-        message: "A quiz must contain at least 4 questions.",
+        message: `A quiz must contain at least ${MIN_QUESTIONS} questions.`,
         onConfirm: null,
       });
+
       return;
     }
 
-    setItems((currentItems) =>
-      currentItems.filter((_, itemIndex) => itemIndex !== index),
-    );
+    deleteQuestion(index);
 
     if (editingIndex === index) {
       handleCancelEdit();
@@ -83,7 +90,10 @@ const QuizPreviewPage = () => {
 
     try {
       setIsSaving(true);
+
       await createQuiz(subject, quizName, items);
+
+      await clearDraft();
 
       setFeedback({
         isOpen: true,
@@ -109,7 +119,15 @@ const QuizPreviewPage = () => {
     }
   };
 
-  if (!location.state) {
+  if (isLoadingDraft) {
+    return (
+      <div className="layout-container py-16 text-center">
+        <p className="text-sm text-muted">Loading quiz preview...</p>
+      </div>
+    );
+  }
+
+  if (!subject || !quizName || !items.length) {
     return (
       <div className="layout-container py-16 text-center">
         <h2 className="text-xl font-bold text-foreground">
@@ -173,12 +191,12 @@ const QuizPreviewPage = () => {
             <div className="flex flex-col gap-6">
               {items.map((item, index) => (
                 <QuizPreviewItem
-                  key={index}
+                  key={item._id || index}
                   item={item}
                   index={index}
                   isEditing={editingIndex === index}
                   editBuffer={editBuffer}
-                  isDeleteDisabled={items.length <= 4}
+                  isDeleteDisabled={items.length <= MIN_QUESTIONS}
                   onStartEdit={() => handleStartEdit(index)}
                   onCancelEdit={handleCancelEdit}
                   onSaveEdit={handleSaveEdit}
@@ -208,7 +226,6 @@ const QuizPreviewPage = () => {
         </footer>
       </div>
 
-      {/* Feedback Popup Modal */}
       <FeedbackModal
         isOpen={feedback.isOpen}
         onClose={closeFeedback}

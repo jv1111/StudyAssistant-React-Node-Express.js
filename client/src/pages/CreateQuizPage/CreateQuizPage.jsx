@@ -22,7 +22,7 @@ const CreateQuizPage = () => {
     deleteQuestion,
     handleItemChange,
     handleChoiceChange,
-    clearDraft,
+    saveCurrentDraft,
   } = useQuizDraft();
 
   const handleSubmit = async (event) => {
@@ -35,11 +35,9 @@ const CreateQuizPage = () => {
     try {
       const response = await previewQuiz(subject, quizName, items);
 
-      await clearDraft();
+      await saveCurrentDraft(response.items);
 
-      navigate("/quiz/create/preview", {
-        state: response,
-      });
+      navigate("/quiz/create/preview");
     } catch (error) {
       console.error("Failed to preview quiz:", error);
     } finally {

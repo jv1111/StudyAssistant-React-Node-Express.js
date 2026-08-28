@@ -38,6 +38,7 @@ const QuizPreviewItem = ({
   index,
   isEditing,
   editBuffer,
+  isDeleteDisabled,
   onStartEdit,
   onCancelEdit,
   onSaveEdit,
@@ -120,7 +121,7 @@ const QuizPreviewItem = ({
                 variant="danger"
                 fit
                 onClick={onDelete}
-                disabled={false}
+                disabled={isDeleteDisabled}
                 title="Delete question"
               >
                 <Trash3 size={14} />
