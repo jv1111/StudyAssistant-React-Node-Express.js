@@ -9,6 +9,24 @@ const QuizDraftSchema = mongoose.Schema(
       unique: true,
     },
 
+    mode: {
+      type: String,
+      enum: ["create", "update"],
+      required: true,
+      default: "create",
+    },
+
+    quizId: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Quiz",
+      default: null,
+    },
+
+    isPreview: {
+      type: Boolean,
+      default: false,
+    },
+
     subject: {
       type: String,
       trim: true,

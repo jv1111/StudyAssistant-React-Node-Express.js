@@ -8,10 +8,10 @@ const router = express.Router();
 
 router.use(verifyAuth);
 
-router.get("/", quizDraftController.getDraft);
+router.get("/", quizDraftController.getCreateQuizDraft);
 
-router.patch("/", quizDraftController.saveDraft);
+router.patch("/", quizDraftController.saveCreateQuizDraft);
 
-router.delete("/", quizDraftController.deleteDraft);
+router.delete("/", quizDraftController.deleteCreateQuizDraft);
 
 module.exports = router;

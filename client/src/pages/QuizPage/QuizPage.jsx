@@ -146,28 +146,16 @@ const QuizPage = () => {
                 Report Issue
               </Button>
 
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="ghost"
-                  fit
-                  onClick={handleNextQuestion}
-                  disabled={isSubmitting}
-                  className="text-muted hover:text-foreground"
-                >
-                  Skip Question
-                </Button>
-
-                <Button
-                  variant="primary"
-                  icon={ArrowRightShort}
-                  fit
-                  disabled={!selectedChoice || isSubmitting}
-                  onClick={handleSubmitAnswer}
-                  className="px-8"
-                >
-                  {isSubmitting ? "Submitting..." : "Submit Answer"}
-                </Button>
-              </div>
+              <Button
+                variant="primary"
+                icon={ArrowRightShort}
+                fit
+                disabled={!selectedChoice || isSubmitting}
+                onClick={handleSubmitAnswer}
+                className="px-8"
+              >
+                {isSubmitting ? "Submitting..." : "Submit Answer"}
+              </Button>
             </div>
           </Card>
         </div>

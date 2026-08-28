@@ -1,143 +1,91 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { deleteSavedData, updateQuiz } from "../../api/quiz.api";
-import autoSave from "../../helper/autoSave";
-import useItemsLoader from "../../hooks/useItemsLoader";
-import useSavedDataFetcher from "../../hooks/useSavedDataFetcher";
 import QuizEditor from "../../components/quiz/QuizEditor";
+import { updateQuiz } from "../../api/quiz.api";
+import useCreateQuizDraft from "../../hooks/useCreateQuizDraft";
+import AppHeaderContent from "../../components/common/AppHeaderContent";
 
 const UpdateQuizPage = () => {
   const { quizId } = useParams();
   const navigate = useNavigate();
 
-  const [subject, setSubject] = useState("");
-  const [quizName, setQuizName] = useState("");
-  const [items, setItems] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useItemsLoader(quizId, setSubject, setQuizName, setItems);
+  const {
+    subject,
+    setSubject,
+    quizName,
+    setQuizName,
+    items,
+    isLoadingDraft,
+    addQuestion,
+    deleteQuestion,
+    handleItemChange,
+    handleChoiceChange,
+    saveCurrentDraft,
+  } = useCreateQuizDraft(quizId);
 
-  useSavedDataFetcher("updateQuiz", setItems, setSubject, setQuizName, quizId);
-
-  const saveData = (data) => {
-    autoSave("updateQuiz", data, quizId);
-  };
-
-  const addQuestion = () => {
-    const newItems = [
-      ...items,
-      {
-        question: "",
-        answer: "",
-      },
-    ];
-
-    setItems(newItems);
-
-    saveData({
-      items: newItems,
-      subject,
-      quizName,
-    });
-  };
-
-  const deleteQuestion = (index) => {
-    const newItems = items.filter((_, itemIndex) => itemIndex !== index);
-
-    setItems(newItems);
-
-    saveData({
-      items: newItems,
-      subject,
-      quizName,
-    });
-  };
-
-  const itemOnChangeHandler = (event, index) => {
-    const newItems = items.map((item, itemIndex) =>
-      itemIndex === index
-        ? {
-            ...item,
-            [event.target.name]: event.target.value,
-          }
-        : item,
-    );
-
-    setItems(newItems);
-
-    saveData({
-      items: newItems,
-      subject,
-      quizName,
-    });
-  };
-
-  const submitHandler = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await updateQuiz(quizId, subject, quizName, items);
+    if (isSubmitting) return;
 
-    if (response.error) {
-      alert(response.error);
-      return;
+    setIsSubmitting(true);
+
+    try {
+      const response = await updateQuiz(quizId, subject, quizName, items);
+
+      if (response.error) {
+        alert(response.error);
+        return;
+      }
+
+      await saveCurrentDraft(items);
+
+      navigate(`/quiz/${subject}`);
+    } catch (error) {
+      console.error("Failed to update quiz:", error);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    await deleteSavedData("updateQuiz", quizId);
-
-    navigate(`/quiz/${subject}`);
   };
 
+  if (isLoadingDraft) {
+    return (
+      <div className="flex min-h-64 items-center justify-center text-sm text-muted">
+        Loading quiz draft...
+      </div>
+    );
+  }
+
   return (
-    <main className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-10">
-      <header className="mb-8">
-        <span className="text-xs font-medium uppercase tracking-wider text-primary">
-          Quiz Builder
-        </span>
-
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
-          Update Quiz
-        </h1>
-
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-          Update the quiz details and modify its questions.
-        </p>
+    <>
+      <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <AppHeaderContent
+          eyebrow="Quiz Builder"
+          title="Update Quiz"
+          description="Update the quiz details and modify its questions."
+        />
       </header>
 
       <QuizEditor
         subject={subject}
         quizName={quizName}
         items={items}
-        onSubjectChange={(event) => {
-          const value = event.target.value;
-
-          setSubject(value);
-
-          saveData({
-            items,
-            subject: value,
-            quizName,
-          });
-        }}
-        onQuizNameChange={(event) => {
-          const value = event.target.value;
-
-          setQuizName(value);
-
-          saveData({
-            items,
-            subject,
-            quizName: value,
-          });
-        }}
-        onItemChange={itemOnChangeHandler}
+        onSubjectChange={(event) => setSubject(event.target.value)}
+        onQuizNameChange={(event) => setQuizName(event.target.value)}
+        onItemChange={handleItemChange}
+        onChoiceChange={handleChoiceChange}
         onDeleteQuestion={deleteQuestion}
         onAddQuestion={addQuestion}
-        onSubmit={submitHandler}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
         submitLabel="Update Quiz"
         quizInfoDescription="Update the basic details for your quiz."
         questionsDescription="Modify questions and update their correct answers."
       />
-    </main>
+    </>
   );
 };
 

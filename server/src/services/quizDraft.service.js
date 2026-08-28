@@ -1,14 +1,21 @@
 const QuizDraft = require("../models/quizDraft.model");
 
-const getDraft = async (userId) => {
+const getCreateQuizDraft = async (userId) => {
   return QuizDraft.findOne({ userId });
 };
 
-const saveDraft = async (userId, subject, quizName, items) => {
+const saveCreateQuizDraft = async (
+  userId,
+  isPreview,
+  subject,
+  quizName,
+  items,
+) => {
   return QuizDraft.findOneAndUpdate(
     { userId },
     {
       $set: {
+        isPreview,
         subject,
         quizName,
         items,
@@ -22,12 +29,12 @@ const saveDraft = async (userId, subject, quizName, items) => {
   );
 };
 
-const deleteDraft = async (userId) => {
+const deleteCreateQuizDraft = async (userId) => {
   return QuizDraft.findOneAndDelete({ userId });
 };
 
 module.exports = {
-  getDraft,
-  saveDraft,
-  deleteDraft,
+  getCreateQuizDraft,
+  saveCreateQuizDraft,
+  deleteCreateQuizDraft,
 };

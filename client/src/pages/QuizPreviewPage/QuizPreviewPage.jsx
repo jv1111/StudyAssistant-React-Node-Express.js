@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, Save } from "react-bootstrap-icons";
 
 import Card from "../../components/common/Card";
@@ -11,12 +11,15 @@ import Badge from "../../components/common/Badge";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 
 import { createQuiz } from "../../api/quiz.api";
-import useQuizDraft from "../../hooks/useQuizDraft";
+import useCreateQuizDraft from "../../hooks/useCreateQuizDraft";
 
 const MIN_QUESTIONS = 4;
 
 const QuizPreviewPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const mode = location.state?.mode || "create";
 
   const {
     subject,
@@ -26,7 +29,7 @@ const QuizPreviewPage = () => {
     deleteQuestion,
     updateItem,
     clearDraft,
-  } = useQuizDraft();
+  } = useCreateQuizDraft(mode, null, true);
 
   const [editingIndex, setEditingIndex] = useState(null);
   const [editBuffer, setEditBuffer] = useState(null);

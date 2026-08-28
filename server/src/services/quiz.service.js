@@ -21,9 +21,13 @@ const previewQuiz = async (subject, quizName, items) => {
 
       const shuffledAnswers = [...otherAnswers].sort(() => Math.random() - 0.5);
 
-      choices = [item.answer, ...shuffledAnswers.slice(0, 3)].sort(
-        () => Math.random() - 0.5,
-      );
+      choices = [item.answer, ...shuffledAnswers.slice(0, 3)];
+
+      while (choices.length < 4) {
+        choices.push(item.answer);
+      }
+
+      choices.sort(() => Math.random() - 0.5);
     }
 
     return {
@@ -164,8 +168,11 @@ const getRecord = async (recordId) => {
   };
 };
 
-const getItems = async (quizId) => {
-  const quiz = await Quiz.findById(quizId).populate("subjectId", "name");
+const getItems = async (userId, quizId) => {
+  const quiz = await Quiz.findOne({
+    _id: quizId,
+    userId,
+  }).populate("subjectId", "name");
 
   if (!quiz) {
     throw new AppError("Quiz not found", 404);

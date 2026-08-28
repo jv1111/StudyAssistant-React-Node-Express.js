@@ -108,7 +108,7 @@ const deleteSavedData = asyncHandler(async (req, res) => {
 const getItems = asyncHandler(async (req, res) => {
   const { quizId } = req.query;
 
-  const result = await quizService.getItems(quizId);
+  const result = await quizService.getItems(req.user._id, quizId);
 
   successResponse(res, 200, result);
 });

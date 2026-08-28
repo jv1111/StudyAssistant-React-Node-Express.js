@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import {
   PatchCheckFill,
   QuestionCircle,
@@ -8,9 +7,7 @@ import {
 } from "react-bootstrap-icons";
 import Button from "../common/Button";
 
-const QuizCardContent = ({ quiz, onSelect, onDownload }) => {
-  const navigate = useNavigate();
-
+const QuizCardContent = ({ quiz, onSelect, onEdit, onDownload }) => {
   return (
     <article className="flex h-full min-h-48 flex-col justify-between">
       <div>
@@ -60,7 +57,7 @@ const QuizCardContent = ({ quiz, onSelect, onDownload }) => {
             type="button"
             variant="secondary"
             fit
-            onClick={() => navigate(`/quiz/update/${quiz._id}`)}
+            onClick={() => onEdit(quiz._id)}
             title="Update Quiz"
             aria-label="Update Quiz"
             className="p-2.5! text-muted hover:text-foreground"

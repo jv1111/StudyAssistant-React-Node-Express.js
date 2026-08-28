@@ -9,7 +9,6 @@ const Modal = ({ isOpen, onClose, children }) => {
   return (
     <div
       role="presentation"
-      onMouseDown={onClose}
       className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 p-4 backdrop-blur-xs transition-opacity"
     >
       <div
