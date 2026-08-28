@@ -7,6 +7,7 @@ const Button = ({
   onClick,
   className = "",
   fit = false,
+  icon: Icon,
 }) => {
   const baseStyles =
     variant === "link"
@@ -52,6 +53,7 @@ const Button = ({
       onClick={onClick}
       className={buttonClassName}
     >
+      {Icon && <Icon size={16} />}
       {children}
     </button>
   );

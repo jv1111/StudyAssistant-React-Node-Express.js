@@ -1,241 +1,335 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {
+  TrophyFill,
+  Clock,
+  ArrowRightShort,
+  Flag,
+  PauseFill,
+  XCircle,
+} from "react-bootstrap-icons";
 
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
+import Badge from "../../components/common/Badge";
+import FeedbackModal from "../../components/common/FeedbackModal";
+import SelectableOption from "../../components/common/SelectableOption";
 
-import useQuestionFetcher from "../../hooks/useQuestionFetcher";
-import LoadingPage from "../Loading/LoadingPage";
-import { submitAnswer, saveQuizRecord } from "../../api/quiz.api";
+const SAMPLE_QUIZ_DATA = {
+  id: "quiz_9921",
+  subject: "General Science",
+  quizName: "Cellular Biology & Photosynthesis",
+  totalItems: 5,
+  questions: [
+    {
+      _id: "q1",
+      question:
+        "What is the primary function of the mitochondria in eukaryotic cells?",
+      choices: [
+        "Protein synthesis and folding",
+        "Cellular respiration and ATP production",
+        "Storage of genomic DNA",
+        "Packaging of cellular waste for exocytosis",
+      ],
+      answer: "Cellular respiration and ATP production",
+      explanation:
+        "Mitochondria are often referred to as the powerhouse of the cell because they generate ATP through oxidative phosphorylation.",
+    },
+    {
+      _id: "q2",
+      question:
+        "Which pigment absorbs red and blue light while reflecting green light during photosynthesis?",
+      choices: ["Carotenoid", "Chlorophyll a", "Phycobilin", "Anthocyanin"],
+      answer: "Chlorophyll a",
+      explanation:
+        "Chlorophyll absorbs blue and red wavelengths of light and reflects green light, giving plants their green color.",
+    },
+    {
+      _id: "q3",
+      question:
+        "What process results in four genetically diverse haploid daughter cells?",
+      choices: ["Mitosis", "Binary Fission", "Meiosis", "Budding"],
+      answer: "Meiosis",
+      explanation:
+        "Meiosis undergoes two rounds of division to produce four non-identical haploid gametes.",
+    },
+  ],
+};
 
 const QuizPage = () => {
-  const [numAnswered, setNumAnswered] = useState(0);
-  const { quizId } = useParams();
-
-  const { isLoading, item, quizEnded } = useQuestionFetcher(
-    quizId,
-    numAnswered,
-  );
-
-  const [showCorrectAnsPopup, setShowCorrectAnsPopup] = useState(false);
-  const [showCorrectLbl, setShowCorrectLbl] = useState(false);
-  const [correctAns, setCorrectAns] = useState("");
-  const [disableSubmittion, setDisableSubmittion] = useState(false);
-
   const navigate = useNavigate();
 
-  const submitAnswerHandler = async (answer, questionId) => {
-    setDisableSubmittion(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedChoice, setSelectedChoice] = useState(null);
+  const [score, setScore] = useState(0);
 
-    const response = await submitAnswer(questionId, answer);
+  const [feedback, setFeedback] = useState({
+    isOpen: false,
+    type: "success",
+    title: "",
+    message: "",
+  });
 
-    if (response.error) {
-      alert("error");
-      setDisableSubmittion(false);
-      return;
-    }
+  const currentQuestion = SAMPLE_QUIZ_DATA.questions[currentIndex];
+  const progressPercent =
+    ((currentIndex + 1) / SAMPLE_QUIZ_DATA.totalItems) * 100;
 
-    if (response.correct) {
-      setShowCorrectLbl(true);
+  const handleSelectOption = (choice) => {
+    setSelectedChoice(choice);
+  };
 
-      setTimeout(() => {
-        setNumAnswered((prev) => prev + 1);
-        setDisableSubmittion(false);
-        setShowCorrectLbl(false);
-      }, 1500);
+  const handleSubmitAnswer = () => {
+    if (!selectedChoice) return;
+
+    const isCorrect =
+      selectedChoice.trim().toLowerCase() ===
+      currentQuestion.answer.trim().toLowerCase();
+
+    if (isCorrect) {
+      setScore((prev) => prev + 1);
+      setFeedback({
+        isOpen: true,
+        type: "success",
+        title: "Spot On! Correct Answer",
+        message:
+          currentQuestion.explanation ||
+          `Great job! "${currentQuestion.answer}" is indeed correct.`,
+      });
     } else {
-      setCorrectAns(response.correctAns);
-      setShowCorrectAnsPopup(true);
+      setFeedback({
+        isOpen: true,
+        type: "error",
+        title: "Incorrect Answer",
+        message: `The correct answer was: "${currentQuestion.answer}".\n${
+          currentQuestion.explanation || ""
+        }`,
+      });
     }
   };
 
-  if (quizEnded) {
-    const saveRecord = async () => {
-      const record = await saveQuizRecord(quizId);
-      await navigate(`/quiz/records/${record._id}`);
-    };
+  const handleNextQuestion = () => {
+    setSelectedChoice(null);
 
-    saveRecord();
+    if (currentIndex + 1 < SAMPLE_QUIZ_DATA.questions.length) {
+      setCurrentIndex((prev) => prev + 1);
+    } else {
+      setFeedback({
+        isOpen: true,
+        type: "success",
+        title: "Quiz Completed! 🎉",
+        message: `You've completed the quiz with a total score of ${score + 1}/${
+          SAMPLE_QUIZ_DATA.totalItems
+        }!`,
+        onConfirm: () => navigate("/"),
+      });
+    }
+  };
 
-    return null;
-  }
+  const handlePauseQuiz = () => {
+    navigate(-1);
+  };
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
-  const progress = (item.questionNumber / item.numberOfItems) * 100;
+  const handleCancelQuiz = () => {
+    setFeedback({
+      isOpen: true,
+      type: "warning",
+      title: "Cancel Quiz?",
+      message:
+        "Are you sure you want to exit? Your progress will not be saved.",
+      onConfirm: () => navigate("/"),
+    });
+  };
 
   return (
-    <div className="mx-auto w-full max-w-(--content-max-width) px-(--page-padding) py-10">
-      <header className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <span className="text-xs font-medium uppercase tracking-wider text-primary">
-            Quiz in Progress
+    <div className="layout-container mx-auto flex max-w-6xl flex-col gap-6 py-8">
+      <header className="flex flex-col gap-4 rounded-card border border-border bg-surface p-5 shadow-(--shadow-card)">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Badge variant="primary" shape="rounded">
+              {SAMPLE_QUIZ_DATA.subject}
+            </Badge>
+
+            <span className="text-xs font-semibold text-muted">
+              Quiz ID: #{SAMPLE_QUIZ_DATA.id}
+            </span>
+          </div>
+
+          <span className="text-xs font-semibold text-muted">
+            Question {currentIndex + 1} of {SAMPLE_QUIZ_DATA.totalItems}
           </span>
-
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
-            {item.quizName}
-          </h1>
-
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            {item.subject}
-          </p>
         </div>
 
-        <dl className="flex gap-8">
-          <div>
-            <dt className="text-xs font-medium uppercase tracking-wider text-muted">
-              Score
-            </dt>
+        <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+          {SAMPLE_QUIZ_DATA.quizName}
+        </h1>
 
-            <dd className="mt-1 text-xl font-semibold text-foreground">
-              {item.score}
-            </dd>
+        <div className="flex flex-col gap-1.5 border-t border-border/60 pt-2">
+          <div className="flex justify-between text-xs font-semibold text-muted">
+            <span>Progress</span>
+            <span>{Math.round(progressPercent)}% Completed</span>
           </div>
 
-          <div>
-            <dt className="text-xs font-medium uppercase tracking-wider text-muted">
-              Question
-            </dt>
-
-            <dd className="mt-1 text-xl font-semibold text-foreground">
-              {item.questionNumber}
-              <span className="text-sm font-medium text-muted">
-                {" "}
-                / {item.numberOfItems}
-              </span>
-            </dd>
+          <div className="h-2 w-full overflow-hidden rounded-full bg-background-secondary">
+            <div
+              className="h-full rounded-full bg-primary transition-all duration-300 ease-out"
+              style={{ width: `${progressPercent}%` }}
+            />
           </div>
-        </dl>
+        </div>
       </header>
 
-      <div
-        role="progressbar"
-        aria-label={`Question ${item.questionNumber} of ${item.numberOfItems}`}
-        aria-valuenow={item.questionNumber}
-        aria-valuemin="1"
-        aria-valuemax={item.numberOfItems}
-        className="mb-6 h-2 overflow-hidden rounded-full bg-white/10"
-      >
-        <span
-          className="block h-full rounded-full bg-primary transition-all duration-500"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <Card className="card-base flex flex-col gap-6">
+            <div className="flex items-start gap-3">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-sm font-bold text-primary">
+                {currentIndex + 1}
+              </span>
 
-      <Card>
-        {showCorrectAnsPopup && (
-          <CorrectAnsPopup
-            correctAns={correctAns}
-            setShowCorrectAnsPopup={setShowCorrectAnsPopup}
-            setNumAnswered={setNumAnswered}
-            setDisableSubmittion={setDisableSubmittion}
-          />
-        )}
+              <div className="flex-1">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted">
+                  Question Prompt
+                </span>
 
-        <section aria-labelledby="question-title">
-          <header className="mb-6 flex items-center justify-between gap-4">
-            <span className="text-xs font-medium uppercase tracking-wider text-primary">
-              Question {item.questionNumber}
+                <h2 className="mt-1 text-lg font-bold leading-relaxed text-foreground sm:text-xl">
+                  {currentQuestion.question}
+                </h2>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {currentQuestion.choices.map((choice, optionIndex) => {
+                const letterLabel = String.fromCharCode(65 + optionIndex);
+                const isSelected = selectedChoice === choice;
+
+                return (
+                  <SelectableOption
+                    key={optionIndex}
+                    selected={isSelected}
+                    optionLabel={letterLabel}
+                    label={choice}
+                    showSelectedIndicator
+                    onClick={() => handleSelectOption(choice)}
+                    className="min-h-16"
+                  />
+                );
+              })}
+            </div>
+
+            <div className="flex items-center justify-between gap-4 border-t border-border/80 pt-5">
+              <Button
+                variant="ghost"
+                icon={Flag}
+                fit
+                className="gap-1.5 px-0 text-xs font-semibold hover:bg-transparent"
+              >
+                Report Issue
+              </Button>
+
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  fit
+                  onClick={handleNextQuestion}
+                  className="text-muted hover:text-foreground"
+                >
+                  Skip Question
+                </Button>
+
+                <Button
+                  variant="primary"
+                  icon={ArrowRightShort}
+                  fit
+                  disabled={!selectedChoice}
+                  onClick={handleSubmitAnswer}
+                  className="px-8"
+                >
+                  Submit Answer
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <aside className="flex flex-col gap-4 lg:col-span-1">
+          <Card className="card-base flex flex-col gap-2 border-l-4 border-l-primary p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted">
+                Time Remaining
+              </span>
+              <Clock className="text-primary" size={18} />
+            </div>
+
+            <div className="font-mono text-3xl font-extrabold tracking-tight text-foreground">
+              12:45
+            </div>
+
+            <p className="text-xs text-muted">
+              Quiz auto-submits when timer expires.
+            </p>
+          </Card>
+
+          <Card className="card-base flex flex-col gap-3 p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted">
+                Current Score
+              </span>
+              <TrophyFill className="text-primary" size={18} />
+            </div>
+
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-black text-primary">{score}</span>
+              <span className="text-sm font-semibold text-muted">
+                / {SAMPLE_QUIZ_DATA.totalItems} pts
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg bg-background-secondary p-3 text-xs">
+              <span className="font-medium text-muted">Current Accuracy</span>
+              <span className="font-bold text-foreground">
+                {currentIndex > 0
+                  ? `${Math.round((score / currentIndex) * 100)}%`
+                  : "100%"}
+              </span>
+            </div>
+          </Card>
+
+          <Card className="card-base flex flex-col gap-3 p-5">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted">
+              Quiz Controls
             </span>
 
-            {showCorrectLbl && (
-              <strong
-                className="text-sm font-semibold text-success"
-                aria-live="polite"
+            <div className="flex flex-col gap-2.5">
+              <Button
+                variant="secondary"
+                icon={PauseFill}
+                onClick={handlePauseQuiz}
+                className="w-full justify-center gap-2"
               >
-                Correct!
-              </strong>
-            )}
-          </header>
+                Pause Quiz
+              </Button>
 
-          <h2
-            id="question-title"
-            className="text-xl font-semibold leading-relaxed text-foreground sm:text-2xl"
-          >
-            {item.question}
-          </h2>
+              <Button
+                variant="ghost"
+                icon={XCircle}
+                onClick={handleCancelQuiz}
+                className="w-full justify-center gap-2 text-error hover:bg-error/10 hover:text-error"
+              >
+                Cancel Quiz
+              </Button>
+            </div>
+          </Card>
+        </aside>
+      </div>
 
-          <div
-            className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2"
-            aria-label="Answer choices"
-          >
-            {item.choices.map((choice, index) => {
-              if (!choice) return null;
-
-              return (
-                <Button
-                  key={index}
-                  type="button"
-                  variant="ghost"
-                  onClick={() => submitAnswerHandler(choice, item._id)}
-                  disabled={disableSubmittion}
-                  className="min-h-16 justify-start border-white/10 bg-white/5 px-5 text-left text-sm font-medium hover:border-primary/40 hover:bg-primary/10 hover:text-foreground"
-                >
-                  <span className="mr-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-semibold text-muted">
-                    {String.fromCharCode(65 + index)}
-                  </span>
-
-                  {choice}
-                </Button>
-              );
-            })}
-          </div>
-        </section>
-      </Card>
-    </div>
-  );
-};
-
-const CorrectAnsPopup = ({
-  correctAns,
-  setShowCorrectAnsPopup,
-  setNumAnswered,
-  setDisableSubmittion,
-}) => {
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
-      role="presentation"
-    >
-      <section
-        className="w-full max-w-md rounded-(--radius-glass) border border-white/10 bg-background-secondary/95 p-6 shadow-(--shadow-glass) backdrop-blur-2xl"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="incorrect-answer-title"
-      >
-        <span className="text-xs font-medium uppercase tracking-wider text-primary">
-          Keep Going
-        </span>
-
-        <h2
-          id="incorrect-answer-title"
-          className="mt-2 text-xl font-semibold text-foreground"
-        >
-          Incorrect answer
-        </h2>
-
-        <p className="mt-4 text-sm text-muted">The correct answer is</p>
-
-        <p className="mt-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-foreground">
-          {correctAns}
-        </p>
-
-        <div className="mt-6 flex justify-end">
-          <Button
-            type="button"
-            fit
-            onClick={() => {
-              setNumAnswered((prev) => prev + 1);
-              setShowCorrectAnsPopup(false);
-              setDisableSubmittion(false);
-            }}
-          >
-            Next Question
-          </Button>
-        </div>
-      </section>
+      <FeedbackModal
+        isOpen={feedback.isOpen}
+        onClose={() => setFeedback((prev) => ({ ...prev, isOpen: false }))}
+        type={feedback.type}
+        title={feedback.title}
+        message={feedback.message}
+        onConfirm={feedback.onConfirm || handleNextQuestion}
+      />
     </div>
   );
 };

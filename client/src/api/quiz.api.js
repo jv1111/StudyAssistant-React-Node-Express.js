@@ -10,6 +10,16 @@ const createQuiz = async (subject, quizName, items) => {
   return response.data;
 };
 
+const previewQuiz = async (subject, quizName, items) => {
+  const response = await api.post("/quiz/preview", {
+    subject,
+    quizName,
+    items,
+  });
+
+  return response.data;
+};
+
 const getSubjects = async ({ searchVal, skipCount }) => {
   const response = await api.get("/quiz/subjectsList", {
     params: {
@@ -28,23 +38,6 @@ const getQuizzes = async ({ subjectId, searchVal, skipCount }) => {
       searchQuery: searchVal,
       skipCount,
     },
-  });
-
-  return response.data;
-};
-
-const getQuestion = async (quizId) => {
-  const response = await api.get("/quiz/startQuiz", {
-    params: { quizId },
-  });
-
-  return response.data;
-};
-
-const submitAnswer = async (questionId, answer) => {
-  const response = await api.put("/quiz/submitAnswer", {
-    questionId,
-    answer,
   });
 
   return response.data;
@@ -153,27 +146,14 @@ const deleteFile = async (filePath) => {
   return response.data;
 };
 
-const previewQuiz = async (subject, quizName, items) => {
-  const response = await api.post("/quiz/preview", {
-    subject,
-    quizName,
-    items,
-  });
-
-  return response.data;
-};
-
 export {
-  deleteFile,
+  createQuiz,
+  previewQuiz,
   getSubjects,
   getQuizzes,
-  getQuestion,
-  submitAnswer,
   saveQuizRecord,
   getRecords,
   getRecord,
-  createQuiz,
-  previewQuiz,
   saveData,
   getSavedData,
   deleteSavedData,
@@ -181,4 +161,5 @@ export {
   updateQuiz,
   setPDFOnServer,
   getPdf,
+  deleteFile,
 };
