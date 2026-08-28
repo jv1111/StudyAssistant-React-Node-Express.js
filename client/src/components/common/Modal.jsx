@@ -1,4 +1,5 @@
 import { X } from "react-bootstrap-icons";
+import Button from "../common/Button";
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) {
@@ -17,14 +18,14 @@ const Modal = ({ isOpen, onClose, children }) => {
         onMouseDown={(event) => event.stopPropagation()}
         className="relative w-full max-w-md animate-in fade-in zoom-in-95 duration-150"
       >
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          icon={X}
+          iconOnly
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-4 top-4 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-background-secondary text-muted transition-colors hover:bg-border hover:text-foreground"
-        >
-          <X size={18} strokeWidth={2.5} />
-        </button>
+          className="absolute right-4 top-4 z-10 bg-background-secondary hover:bg-border hover:text-foreground"
+        />
 
         {children}
       </div>
