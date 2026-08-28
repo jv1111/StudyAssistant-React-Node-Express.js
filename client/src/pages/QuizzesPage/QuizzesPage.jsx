@@ -15,8 +15,14 @@ import { deleteFile, getPdf, setPDFOnServer } from "../../api/quiz.api";
 import LoadingPage from "../Loading/LoadingPage";
 
 const QuizPage = () => {
-  const { quizzes, isLoading, searchInput, handleSearch, handleScroll } =
-    useQuizzes();
+  const {
+    quizzes,
+    isLoading,
+    searchInput,
+    handleSearch,
+    handleScroll,
+    handleStartQuiz,
+  } = useQuizzes();
 
   const [selectedQuiz, setSelectedQuiz] = useState(null);
 
@@ -90,6 +96,9 @@ const QuizPage = () => {
           <QuizOptionBox
             quizId={selectedQuiz}
             onClose={handleQuizOptionClose}
+            onStartQuiz={(quizId, quizType) =>
+              handleStartQuiz(quizId, quizType, false)
+            }
           />
         </Card>
       </Modal>

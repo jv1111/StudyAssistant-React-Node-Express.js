@@ -1,21 +1,7 @@
-import { useNavigate } from "react-router-dom";
-
 import Button from "../common/Button";
 import AuthFormHeader from "../auth/AuthFormHeader";
 
-const QuizOptionBox = ({ quizId, onClose }) => {
-  const navigate = useNavigate();
-
-  const selectHandler = (type) => {
-    if (type === "multipleChoice") {
-      navigate(quizId);
-    }
-
-    if (type === "enumeration") {
-      navigate(`enum/${quizId}`);
-    }
-  };
-
+const QuizOptionBox = ({ quizId, onClose, onStartQuiz }) => {
   return (
     <div>
       <AuthFormHeader
@@ -25,14 +11,17 @@ const QuizOptionBox = ({ quizId, onClose }) => {
       />
 
       <div className="mt-7 flex gap-3">
-        <Button type="button" onClick={() => selectHandler("multipleChoice")}>
+        <Button
+          type="button"
+          onClick={() => onStartQuiz(quizId, "multiple_choice")}
+        >
           Multiple choices
         </Button>
 
         <Button
           type="button"
           variant="secondary"
-          onClick={() => selectHandler("enumeration")}
+          onClick={() => onStartQuiz(quizId, "enumeration")}
         >
           Enumeration
         </Button>

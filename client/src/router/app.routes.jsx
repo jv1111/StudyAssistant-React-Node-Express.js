@@ -55,7 +55,7 @@ export const appRoutes = {
               element: <QuizzesPage />,
             },
             {
-              path: ":subjectId/:quizId",
+              path: "session/:sessionId",
               element: <QuizPage />,
             },
             {
