@@ -1,5 +1,7 @@
-const Quiz = require("../models/quiz.model");
 const QuizSession = require("../models/quizSession.model");
+
+const quizRecordService = require("./quizRecord.service");
+const quizService = require("./quiz.service");
 
 const AppError = require("../utils/AppError");
 
@@ -11,7 +13,7 @@ const startQuiz = async (
 ) => {
   validateQuizType(quizType);
 
-  const quiz = await getQuiz(userId, quizId);
+  const quiz = await quizService.getQuiz(userId, quizId);
 
   let session = await QuizSession.findOne({
     userId,
@@ -63,7 +65,7 @@ const submitAnswer = async (userId, sessionId, answer) => {
     throw new AppError("Quiz session is not in progress", 400);
   }
 
-  const quiz = await getQuiz(userId, session.quizId);
+  const quiz = await quizService.getQuiz(userId, session.quizId);
 
   const currentQuizItem = getCurrentQuizItem(quiz, session);
 
@@ -103,6 +105,10 @@ const submitAnswer = async (userId, sessionId, answer) => {
 
   await session.save();
 
+  if (session.status === "completed") {
+    await quizRecordService.saveRecord(session, quiz);
+  }
+
   return {
     correct: isCorrect,
     correctAnswer: currentQuizItem.answer,
@@ -128,7 +134,7 @@ const nextQuestion = async (userId, sessionId) => {
     throw new AppError("Quiz has already been completed", 400);
   }
 
-  const quiz = await getQuiz(userId, session.quizId);
+  const quiz = await quizService.getQuiz(userId, session.quizId);
 
   const currentQuizItem = getCurrentQuizItem(quiz, session);
 
@@ -142,19 +148,6 @@ const validateQuizType = (quizType) => {
       400,
     );
   }
-};
-
-const getQuiz = async (userId, quizId) => {
-  const quiz = await Quiz.findOne({
-    _id: quizId,
-    userId,
-  });
-
-  if (!quiz) {
-    throw new AppError("Quiz not found", 404);
-  }
-
-  return quiz;
 };
 
 const getCurrentQuizItem = (quiz, session) => {

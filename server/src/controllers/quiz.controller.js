@@ -54,30 +54,6 @@ const getQuizzes = asyncHandler(async (req, res) => {
   successResponse(res, 200, quizzes);
 });
 
-const saveQuizRecord = asyncHandler(async (req, res) => {
-  const { quizId } = req.body;
-
-  const record = await quizService.saveRecordQuizResult(quizId, req.user._id);
-
-  successResponse(res, 201, createRecordResponse(record));
-});
-
-const getQuizRecords = asyncHandler(async (req, res) => {
-  const { searchQuery } = req.query;
-
-  const records = await quizService.getRecords(req.user._id, searchQuery);
-
-  successResponse(res, 200, records.map(createRecordResponse));
-});
-
-const getQuizRecord = asyncHandler(async (req, res) => {
-  const { recordId } = req.query;
-
-  const record = await quizService.getRecord(recordId);
-
-  successResponse(res, 200, record);
-});
-
 const saveData = asyncHandler(async (req, res) => {
   const { key, data, quizId } = req.body;
 
@@ -150,9 +126,6 @@ module.exports = {
   createQuiz,
   getSubjects,
   getQuizzes,
-  saveQuizRecord,
-  getQuizRecords,
-  getQuizRecord,
   saveData,
   getSavedData,
   deleteSavedData,

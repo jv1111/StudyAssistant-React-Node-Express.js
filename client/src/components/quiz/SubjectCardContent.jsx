@@ -1,28 +1,27 @@
-import { useNavigate } from "react-router-dom";
 import {
   JournalBookmark,
   ArrowRight,
   CollectionPlay,
 } from "react-bootstrap-icons";
+
 import Button from "../common/Button";
 import Badge from "../common/Badge";
 
-const SubjectCardContent = ({ subject }) => {
-  const navigate = useNavigate();
-
+const SubjectCardContent = ({ subject, onSelectSubject }) => {
   return (
     <div className="flex h-full flex-col justify-between">
       <div>
         {/* Top Header: Icon & Metadata Badge */}
         <div className="flex items-center justify-between gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-xs transition-transform duration-300 group-hover:scale-105">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-xs transition-transform duration-300 group-hover:scale-105">
             <JournalBookmark size={22} />
           </div>
 
-          {/* Render Quiz Count if available, otherwise default Badge */}
+          {/* Quiz Count */}
           {subject.quizCount !== undefined ? (
             <div className="flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-semibold text-muted">
               <CollectionPlay size={12} className="text-primary" />
+
               <span>
                 {subject.quizCount}{" "}
                 {subject.quizCount === 1 ? "Quiz" : "Quizzes"}
@@ -36,12 +35,12 @@ const SubjectCardContent = ({ subject }) => {
         </div>
 
         {/* Subject Title */}
-        <h2 className="mt-4 text-xl font-bold tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary line-clamp-1">
+        <h2 className="mt-4 line-clamp-1 text-xl font-bold tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary">
           {subject.name}
         </h2>
 
         {/* Subject Description */}
-        <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-2">
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">
           {subject.description ||
             "Explore quizzes, challenge your skills, and master this subject."}
         </p>
@@ -52,14 +51,11 @@ const SubjectCardContent = ({ subject }) => {
         <Button
           type="button"
           fit
-          onClick={() => navigate(`quiz/${subject._id}`)}
-          className="w-full justify-between gap-2 shadow-xs group-hover:shadow-md transition-all"
+          icon={ArrowRight}
+          onClick={onSelectSubject}
+          className="w-full justify-between gap-2 shadow-xs transition-all group-hover:shadow-md"
         >
-          <span>Select Subject</span>
-          <ArrowRight
-            size={15}
-            className="transition-transform duration-200 group-hover:translate-x-1"
-          />
+          Select Subject
         </Button>
       </div>
     </div>

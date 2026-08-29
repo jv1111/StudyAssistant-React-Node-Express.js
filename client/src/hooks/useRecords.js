@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import useDebounce from "./useDebounce";
 import useItemFetcher from "./useItemFetcher";
+import useDeferredLoading from "./useDeferredLoading";
 
-import { getRecords } from "../api/quiz.api";
-
+import { getRecords } from "../api/quizRecord.api";
 import infinitScroller from "../helper/infinitScroller";
 
 const useRecords = () => {
@@ -19,6 +19,8 @@ const useRecords = () => {
     getRecords,
   );
 
+  const showLoading = useDeferredLoading(isLoading, 200);
+
   const handleSearch = (event) => {
     setSearchInput(event.target.value);
   };
@@ -29,7 +31,7 @@ const useRecords = () => {
 
   return {
     records,
-    isLoading,
+    isLoading: showLoading,
     searchInput,
     handleSearch,
     handleScroll,

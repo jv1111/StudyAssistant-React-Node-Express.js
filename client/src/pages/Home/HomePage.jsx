@@ -1,15 +1,23 @@
+import { useNavigate } from "react-router-dom";
+
 import EmptyState from "../../components/common/EmptyState";
 import SubjectCardContent from "../../components/quiz/SubjectCardContent";
 import Card from "../../components/common/Card";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
-
-import useSubjects from "../../hooks/useSubjects";
 import LoadingPage from "../Loading/LoadingPage";
 
+import useSubjects from "../../hooks/useSubjects";
+
 const HomePage = () => {
+  const navigate = useNavigate();
+
   const { subjects, isLoading, searchInput, handleSearch, handleScroll } =
     useSubjects();
+
+  const handleSelectSubject = (subjectId) => {
+    navigate(`/quiz/${subjectId}`);
+  };
 
   if (isLoading) {
     return <LoadingPage />;
@@ -41,7 +49,10 @@ const HomePage = () => {
           {subjects.map((subject) => (
             <li key={subject._id} className="h-full">
               <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-                <SubjectCardContent subject={subject} />
+                <SubjectCardContent
+                  subject={subject}
+                  onSelectSubject={() => handleSelectSubject(subject._id)}
+                />
               </Card>
             </li>
           ))}

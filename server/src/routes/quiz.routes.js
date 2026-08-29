@@ -16,12 +16,6 @@ router.get("/subjectsList", quizController.getSubjects);
 
 router.get("/quizList", quizController.getQuizzes);
 
-router.put("/saveRecord", quizController.saveQuizRecord);
-
-router.get("/records", quizController.getQuizRecords);
-
-router.get("/record", quizController.getQuizRecord);
-
 router.put("/saveData", quizController.saveData);
 
 router.get("/savedData", quizController.getSavedData);

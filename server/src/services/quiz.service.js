@@ -1,8 +1,6 @@
 const Quiz = require("../models/quiz.model");
 const Subject = require("../models/subject.model");
-const Records = require("../models/records.model");
 
-const dateFormatter = require("../utils/dateFormatter");
 const { savePDF } = require("../utils/pdfHandler");
 
 const AppError = require("../utils/AppError");
@@ -108,6 +106,19 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
     .limit(10);
 };
 
+const getQuiz = async (userId, quizId) => {
+  const quiz = await Quiz.findOne({
+    _id: quizId,
+    userId,
+  }).populate("subjectId", "name");
+
+  if (!quiz) {
+    throw new AppError("Quiz not found", 404);
+  }
+
+  return quiz;
+};
+
 const getQuizzes = async (userId, subjectId, searchQuery, skipCount = 0) => {
   const filter = {
     userId,
@@ -139,46 +150,6 @@ const getQuizById = async (userId, quizId) => {
   }
 
   return quiz;
-};
-
-const getRecords = async (userId, searchQuery) => {
-  const filter = {
-    userId,
-  };
-
-  if (searchQuery) {
-    filter.quizName = {
-      $regex: new RegExp(searchQuery, "i"),
-    };
-  }
-
-  const records = await Records.find(filter);
-
-  return records.map((record) => ({
-    _id: record._id,
-    subject: record.subject,
-    quizName: record.quizName,
-    score: record.score,
-    numberOfItems: record.numberOfItems,
-    date: dateFormatter(record.createdAt),
-  }));
-};
-
-const getRecord = async (recordId) => {
-  const record = await Records.findById(recordId);
-
-  if (!record) {
-    throw new AppError("Quiz record not found", 404);
-  }
-
-  return {
-    items: record.items,
-    numberOfItems: record.numberOfItems,
-    quizName: record.quizName,
-    score: record.score,
-    subject: record.subject,
-    date: dateFormatter(record.createdAt),
-  };
 };
 
 const getItems = async (userId, quizId) => {
@@ -286,10 +257,9 @@ module.exports = {
   previewQuiz,
   createQuiz,
   getSubjects,
+  getQuiz,
   getQuizzes,
   getQuizById,
-  getRecords,
-  getRecord,
   getItems,
   updateQuiz,
   downloadPdf,
