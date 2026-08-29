@@ -11,7 +11,7 @@ import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
 
 import useQuizzes from "../../hooks/useQuizzes";
-import { deleteFile, getPdf, setPDFOnServer } from "../../api/quiz.api";
+import { downloadPdf } from "../../api/quiz.api";
 
 import LoadingPage from "../Loading/LoadingPage";
 
@@ -44,12 +44,13 @@ const QuizPage = () => {
   const handleDownloadPdf = async (event, quizId) => {
     event.stopPropagation();
 
-    const pdfData = await setPDFOnServer(quizId);
-    const pdf = await getPdf(pdfData.pdfName);
+    const response = await downloadPdf(quizId);
 
-    saveAs(pdf, pdfData.pdfName);
+    const contentDisposition = response.headers["content-disposition"];
+    const fileName =
+      contentDisposition?.match(/filename="?([^"]+)"?/)?.[1] || "quiz.pdf";
 
-    await deleteFile(pdfData.path);
+    saveAs(response.data, fileName);
   };
 
   if (isLoading) {

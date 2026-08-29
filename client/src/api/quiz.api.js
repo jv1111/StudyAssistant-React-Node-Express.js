@@ -127,29 +127,12 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
   return response.data;
 };
 
-const setPDFOnServer = async (quizId) => {
-  const response = await api.put("/quiz/pdf", {
-    quizId,
-  });
-
-  return response.data;
-};
-
-const getPdf = async (pdfId) => {
-  const response = await api.get("/quiz/pdf", {
-    params: { pdfId },
+const downloadPdf = async (quizId) => {
+  const response = await api.get(`/quiz/${quizId}/pdf`, {
     responseType: "blob",
   });
 
-  return response.data;
-};
-
-const deleteFile = async (filePath) => {
-  const response = await api.delete("/quiz/file", {
-    params: { filePath },
-  });
-
-  return response.data;
+  return response;
 };
 
 export {
@@ -166,7 +149,5 @@ export {
   deleteSavedData,
   getItemsApi,
   updateQuiz,
-  setPDFOnServer,
-  getPdf,
-  deleteFile,
+  downloadPdf,
 };

@@ -34,10 +34,6 @@ router.get("/:quizId", quizController.getQuizById);
 
 router.put("/update", quizController.updateQuiz);
 
-router.put("/pdf", quizController.createPdf);
-
-router.get("/pdf", quizController.getPdf);
-
-router.delete("/file", quizController.deleteFile);
+router.get("/:quizId/pdf", quizController.downloadPdf);
 
 module.exports = router;

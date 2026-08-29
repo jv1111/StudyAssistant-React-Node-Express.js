@@ -230,29 +230,6 @@ const updateQuiz = async (quizId, userId, subject, quizName, items) => {
   return updatedQuiz;
 };
 
-const createPdf = async (quizId) => {
-  const quiz = await Quiz.findById(quizId).populate("subjectId", "name");
-
-  if (!quiz) {
-    throw new AppError("Quiz not found", 404);
-  }
-
-  const questions = quiz.items.map((quizItem) => ({
-    question: quizItem.question,
-    choices: generateRandomChoices(quizItem.answer, quiz.items),
-    correctAns: quizItem.answer,
-  }));
-
-  const data = {
-    _id: quizId,
-    subject: quiz.subjectId.name,
-    quizName: quiz.quizName,
-    questions,
-  };
-
-  return savePDF(data);
-};
-
 const validateQuizInput = (subject, quizName, items) => {
   if (!subject || !subject.trim()) {
     throw new AppError("Subject is required", 400);
@@ -279,6 +256,32 @@ const validateQuizChoices = (items) => {
   }
 };
 
+const downloadPdf = async (userId, quizId) => {
+  const quiz = await Quiz.findOne({
+    _id: quizId,
+    userId,
+  }).populate("subjectId", "name");
+
+  if (!quiz) {
+    throw new AppError("Quiz not found", 404);
+  }
+
+  const questions = quiz.items.map((quizItem) => ({
+    question: quizItem.question,
+    choices: quizItem.choices,
+    correctAns: quizItem.answer,
+  }));
+
+  const data = {
+    _id: quizId,
+    subject: quiz.subjectId.name,
+    quizName: quiz.quizName,
+    questions,
+  };
+
+  return savePDF(data);
+};
+
 module.exports = {
   previewQuiz,
   createQuiz,
@@ -289,5 +292,5 @@ module.exports = {
   getRecord,
   getItems,
   updateQuiz,
-  createPdf,
+  downloadPdf,
 };

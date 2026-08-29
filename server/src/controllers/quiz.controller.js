@@ -1,10 +1,7 @@
-const path = require("path");
-
 const quizService = require("../services/quiz.service");
 
-const { fileDelete } = require("../utils/pdfHandler");
-
 const asyncHandler = require("../utils/asyncHandler");
+const { fileDelete } = require("../utils/pdfHandler");
 const { successResponse, errorResponse } = require("../utils/response");
 const {
   createRecordResponse,
@@ -135,34 +132,18 @@ const updateQuiz = asyncHandler(async (req, res) => {
   successResponse(res, 200, createQuizResponse(result));
 });
 
-const createPdf = asyncHandler(async (req, res) => {
-  const { quizId } = req.body;
+const downloadPdf = asyncHandler(async (req, res) => {
+  const { quizId } = req.params;
 
-  const result = await quizService.createPdf(quizId);
+  const pdf = await quizService.downloadPdf(req.user._id, quizId);
 
-  successResponse(res, 200, result);
-});
+  res.download(pdf.path, pdf.pdfName, async (error) => {
+    if (error) {
+      throw error;
+    }
 
-const getPdf = asyncHandler(async (req, res) => {
-  const { pdfId } = req.query;
-
-  const projectRoot = path.resolve(__dirname, "../..");
-  const pdfDirectory = path.join(projectRoot, "public", "pdf");
-  const filePath = path.join(pdfDirectory, pdfId);
-
-  res.sendFile(filePath);
-});
-
-const deleteFile = asyncHandler(async (req, res) => {
-  const { filePath } = req.query;
-
-  if (!filePath) {
-    return errorResponse(res, 400, "filePath is required");
-  }
-
-  const result = await fileDelete(filePath);
-
-  successResponse(res, 200, result);
+    await fileDelete(pdf.path);
+  });
 });
 
 module.exports = {
@@ -178,8 +159,6 @@ module.exports = {
   getQuizById,
   getItems,
   updateQuiz,
-  createPdf,
-  getPdf,
-  deleteFile,
   previewQuiz,
+  downloadPdf,
 };
