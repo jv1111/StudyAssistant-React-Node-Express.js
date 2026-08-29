@@ -1,13 +1,13 @@
 import HomePage from "../pages/Home/HomePage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
-import CreateQuizPage from "../pages/CreateQuizPage/CreateQuizPage.jsx";
+import CreateQuizPage from "../pages/CreateQuizPage/CreateQuizPage";
 import QuizPreviewPage from "../pages/QuizPreviewPage/QuizPreviewPage";
 import UpdateQuizPage from "../pages/UpdateQuizPage/UpdateQuizPage";
 import RecordsPage from "../pages/RecordsPage/RecordsPage";
 import RecordPage from "../pages/RecordPage/RecordPage";
 import QuizzesPage from "../pages/QuizzesPage/QuizzesPage";
 import QuizPage from "../pages/QuizPage/QuizPage";
-import EnumQuizPage from "../pages/EnumQuizPage/EnumQuizPage";
+import EnumerationQuizPage from "../pages/EnumerationQuizPage/EnumerationQuizPage";
 import VerifyEmailPage from "../pages/VerifyEmailPage/VerifyEmailPage";
 
 import ProtectedRoute from "./guards/ProtectedRoute";
@@ -55,12 +55,12 @@ export const appRoutes = {
               element: <QuizzesPage />,
             },
             {
-              path: "session/:sessionId",
+              path: "session/multiple_choice/:sessionId",
               element: <QuizPage />,
             },
             {
-              path: ":subject/enum/:quizId",
-              element: <EnumQuizPage />,
+              path: "session/enumeration/:sessionId",
+              element: <EnumerationQuizPage />,
             },
           ],
         },
