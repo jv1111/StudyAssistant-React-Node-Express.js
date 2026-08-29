@@ -20,6 +20,7 @@ const UpdateQuizPage = () => {
 
   const {
     subject,
+    subjectId,
     quizName,
     items,
     isLoadingDraft,
@@ -71,16 +72,14 @@ const UpdateQuizPage = () => {
 
     try {
       await updateQuiz(quizId, subject, quizName, items);
-
       await clearDraft();
-
-      navigate(`/quiz/${subject}`);
-    } catch (error) {
-      console.error("Failed to update quiz:", error);
-      throw error;
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmitSuccess = () => {
+    navigate(`/quiz/${subjectId}`);
   };
 
   if (isLoadingDraft) {
@@ -108,6 +107,7 @@ const UpdateQuizPage = () => {
         onUpdateItem={updateItem}
         onDeleteItem={deleteQuestion}
         onSubmit={handleSubmit}
+        onSubmitSuccess={handleSubmitSuccess}
         isSubmitting={isSubmitting}
         submitLabel="Update Quiz"
         submittingLabel="Updating..."

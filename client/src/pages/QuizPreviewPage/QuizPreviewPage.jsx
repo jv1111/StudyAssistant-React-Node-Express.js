@@ -26,9 +26,10 @@ const QuizPreviewPage = () => {
 
   const handleFinalSubmit = async () => {
     await createQuiz(subject, quizName, items);
-
     await clearDraft();
+  };
 
+  const handleSubmitSuccess = () => {
     navigate("/");
   };
 
@@ -80,6 +81,7 @@ const QuizPreviewPage = () => {
         onUpdateItem={updateItem}
         onDeleteItem={deleteQuestion}
         onSubmit={handleFinalSubmit}
+        onSubmitSuccess={handleSubmitSuccess}
         submitLabel="Save Quiz"
         submittingLabel="Saving..."
         description="Review complete? Save your quiz to finalize."

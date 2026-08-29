@@ -9,6 +9,7 @@ import {
 import { getQuizById } from "../api/quiz.api";
 
 const useUpdateQuizDraft = (quizId) => {
+  const [subjectId, setSubjectId] = useState("");
   const [items, setItems] = useState([]);
   const [subject, setSubject] = useState("");
   const [quizName, setQuizName] = useState("");
@@ -21,7 +22,7 @@ const useUpdateQuizDraft = (quizId) => {
 
   const loadQuiz = async () => {
     const quiz = await getQuizById(quizId);
-
+    setSubjectId(quiz.subjectId?._id || quiz.subjectId || "");
     setSubject(quiz.subject || quiz.subjectId?.name || "");
     setQuizName(quiz.quizName || "");
     setItems(quiz.items || []);
@@ -205,6 +206,7 @@ const useUpdateQuizDraft = (quizId) => {
 
   return {
     subject,
+    subjectId,
     setSubject: handleSubjectChange,
     quizName,
     setQuizName: handleQuizNameChange,

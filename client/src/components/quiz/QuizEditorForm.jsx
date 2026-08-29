@@ -17,6 +17,7 @@ const QuizEditorForm = ({
   onUpdateItem,
   onDeleteItem,
   onSubmit,
+  onSubmitSuccess = null,
   isSubmitting = false,
   submitLabel = "Save Quiz",
   submittingLabel = "Saving...",
@@ -34,10 +35,16 @@ const QuizEditorForm = ({
   });
 
   const closeFeedback = () => {
+    const callback = feedback.onConfirm;
+
     setFeedback((previous) => ({
       ...previous,
       isOpen: false,
     }));
+
+    if (callback) {
+      callback();
+    }
   };
 
   const handleStartEdit = (index) => {
@@ -87,6 +94,14 @@ const QuizEditorForm = ({
 
     try {
       await onSubmit();
+
+      setFeedback({
+        isOpen: true,
+        type: "success",
+        title: "Quiz Saved",
+        message: "Your quiz has been saved successfully.",
+        onConfirm: onSubmitSuccess,
+      });
     } catch (error) {
       console.error("Failed to submit quiz:", error);
 
