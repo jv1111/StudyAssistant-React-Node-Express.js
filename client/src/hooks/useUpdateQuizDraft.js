@@ -19,8 +19,17 @@ const useUpdateQuizDraft = (quizId) => {
   const autosaveTimeout = useRef(null);
   const isDirty = useRef(false);
 
-  // Load update quiz draft first.
-  // If no draft exists, load the actual quiz.
+  const loadQuiz = async () => {
+    const quiz = await getQuizById(quizId);
+
+    setSubject(quiz.subject || quiz.subjectId?.name || "");
+    setQuizName(quiz.quizName || "");
+    setItems(quiz.items || []);
+
+    isDirty.current = false;
+    isFirstSave.current = true;
+  };
+
   useEffect(() => {
     const loadQuizData = async () => {
       try {
@@ -39,15 +48,7 @@ const useUpdateQuizDraft = (quizId) => {
           return;
         }
 
-        // No draft exists, so load the actual quiz.
-        const quiz = await getQuizById(quizId);
-
-        setSubject(quiz.subject || quiz.subjectId?.name || "");
-        setQuizName(quiz.quizName || "");
-
-        if (quiz.items?.length) {
-          setItems(quiz.items);
-        }
+        await loadQuiz();
       } catch (error) {
         console.error("Failed to load update quiz:", error);
       } finally {
@@ -58,9 +59,11 @@ const useUpdateQuizDraft = (quizId) => {
     loadQuizData();
   }, [quizId]);
 
-  // Autosave only after the user actually changes something.
+  // Autosave
   useEffect(() => {
-    if (isLoadingDraft) return;
+    if (isLoadingDraft) {
+      return;
+    }
 
     if (isFirstSave.current) {
       isFirstSave.current = false;
@@ -185,6 +188,21 @@ const useUpdateQuizDraft = (quizId) => {
     }
   };
 
+  const reloadQuiz = async () => {
+    try {
+      if (autosaveTimeout.current) {
+        clearTimeout(autosaveTimeout.current);
+        autosaveTimeout.current = null;
+      }
+
+      await loadQuiz();
+      setHasDraft(false);
+    } catch (error) {
+      console.error("Failed to reload quiz:", error);
+      throw error;
+    }
+  };
+
   return {
     subject,
     setSubject: handleSubjectChange,
@@ -199,6 +217,7 @@ const useUpdateQuizDraft = (quizId) => {
     handleItemChange,
     handleChoiceChange,
     clearDraft,
+    reloadQuiz,
   };
 };
 

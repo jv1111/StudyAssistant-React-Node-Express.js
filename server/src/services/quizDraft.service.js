@@ -67,6 +67,7 @@ const saveUpdateQuizDraft = async (
     {
       $set: {
         mode: "update",
+        isPreview: false,
         quizId,
         subject,
         quizName,

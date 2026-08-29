@@ -33,7 +33,7 @@ const GENERATION_METHODS = {
 
 const DEFAULT_CHOICES = ["", "", "", ""];
 
-const QuizPreviewItem = ({
+const QuizEditorItem = ({
   item,
   index,
   isEditing,
@@ -242,4 +242,4 @@ const QuizPreviewItem = ({
   );
 };
 
-export default QuizPreviewItem;
+export default QuizEditorItem;

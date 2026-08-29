@@ -1,51 +1,83 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import QuizEditor from "../../components/quiz/QuizEditor";
+import QuizEditorForm from "../../components/quiz/QuizEditorForm";
+import AppHeaderContent from "../../components/common/AppHeaderContent";
+import OptionBox from "../../components/common/OptionBox";
+import Card from "../../components/common/Card";
+import Modal from "../../components/common/Modal";
+
 import { updateQuiz } from "../../api/quiz.api";
 import useUpdateQuizDraft from "../../hooks/useUpdateQuizDraft";
-import AppHeaderContent from "../../components/common/AppHeaderContent";
 
 const UpdateQuizPage = () => {
   const { quizId } = useParams();
   const navigate = useNavigate();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDraftModal, setShowDraftModal] = useState(false);
+  const [hasHandledDraft, setHasHandledDraft] = useState(false);
 
   const {
     subject,
-    setSubject,
     quizName,
-    setQuizName,
     items,
     isLoadingDraft,
-    addQuestion,
+    hasDraft,
+    updateItem,
     deleteQuestion,
-    handleItemChange,
-    handleChoiceChange,
     clearDraft,
+    reloadQuiz,
   } = useUpdateQuizDraft(quizId);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  useEffect(() => {
+    if (isLoadingDraft) {
+      return;
+    }
 
-    if (isSubmitting) return;
+    // Ask the user what to do with the existing draft.
+    if (hasDraft && !hasHandledDraft) {
+      setShowDraftModal(true);
+    }
+  }, [isLoadingDraft, hasDraft, hasHandledDraft]);
+
+  const handleDraftOption = async (option) => {
+    if (option === "continue") {
+      setHasHandledDraft(true);
+      setShowDraftModal(false);
+
+      return;
+    }
+
+    if (option === "clear") {
+      try {
+        await clearDraft();
+        await reloadQuiz();
+
+        setHasHandledDraft(true);
+        setShowDraftModal(false);
+      } catch (error) {
+        console.error("Failed to clear quiz draft:", error);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting) {
+      return;
+    }
 
     setIsSubmitting(true);
 
     try {
-      const response = await updateQuiz(quizId, subject, quizName, items);
-
-      if (response.error) {
-        alert(response.error);
-        return;
-      }
+      await updateQuiz(quizId, subject, quizName, items);
 
       await clearDraft();
 
       navigate(`/quiz/${subject}`);
     } catch (error) {
       console.error("Failed to update quiz:", error);
+      throw error;
     } finally {
       setIsSubmitting(false);
     }
@@ -69,22 +101,41 @@ const UpdateQuizPage = () => {
         />
       </header>
 
-      <QuizEditor
+      <QuizEditorForm
         subject={subject}
         quizName={quizName}
         items={items}
-        onSubjectChange={(event) => setSubject(event.target.value)}
-        onQuizNameChange={(event) => setQuizName(event.target.value)}
-        onItemChange={handleItemChange}
-        onChoiceChange={handleChoiceChange}
-        onDeleteQuestion={deleteQuestion}
-        onAddQuestion={addQuestion}
+        onUpdateItem={updateItem}
+        onDeleteItem={deleteQuestion}
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
         submitLabel="Update Quiz"
-        quizInfoDescription="Update the basic details for your quiz."
-        questionsDescription="Modify questions and update their correct answers."
+        submittingLabel="Updating..."
+        description="Review your changes and save the quiz when you're finished."
       />
+
+      <Modal isOpen={showDraftModal} onClose={() => setShowDraftModal(false)}>
+        <Card className="max-w-md">
+          <OptionBox
+            eyebrow="QUIZ DRAFT"
+            title="Draft found"
+            description="You have unsaved changes for this quiz. Would you like to continue with the draft or clear it and use the saved quiz?"
+            options={[
+              {
+                label: "Continue with draft",
+                value: "continue",
+              },
+              {
+                label: "Clear draft",
+                value: "clear",
+              },
+            ]}
+            onSelect={handleDraftOption}
+            onClose={() => setShowDraftModal(false)}
+            closeLabel="Cancel"
+          />
+        </Card>
+      </Modal>
     </>
   );
 };
