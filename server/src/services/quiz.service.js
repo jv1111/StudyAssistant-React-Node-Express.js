@@ -128,6 +128,19 @@ const getQuizzes = async (userId, subjectId, searchQuery, skipCount = 0) => {
     .limit(10);
 };
 
+const getQuizById = async (userId, quizId) => {
+  const quiz = await Quiz.findOne({
+    _id: quizId,
+    userId,
+  }).populate("subjectId", "name");
+
+  if (!quiz) {
+    throw new AppError("Quiz not found", 404);
+  }
+
+  return quiz;
+};
+
 const getRecords = async (userId, searchQuery) => {
   const filter = {
     userId,
@@ -271,6 +284,7 @@ module.exports = {
   createQuiz,
   getSubjects,
   getQuizzes,
+  getQuizById,
   getRecords,
   getRecord,
   getItems,

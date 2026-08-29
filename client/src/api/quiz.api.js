@@ -43,6 +43,12 @@ const getQuizzes = async ({ subjectId, searchVal, skipCount }) => {
   return response.data;
 };
 
+const getQuizById = async (quizId) => {
+  const response = await api.get(`/quiz/${quizId}`);
+
+  return response.data;
+};
+
 const saveQuizRecord = async (quizId) => {
   const response = await api.put("/quiz/saveRecord", {
     quizId,
@@ -151,6 +157,7 @@ export {
   previewQuiz,
   getSubjects,
   getQuizzes,
+  getQuizById,
   saveQuizRecord,
   getRecords,
   getRecord,

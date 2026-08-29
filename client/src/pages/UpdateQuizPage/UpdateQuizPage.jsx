@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import QuizEditor from "../../components/quiz/QuizEditor";
 import { updateQuiz } from "../../api/quiz.api";
-import useCreateQuizDraft from "../../hooks/useCreateQuizDraft";
+import useUpdateQuizDraft from "../../hooks/useUpdateQuizDraft";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 
 const UpdateQuizPage = () => {
@@ -23,8 +23,8 @@ const UpdateQuizPage = () => {
     deleteQuestion,
     handleItemChange,
     handleChoiceChange,
-    saveCurrentDraft,
-  } = useCreateQuizDraft(quizId);
+    clearDraft,
+  } = useUpdateQuizDraft(quizId);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,7 +41,7 @@ const UpdateQuizPage = () => {
         return;
       }
 
-      await saveCurrentDraft(items);
+      await clearDraft();
 
       navigate(`/quiz/${subject}`);
     } catch (error) {
@@ -54,7 +54,7 @@ const UpdateQuizPage = () => {
   if (isLoadingDraft) {
     return (
       <div className="flex min-h-64 items-center justify-center text-sm text-muted">
-        Loading quiz draft...
+        Loading quiz...
       </div>
     );
   }

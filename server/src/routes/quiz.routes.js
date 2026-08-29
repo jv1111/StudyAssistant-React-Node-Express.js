@@ -30,6 +30,8 @@ router.delete("/savedData", quizController.deleteSavedData);
 
 router.get("/items", quizController.getItems);
 
+router.get("/:quizId", quizController.getQuizById);
+
 router.put("/update", quizController.updateQuiz);
 
 router.put("/pdf", quizController.createPdf);

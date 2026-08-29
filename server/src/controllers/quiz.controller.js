@@ -105,6 +105,14 @@ const deleteSavedData = asyncHandler(async (req, res) => {
   successResponse(res, 200, result);
 });
 
+const getQuizById = asyncHandler(async (req, res) => {
+  const { quizId } = req.params;
+
+  const quiz = await quizService.getQuizById(req.user._id, quizId);
+
+  successResponse(res, 200, quiz);
+});
+
 const getItems = asyncHandler(async (req, res) => {
   const { quizId } = req.query;
 
@@ -167,6 +175,7 @@ module.exports = {
   saveData,
   getSavedData,
   deleteSavedData,
+  getQuizById,
   getItems,
   updateQuiz,
   createPdf,

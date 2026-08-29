@@ -1,45 +1,68 @@
 import api from "./axios";
 
+// CREATE QUIZ DRAFT
+
 const getCreateQuizDraft = async () => {
-  console.log("[quizDraft] GET /quiz/draft");
-
-  const response = await api.get("/quiz/draft");
-
-  console.log("[quizDraft] GET response:", response.data);
+  const response = await api.get("/quiz/draft/create");
 
   return response.data;
 };
 
 const saveCreateQuizDraft = async (isPreview, subject, quizName, items) => {
-  console.log("[quizDraft] PATCH /quiz/draft");
-
-  console.log("[quizDraft] PATCH payload:", {
+  const response = await api.patch("/quiz/draft/create", {
     isPreview,
     subject,
     quizName,
     items,
   });
-
-  const response = await api.patch("/quiz/draft", {
-    isPreview,
-    subject,
-    quizName,
-    items,
-  });
-
-  console.log("[quizDraft] PATCH response:", response.data);
 
   return response.data;
 };
 
 const deleteCreateQuizDraft = async () => {
-  console.log("[quizDraft] DELETE /quiz/draft");
-
-  const response = await api.delete("/quiz/draft");
-
-  console.log("[quizDraft] DELETE response:", response.data);
+  const response = await api.delete("/quiz/draft/create");
 
   return response.data;
 };
 
-export { getCreateQuizDraft, saveCreateQuizDraft, deleteCreateQuizDraft };
+// UPDATE QUIZ DRAFT
+
+const getUpdateQuizDraft = async (quizId) => {
+  const response = await api.get("/quiz/draft/update", {
+    params: {
+      quizId,
+    },
+  });
+
+  return response.data;
+};
+
+const saveUpdateQuizDraft = async (quizId, subject, quizName, items) => {
+  const response = await api.patch("/quiz/draft/update", {
+    quizId,
+    subject,
+    quizName,
+    items,
+  });
+
+  return response.data;
+};
+
+const deleteUpdateQuizDraft = async (quizId) => {
+  const response = await api.delete("/quiz/draft/update", {
+    params: {
+      quizId,
+    },
+  });
+
+  return response.data;
+};
+
+export {
+  getCreateQuizDraft,
+  saveCreateQuizDraft,
+  deleteCreateQuizDraft,
+  getUpdateQuizDraft,
+  saveUpdateQuizDraft,
+  deleteUpdateQuizDraft,
+};

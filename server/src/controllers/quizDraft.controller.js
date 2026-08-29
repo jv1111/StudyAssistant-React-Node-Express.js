@@ -30,8 +30,45 @@ const deleteCreateQuizDraft = asyncHandler(async (req, res) => {
   successResponse(res, 200, draft);
 });
 
+const getUpdateQuizDraft = asyncHandler(async (req, res) => {
+  const { quizId } = req.query;
+
+  const draft = await quizDraftService.getUpdateQuizDraft(req.user._id, quizId);
+
+  successResponse(res, 200, draft);
+});
+
+const saveUpdateQuizDraft = asyncHandler(async (req, res) => {
+  const { quizId, subject, quizName, items } = req.body;
+
+  const draft = await quizDraftService.saveUpdateQuizDraft(
+    req.user._id,
+    quizId,
+    subject,
+    quizName,
+    items,
+  );
+
+  successResponse(res, 200, draft);
+});
+
+const deleteUpdateQuizDraft = asyncHandler(async (req, res) => {
+  const { quizId } = req.query;
+
+  const draft = await quizDraftService.deleteUpdateQuizDraft(
+    req.user._id,
+    quizId,
+  );
+
+  successResponse(res, 200, draft);
+});
+
 module.exports = {
   getCreateQuizDraft,
   saveCreateQuizDraft,
   deleteCreateQuizDraft,
+
+  getUpdateQuizDraft,
+  saveUpdateQuizDraft,
+  deleteUpdateQuizDraft,
 };
