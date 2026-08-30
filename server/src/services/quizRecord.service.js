@@ -1,86 +1,70 @@
-const QuizRecord = require("../models/quizRecords.model");
+  const QuizRecord = require("../models/quizRecords.model");
 
-const AppError = require("../utils/AppError");
+  const AppError = require("../utils/AppError");
+  const { getPagination } = require("../utils/pagination");
 
-const saveRecord = async (session, quiz) => {
-  const items = session.answers.map((sessionAnswer) => {
-    const quizItem = quiz.items.id(sessionAnswer.itemId);
+  const saveRecord = async (session, quiz) => {
+    const items = session.answers.map((sessionAnswer) => {
+      const quizItem = quiz.items.id(sessionAnswer.itemId);
 
-    return {
-      question: quizItem.question,
-      answer: sessionAnswer.answer,
-      correctAnswer: quizItem.answer,
-      correct: sessionAnswer.correct,
-      answeredAt: sessionAnswer.answeredAt,
-    };
-  });
+      return {
+        question: quizItem.question,
+        answer: sessionAnswer.answer,
+        correctAnswer: quizItem.answer,
+        correct: sessionAnswer.correct,
+        answeredAt: sessionAnswer.answeredAt,
+      };
+    });
 
-  return QuizRecord.create({
-    userId: session.userId,
-    quizId: session.quizId,
-    quizName: quiz.quizName,
-    subject: quiz.subjectId.name,
-    quizType: session.quizType,
-    score: session.score,
-    numberOfItems: quiz.numberOfItems,
-    items,
-    completedAt: session.completedAt,
-  });
-};
-
-const getRecords = async (userId, searchQuery, skipCount = 0) => {
-  // 1. Log the incoming arguments to ensure they are what you expect
-  console.log("--- getRecords Debug ---");
-  console.log("Inputs:", { userId, searchQuery, skipCount });
-
-  const filter = {
-    userId,
+    return QuizRecord.create({
+      userId: session.userId,
+      quizId: session.quizId,
+      quizName: quiz.quizName,
+      subject: quiz.subjectId.name,
+      quizType: session.quizType,
+      score: session.score,
+      numberOfItems: quiz.numberOfItems,
+      items,
+      completedAt: session.completedAt,
+    });
   };
 
-  if (searchQuery) {
-    filter.quizName = {
-      $regex: new RegExp(searchQuery, "i"),
+  const getRecords = async (userId, searchQuery, skipCount = 0) => {
+    const filter = {
+      userId,
     };
-  }
 
-  // 2. Log the final filter object being passed to MongoDB
-  console.log("MongoDB Filter:", filter);
+    if (searchQuery) {
+      filter.quizName = {
+        $regex: new RegExp(searchQuery, "i"),
+      };
+    }
 
-  // Execute the query
-  const records = await QuizRecord.find(filter)
-    .sort({ completedAt: -1 })
-    .skip(parseInt(skipCount))
-    .limit(10);
+    const { skip, limit } = getPagination(skipCount);
 
-  // 3. Log the results returned from the database
-  console.log(`Found ${records.length} records.`);
+    const records = await QuizRecord.find(filter)
+      .sort({ completedAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
-  // Optional: log a tiny snippet of the first record to verify data structure
-  if (records.length > 0) {
-    console.log("First record ID:", records[0]._id);
-  } else {
-    console.log("Query returned empty array.");
-  }
-  console.log("------------------------");
+    return records;
+  };
 
-  return records;
-};
+  const getRecordByRecordId = async (userId, recordId) => {
+    const record = await QuizRecord.findOne({
+      _id: recordId,
+      userId,
+    });
 
-const getRecordByRecordId = async (userId, recordId) => {
-  const record = await QuizRecord.findOne({
-    _id: recordId,
-    userId,
-  });
+    if (!record) {
+      throw new AppError("Quiz record not found", 404);
+    }
 
-  if (!record) {
-    throw new AppError("Quiz record not found", 404);
-  }
+    return record;
+  };
 
-  return record;
-};
-
-module.exports = {
-  saveRecord,
-  getRecords,
-  getRecordByRecordId,
-};
+  module.exports = {
+    saveRecord,
+    getRecords,
+    getRecordByRecordId,
+  };

@@ -13,9 +13,13 @@ const saveRecord = asyncHandler(async (req, res) => {
 });
 
 const getRecords = asyncHandler(async (req, res) => {
-  const { searchQuery } = req.query;
+  const { searchQuery, skipCount } = req.query;
 
-  const records = await quizRecordService.getRecords(req.user._id, searchQuery);
+  const records = await quizRecordService.getRecords(
+    req.user._id,
+    searchQuery,
+    skipCount,
+  );
 
   successResponse(res, 200, records);
 });

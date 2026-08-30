@@ -2,6 +2,7 @@ const Quiz = require("../models/quiz.model");
 const Subject = require("../models/subject.model");
 
 const { savePDF } = require("../utils/pdfHandler");
+const { getPagination } = require("../utils/pagination");
 
 const AppError = require("../utils/AppError");
 
@@ -100,10 +101,9 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
     };
   }
 
-  return Subject.find(filter)
-    .sort({ name: 1 })
-    .skip(parseInt(skipCount))
-    .limit(10);
+  const { skip, limit } = getPagination(skipCount);
+
+  return Subject.find(filter).sort({ name: 1 }).skip(skip).limit(limit);
 };
 
 const getQuiz = async (userId, quizId) => {
@@ -131,12 +131,14 @@ const getQuizzes = async (userId, subjectId, searchQuery, skipCount = 0) => {
     };
   }
 
+  const { skip, limit } = getPagination(skipCount);
+
   return Quiz.find(filter)
     .select("subjectId quizName numberOfItems")
     .populate("subjectId", "name")
     .sort({ createdAt: -1 })
-    .skip(parseInt(skipCount))
-    .limit(10);
+    .skip(skip)
+    .limit(limit);
 };
 
 const getQuizById = async (userId, quizId) => {

@@ -49,33 +49,6 @@ const getQuizById = async (quizId) => {
   return response.data;
 };
 
-const saveQuizRecord = async (quizId) => {
-  const response = await api.put("/quiz/saveRecord", {
-    quizId,
-  });
-
-  return response.data;
-};
-
-const getRecords = async ({ searchVal, skipCount }) => {
-  const response = await api.get("/quiz/records", {
-    params: {
-      searchQuery: searchVal,
-      skipCount,
-    },
-  });
-
-  return response.data;
-};
-
-const getRecord = async (recordId) => {
-  const response = await api.get("/quiz/record", {
-    params: { recordId },
-  });
-
-  return response.data;
-};
-
 const saveData = async (key, data, quizId) => {
   const response = await api.put("/quiz/saveData", {
     key,
@@ -141,9 +114,6 @@ export {
   getSubjects,
   getQuizzes,
   getQuizById,
-  saveQuizRecord,
-  getRecords,
-  getRecord,
   saveData,
   getSavedData,
   deleteSavedData,
