@@ -15,7 +15,7 @@ import { downloadPdf } from "../../api/quiz.api";
 
 import LoadingPage from "../Loading/LoadingPage";
 
-const QuizPage = () => {
+const QuizzesPage = () => {
   const navigate = useNavigate();
 
   const {
@@ -127,4 +127,4 @@ const QuizPage = () => {
   );
 };
 
-export default QuizPage;
+export default QuizzesPage;

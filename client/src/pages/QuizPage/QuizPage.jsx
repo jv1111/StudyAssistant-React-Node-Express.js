@@ -151,7 +151,7 @@ const QuizPage = () => {
                 icon={ArrowRightShort}
                 fit
                 disabled={!selectedChoice || isSubmitting}
-                onClick={handleSubmitAnswer}
+                onClick={() => handleSubmitAnswer()}
                 className="px-8"
               >
                 {isSubmitting ? "Submitting..." : "Submit Answer"}

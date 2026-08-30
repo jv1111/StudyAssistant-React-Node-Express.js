@@ -36,8 +36,21 @@ const useQuizzes = () => {
   };
 
   const handleStartQuiz = async (quizId, quizType, randomizeQuestions) => {
+    console.log("Starting quiz:", {
+      quizId,
+      quizType,
+      randomizeQuestions,
+    });
+
     const response = await startQuiz(quizId, quizType, randomizeQuestions);
-    navigate(`/quiz/session/${quizType}/${response.sessionId}`);
+
+    console.log("Start quiz response:", response);
+
+    const sessionPath = `/quiz/session/${quizType}/${response.sessionId}`;
+
+    console.log("Navigating to:", sessionPath);
+
+    navigate(sessionPath);
   };
 
   return {

@@ -18,11 +18,12 @@ const startQuiz = asyncHandler(async (req, res) => {
 });
 
 const submitAnswer = asyncHandler(async (req, res) => {
-  const { sessionId, answer } = req.body;
+  const { sessionId, quizType, answer } = req.body;
 
   const result = await quizSessionService.submitAnswer(
     req.user._id,
     sessionId,
+    quizType,
     answer,
   );
 
@@ -30,9 +31,13 @@ const submitAnswer = asyncHandler(async (req, res) => {
 });
 
 const nextQuestion = asyncHandler(async (req, res) => {
-  const { sessionId } = req.query;
+  const { sessionId, quizType } = req.query;
 
-  const result = await quizSessionService.nextQuestion(req.user._id, sessionId);
+  const result = await quizSessionService.nextQuestion(
+    req.user._id,
+    sessionId,
+    quizType,
+  );
 
   successResponse(res, 200, result);
 });

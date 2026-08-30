@@ -15,94 +15,43 @@ import Badge from "../../components/common/Badge";
 import FeedbackModal from "../../components/common/FeedbackModal";
 import LoadingPage from "../Loading/LoadingPage";
 
-const SAMPLE_QUIZ_DATA = {
-  quizId: "IDENT-101",
-  quizName: "Biology & Life Sciences Quiz",
-  questions: [
-    {
-      id: 1,
-      question: "What is known as the powerhouse of the cell?",
-    },
-    {
-      id: 2,
-      question:
-        "What green pigment in plants absorbs light energy for photosynthesis?",
-    },
-    {
-      id: 3,
-      question:
-        "What is the basic functional and structural unit of all living organisms?",
-    },
-  ],
-};
+import useQuizSession from "../../hooks/useQuizSession";
 
 const IdentificationQuizPage = () => {
-  // Quiz session state
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [answeredItems, setAnsweredItems] = useState(0);
+  const {
+    quiz,
+    isLoading,
+    isSubmitting,
+    feedback,
+    handleSubmitAnswer,
+    handleNextQuestion,
+    closeFeedback,
+    handlePauseQuiz,
+    handleCancelQuiz,
+  } = useQuizSession();
 
-  // Input & Submit state
   const [answer, setAnswer] = useState("");
-  const [isLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Feedback Modal state
-  const [feedback, setFeedback] = useState({
-    isOpen: false,
-    type: "success",
-    title: "",
-    message: "",
-  });
-
-  const totalItems = SAMPLE_QUIZ_DATA.questions.length;
-  const currentQuestion = SAMPLE_QUIZ_DATA.questions[currentIndex];
-  const progressPercent = ((currentIndex + 1) / totalItems) * 100;
-
-  // Handle Answer Submission
-  const onSubmit = (e) => {
-    if (e) e.preventDefault();
-    if (!answer.trim() || isSubmitting) return;
-
-    setIsSubmitting(true);
-
-    // Simulate submission delay
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setScore((prev) => prev + 1);
-      setAnsweredItems((prev) => prev + 1);
-
-      setFeedback({
-        isOpen: true,
-        type: "success",
-        title: "Answer Recorded!",
-        message: `Your answer: "${answer.trim()}"`,
-      });
-    }, 500);
-  };
-
-  // Move to Next Question
-  const handleNextQuestion = () => {
-    setFeedback((prev) => ({ ...prev, isOpen: false }));
-    setAnswer(""); // Clear input field
-
-    if (currentIndex < totalItems - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    } else {
-      alert("Quiz Completed!");
-    }
-  };
-
-  const closeFeedback = () => {
-    setFeedback((prev) => ({ ...prev, isOpen: false }));
-  };
-
-  const handlePauseQuiz = () => console.log("Pause quiz triggered");
-  const handleCancelQuiz = () => console.log("Cancel quiz triggered");
-
-  if (isLoading || !currentQuestion) {
+  if (isLoading || !quiz) {
     return <LoadingPage />;
   }
+
+  const totalItems = quiz.numberOfItems;
+  const currentIndex = quiz.currentItem;
+  const progressPercent = ((currentIndex + 1) / totalItems) * 100;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!answer.trim() || isSubmitting) return;
+
+    handleSubmitAnswer(answer.trim());
+  };
+
+  const handleNext = () => {
+    setAnswer("");
+    handleNextQuestion();
+  };
 
   return (
     <div className="layout-container mx-auto flex max-w-6xl flex-col gap-6 py-8">
@@ -115,7 +64,7 @@ const IdentificationQuizPage = () => {
             </Badge>
 
             <span className="text-xs font-semibold text-muted">
-              Quiz ID: #{SAMPLE_QUIZ_DATA.quizId}
+              Quiz ID: #{quiz.quizId}
             </span>
           </div>
 
@@ -125,7 +74,7 @@ const IdentificationQuizPage = () => {
         </div>
 
         <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-          {SAMPLE_QUIZ_DATA.quizName}
+          {quiz.quizName}
         </h1>
 
         <div className="flex flex-col gap-1.5 border-t border-border/60 pt-2">
@@ -159,13 +108,13 @@ const IdentificationQuizPage = () => {
                 </span>
 
                 <h2 className="mt-1 text-lg font-bold leading-relaxed text-foreground sm:text-xl">
-                  {currentQuestion.question}
+                  {quiz.question}
                 </h2>
               </div>
             </div>
 
             {/* SINGLE ANSWER INPUT FORM */}
-            <form onSubmit={onSubmit} className="flex flex-col gap-3">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
               <label
                 htmlFor="single-answer-input"
                 className="text-xs font-semibold text-muted"
@@ -219,6 +168,7 @@ const IdentificationQuizPage = () => {
               <span className="text-xs font-bold uppercase tracking-wider text-muted">
                 Time Remaining
               </span>
+
               <Clock className="text-primary" size={18} />
             </div>
 
@@ -237,11 +187,14 @@ const IdentificationQuizPage = () => {
               <span className="text-xs font-bold uppercase tracking-wider text-muted">
                 Current Score
               </span>
+
               <TrophyFill className="text-primary" size={18} />
             </div>
 
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-black text-primary">{score}</span>
+              <span className="text-4xl font-black text-primary">
+                {quiz.score}
+              </span>
 
               <span className="text-sm font-semibold text-muted">
                 / {totalItems} pts
@@ -250,9 +203,10 @@ const IdentificationQuizPage = () => {
 
             <div className="flex items-center justify-between rounded-lg bg-background-secondary p-3 text-xs">
               <span className="font-medium text-muted">Current Accuracy</span>
+
               <span className="font-bold text-foreground">
-                {answeredItems > 0
-                  ? `${Math.round((score / answeredItems) * 100)}%`
+                {quiz.answeredItems > 0
+                  ? `${Math.round((quiz.score / quiz.answeredItems) * 100)}%`
                   : "100%"}
               </span>
             </div>
@@ -294,7 +248,7 @@ const IdentificationQuizPage = () => {
         type={feedback.type}
         title={feedback.title}
         message={feedback.message}
-        onConfirm={handleNextQuestion}
+        onConfirm={handleNext}
       />
     </div>
   );

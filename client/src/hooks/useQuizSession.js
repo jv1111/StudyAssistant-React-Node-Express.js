@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { submitAnswer, nextQuestion } from "../api/quizSession.api";
 
 const useQuizSession = () => {
   const { sessionId } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const quizType = location.pathname.includes("/enumeration/")
+    ? "enumeration"
+    : "multiple_choice";
+
+  console.log("Quiz Session Params:", {
+    sessionId,
+    quizType,
+    pathname: location.pathname,
+  });
 
   const [quiz, setQuiz] = useState(null);
   const [selectedChoice, setSelectedChoice] = useState(null);
@@ -24,7 +35,7 @@ const useQuizSession = () => {
   useEffect(() => {
     const loadQuiz = async () => {
       try {
-        const response = await nextQuestion(sessionId);
+        const response = await nextQuestion(sessionId, quizType);
 
         setQuiz(response);
       } catch (error) {
@@ -43,21 +54,36 @@ const useQuizSession = () => {
     };
 
     loadQuiz();
-  }, [sessionId, navigate]);
+  }, [sessionId, quizType, navigate]);
 
   const handleSelectOption = (choice) => {
     if (isSubmitting) return;
 
+    console.log("Selected choice:", choice);
+    console.log("Selected choice type:", typeof choice);
+
     setSelectedChoice(choice);
   };
 
-  const handleSubmitAnswer = async () => {
-    if (!selectedChoice || isSubmitting) return;
+  const handleSubmitAnswer = async (answer = selectedChoice) => {
+    if (!answer || !String(answer).trim() || isSubmitting) return;
 
     try {
       setIsSubmitting(true);
 
-      const response = await submitAnswer(sessionId, selectedChoice);
+      console.log("Submitting answer:", {
+        sessionId,
+        quizType,
+        answer,
+        answerType: typeof answer,
+        trimmedAnswer: String(answer).trim(),
+      });
+
+      const response = await submitAnswer(
+        sessionId,
+        quizType,
+        String(answer).trim(),
+      );
 
       if (response.status === "completed") {
         setFeedback({
@@ -100,7 +126,7 @@ const useQuizSession = () => {
     try {
       setIsSubmitting(true);
 
-      const response = await nextQuestion(sessionId);
+      const response = await nextQuestion(sessionId, quizType);
 
       setQuiz(response);
 
@@ -147,6 +173,7 @@ const useQuizSession = () => {
 
   return {
     quiz,
+    quizType,
     selectedChoice,
     isLoading,
     isSubmitting,

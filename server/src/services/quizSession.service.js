@@ -18,6 +18,7 @@ const startQuiz = async (
   let session = await QuizSession.findOne({
     userId,
     quizId,
+    quizType,
     status: { $in: ["in_progress", "paused"] },
   });
 
@@ -51,10 +52,13 @@ const startQuiz = async (
   return formatQuizItemResponse(quiz, session, currentQuizItem);
 };
 
-const submitAnswer = async (userId, sessionId, answer) => {
+const submitAnswer = async (userId, sessionId, quizType, answer) => {
+  validateQuizType(quizType);
+
   const session = await QuizSession.findOne({
     _id: sessionId,
     userId,
+    quizType,
   });
 
   if (!session) {
@@ -120,10 +124,13 @@ const submitAnswer = async (userId, sessionId, answer) => {
   };
 };
 
-const nextQuestion = async (userId, sessionId) => {
+const nextQuestion = async (userId, sessionId, quizType) => {
+  validateQuizType(quizType);
+
   const session = await QuizSession.findOne({
     _id: sessionId,
     userId,
+    quizType,
   });
 
   if (!session) {
