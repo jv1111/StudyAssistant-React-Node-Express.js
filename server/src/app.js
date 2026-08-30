@@ -1,9 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+
 const passport = require("passport");
 
 const session = require("./config/session");
+
 const configurePassport = require("./config/passport");
+
 const errorHandler = require("./middlewares/error.middleware");
 
 const authRoutes = require("./routes/auth.routes");
@@ -27,7 +31,9 @@ app.use(
 );
 
 app.use(express.json());
+
 app.use(express.static("public"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(session);
 

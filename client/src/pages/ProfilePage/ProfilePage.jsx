@@ -10,7 +10,7 @@ const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
 
   return (
-    <main className="layout-container py-10">
+    <div>
       {/* Page Header */}
       <header className="mb-8">
         <Badge variant="primary" shape="rounded">
@@ -84,7 +84,7 @@ const ProfilePage = () => {
           </Card>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 

@@ -43,6 +43,29 @@ const createUser = async (userData) => {
   return user;
 };
 
+const changeProfile = async (userId, file) => {
+  const user = await getUserById(userId);
+
+  user.profileImg = {
+    url: `/uploads/profile/${file.filename}`,
+    filePath: file.path,
+  };
+
+  await user.save();
+
+  return {
+    message: "Profile image updated successfully",
+  };
+};
+
+const getProfileImg = async (userId) => {
+  const user = await getUserById(userId);
+
+  return {
+    url: user.profileImg.url,
+  };
+};
+
 module.exports = {
   getUserById,
   getUserByGoogleId,
@@ -51,4 +74,6 @@ module.exports = {
   getUserByUsernameOrEmail,
   isUsernameAvailable,
   createUser,
+  changeProfile,
+  getProfileImg,
 };

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { useRef, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { List, X, Person, BoxArrowRight } from "react-bootstrap-icons";
 
@@ -9,15 +9,24 @@ import { logout } from "../../redux/slice/authSlice";
 function Navigation() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const accountMenuRef = useRef(null);
 
   const logoutHandler = async () => {
-    const response = await logoutAPI();
+    try {
+      await logoutAPI();
 
-    if (response.success) {
       dispatch(logout());
+      navigate("/auth", { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error);
     }
+  };
+
+  const closeAccountMenu = () => {
+    accountMenuRef.current?.removeAttribute("open");
   };
 
   const navLinkStyles = ({ isActive }) =>
@@ -53,7 +62,6 @@ function Navigation() {
     <nav className="sticky top-0 z-40 w-full border-b border-border bg-surface/85 backdrop-blur-md select-none">
       <div className="layout-container">
         <div className="flex h-16 items-center justify-between md:justify-start">
-          {/* Logo */}
           <Link
             to="/"
             className="flex items-center gap-2 text-xl font-extrabold tracking-tight text-foreground transition-opacity hover:opacity-90 outline-none focus:outline-none shrink-0"
@@ -62,12 +70,12 @@ function Navigation() {
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-light text-primary font-black text-base border border-primary/20">
               Q
             </span>
+
             <span>
               Quiz<span className="text-primary">Builder</span>
             </span>
           </Link>
 
-          {/* Navigation Links */}
           <div className="ml-8 hidden items-center gap-1.5 md:flex">
             {quizzesActive && isQuizSection ? (
               <button
@@ -92,14 +100,15 @@ function Navigation() {
             </NavLink>
           </div>
 
-          {/* Account Dropdown (Pushed to far right) */}
           <div className="ml-auto hidden md:block">
-            <details className="group relative">
+            <details ref={accountMenuRef} className="group relative">
               <summary className="flex cursor-pointer list-none items-center gap-2 rounded-xl border border-border bg-background-secondary px-3.5 py-1.5 text-sm font-semibold text-foreground transition-all hover:border-border-hover hover:bg-surface outline-none focus:outline-none select-none">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                   A
                 </div>
+
                 <span>Account</span>
+
                 <span className="text-[10px] text-muted transition-transform duration-200 group-open:rotate-180">
                   ▼
                 </span>
@@ -108,6 +117,7 @@ function Navigation() {
               <div className="absolute right-0 top-full z-50 mt-2 w-48 rounded-xl border border-border bg-surface p-1.5 shadow-(--shadow-card) animate-in fade-in zoom-in-95 duration-100">
                 <Link
                   to="/profile"
+                  onClick={closeAccountMenu}
                   className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-primary-light hover:text-primary outline-none focus:outline-none"
                 >
                   <Person size={16} />
@@ -118,7 +128,10 @@ function Navigation() {
 
                 <button
                   type="button"
-                  onClick={logoutHandler}
+                  onClick={() => {
+                    closeAccountMenu();
+                    logoutHandler();
+                  }}
                   className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-muted transition-colors hover:bg-danger/10 hover:text-danger outline-none focus:outline-none"
                 >
                   <BoxArrowRight size={16} />
@@ -128,7 +141,6 @@ function Navigation() {
             </details>
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             type="button"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -140,7 +152,6 @@ function Navigation() {
           </button>
         </div>
 
-        {/* Mobile Navigation Dropdown */}
         {isMenuOpen && (
           <div className="border-t border-border py-4 md:hidden">
             <div className="flex flex-col gap-1.5">
@@ -182,7 +193,9 @@ function Navigation() {
 
               <NavLink
                 to="/profile"
-                className={`${navLinkStyles({ isActive: location.pathname === "/profile" })} flex items-center gap-2`}
+                className={`${navLinkStyles({
+                  isActive: location.pathname === "/profile",
+                })} flex items-center gap-2`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 <Person size={16} />

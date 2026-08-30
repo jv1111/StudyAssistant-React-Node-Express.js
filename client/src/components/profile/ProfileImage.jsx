@@ -12,7 +12,7 @@ const ProfileImage = () => {
       const response = await getProfileImageAPI();
 
       if (response.url) {
-        setImgSrc(response.url);
+        setImgSrc(`${import.meta.env.VITE_API_API_URL}${response.url}`);
       }
     };
 
@@ -44,7 +44,7 @@ const ProfileImage = () => {
         type="button"
         onClick={() => fileInputRef.current?.click()}
         title="Change profile picture"
-        className="group relative h-24 w-24 overflow-hidden rounded-full border-2 border-primary/30 bg-background-secondary shadow-md transition-all duration-300 hover:border-primary hover:shadow-(--shadow-button)"
+        className="hover:cursor-pointer group relative h-24 w-24 overflow-hidden rounded-full border-2 border-primary/30 bg-background-secondary shadow-md transition-all duration-300 hover:border-primary hover:shadow-(--shadow-button)"
       >
         <img
           src={imgSrc || emptyProfile}

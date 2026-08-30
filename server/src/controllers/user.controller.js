@@ -23,7 +23,7 @@ const changeProfile = asyncHandler(async (req, res) => {
     throw new AppError("Profile image is required", 400);
   }
 
-  const result = await userService.changeProfile(req.user._id, req.file.path);
+  const result = await userService.changeProfile(req.user._id, req.file);
 
   successResponse(res, 200, result);
 });
