@@ -109,8 +109,11 @@ const submitAnswer = async (userId, sessionId, quizType, answer) => {
 
   await session.save();
 
+  let recordId = null;
+
   if (session.status === "completed") {
-    await quizRecordService.saveRecord(session, quiz);
+    const record = await quizRecordService.saveRecord(session, quiz);
+    recordId = record._id;
   }
 
   return {
@@ -121,6 +124,7 @@ const submitAnswer = async (userId, sessionId, quizType, answer) => {
     currentItem: session.currentItem,
     numberOfItems: quiz.numberOfItems,
     status: session.status,
+    recordId,
   };
 };
 

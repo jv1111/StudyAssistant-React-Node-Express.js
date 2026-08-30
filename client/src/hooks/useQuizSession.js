@@ -91,7 +91,7 @@ const useQuizSession = () => {
           type: "success",
           title: "Quiz Completed!",
           message: `You've completed the quiz with a total score of ${response.score}/${response.numberOfItems}.`,
-          onConfirm: () => navigate("/"),
+          onConfirm: () => navigate(`/quiz/records/${response.recordId}`),
         });
 
         return;

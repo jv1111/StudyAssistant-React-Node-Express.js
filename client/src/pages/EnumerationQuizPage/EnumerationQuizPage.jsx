@@ -46,11 +46,7 @@ const IdentificationQuizPage = () => {
     if (!answer.trim() || isSubmitting) return;
 
     handleSubmitAnswer(answer.trim());
-  };
-
-  const handleNext = () => {
     setAnswer("");
-    handleNextQuestion();
   };
 
   return (
@@ -248,7 +244,7 @@ const IdentificationQuizPage = () => {
         type={feedback.type}
         title={feedback.title}
         message={feedback.message}
-        onConfirm={handleNext}
+        onConfirm={feedback.onConfirm || handleNextQuestion}
       />
     </div>
   );
