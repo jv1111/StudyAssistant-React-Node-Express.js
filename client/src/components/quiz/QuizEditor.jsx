@@ -66,7 +66,6 @@ const QuizEditor = ({
 
   const [isSubjectModalOpen, setIsSubjectModalOpen] = useState(false);
 
-  // Check if both subject and quiz title are confirmed/saved
   const isInfoConfirmed = Boolean(subject?.trim() && quizName?.trim());
 
   useEffect(() => {
@@ -81,10 +80,14 @@ const QuizEditor = ({
 
   const handleCreateSubject = () => {
     const trimmedSubject = newSubject.trim();
+
     if (!trimmedSubject) return;
 
     onSubjectChange({
-      target: { name: "subject", value: trimmedSubject },
+      target: {
+        name: "subject",
+        value: trimmedSubject,
+      },
     });
 
     setNewSubject(trimmedSubject);
@@ -93,7 +96,10 @@ const QuizEditor = ({
 
   const handleSubjectSelect = (selectedSubject) => {
     onSubjectChange({
-      target: { name: "subject", value: selectedSubject.name },
+      target: {
+        name: "subject",
+        value: selectedSubject.name,
+      },
     });
 
     setNewSubject(selectedSubject.name);
@@ -103,7 +109,10 @@ const QuizEditor = ({
 
   const handleRemoveSubject = () => {
     onSubjectChange({
-      target: { name: "subject", value: "" },
+      target: {
+        name: "subject",
+        value: "",
+      },
     });
 
     setNewSubject("");
@@ -116,10 +125,14 @@ const QuizEditor = ({
 
   const handleCreateQuizName = () => {
     const trimmedQuizName = newQuizName.trim();
+
     if (!trimmedQuizName) return;
 
     onQuizNameChange({
-      target: { name: "quizName", value: trimmedQuizName },
+      target: {
+        name: "quizName",
+        value: trimmedQuizName,
+      },
     });
 
     setNewQuizName(trimmedQuizName);
@@ -128,7 +141,10 @@ const QuizEditor = ({
 
   const handleRemoveQuizName = () => {
     onQuizNameChange({
-      target: { name: "quizName", value: "" },
+      target: {
+        name: "quizName",
+        value: "",
+      },
     });
 
     setNewQuizName("");
@@ -137,7 +153,9 @@ const QuizEditor = ({
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+
     if (!isInfoConfirmed || isSubmitting) return;
+
     onSubmit(event);
   };
 
@@ -148,35 +166,44 @@ const QuizEditor = ({
         onSubmit={handleFormSubmit}
         className="flex flex-col gap-8"
       >
-        {/* Section 1: Quiz Information */}
+        {/* =====================================================
+            Section 1: Quiz Information
+        ====================================================== */}
+
         <Card className="card-base">
           <section aria-labelledby="quiz-info-title">
             <header className="mb-6 border-b border-border pb-4">
               <h2
                 id="quiz-info-title"
-                className="text-lg font-bold text-foreground flex items-center gap-2"
+                className="flex items-center gap-2 text-lg font-bold text-foreground"
               >
                 Quiz Details
                 {isInfoConfirmed && (
                   <CheckCircleFill
-                    className="text-primary shrink-0"
+                    className="shrink-0 text-primary"
                     size={18}
                   />
                 )}
               </h2>
+
               <p className="mt-1 text-sm text-muted">{quizInfoDescription}</p>
             </header>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* Subject Field */}
+              {/* =================================================
+                  Subject Field
+              ================================================== */}
+
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center justify-between">
+                <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted">
                   <span>
                     {subject ? `Subject Name: ${subject}` : "Subject Name"}
                   </span>
+
                   {subject && (
-                    <span className="flex items-center gap-1 text-[11px] font-bold text-primary normal-case">
-                      <CheckCircleFill size={12} /> Confirmed
+                    <span className="flex items-center gap-1 text-[11px] font-bold normal-case text-primary">
+                      <CheckCircleFill size={12} />
+                      Confirmed
                     </span>
                   )}
                 </label>
@@ -188,10 +215,12 @@ const QuizEditor = ({
                         className="shrink-0 text-primary"
                         size={18}
                       />
+
                       <span className="truncate text-sm font-bold text-foreground">
                         {subject}
                       </span>
                     </div>
+
                     <Button
                       type="button"
                       variant="secondary"
@@ -233,9 +262,11 @@ const QuizEditor = ({
 
                     <div className="my-3 flex items-center gap-3">
                       <div className="h-px flex-1 bg-border" />
+
                       <span className="shrink-0 text-[11px] font-bold text-muted">
                         OR
                       </span>
+
                       <div className="h-px flex-1 bg-border" />
                     </div>
 
@@ -252,15 +283,20 @@ const QuizEditor = ({
                 )}
               </div>
 
-              {/* Quiz Name Field */}
+              {/* =================================================
+                  Quiz Name Field
+              ================================================== */}
+
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center justify-between">
+                <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted">
                   <span>
                     {quizName ? `Quiz Title: ${quizName}` : "Quiz Title"}
                   </span>
+
                   {quizName && (
-                    <span className="flex items-center gap-1 text-[11px] font-bold text-primary normal-case">
-                      <CheckCircleFill size={12} /> Confirmed
+                    <span className="flex items-center gap-1 text-[11px] font-bold normal-case text-primary">
+                      <CheckCircleFill size={12} />
+                      Confirmed
                     </span>
                   )}
                 </label>
@@ -272,10 +308,12 @@ const QuizEditor = ({
                         className="shrink-0 text-primary"
                         size={18}
                       />
+
                       <span className="truncate text-sm font-bold text-foreground">
                         {quizName}
                       </span>
                     </div>
+
                     <Button
                       type="button"
                       variant="secondary"
@@ -319,26 +357,31 @@ const QuizEditor = ({
           </section>
         </Card>
 
-        {/* Section 2: Questions Editor */}
+        {/* =====================================================
+            Section 2: Questions Editor
+        ====================================================== */}
+
         <section aria-labelledby="questions-title">
           <Card
-            className={`card-base transition-opacity duration-200 ${
-              !isInfoConfirmed ? "opacity-75" : ""
+            className={`relative card-base transition-all duration-300 ${
+              !isInfoConfirmed ? "border-notice/40 bg-surface/50" : ""
             }`}
           >
             <header className="mb-6 flex flex-col gap-4 border-b border-border pb-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2
                   id="questions-title"
-                  className="text-lg font-bold text-foreground flex items-center gap-2"
+                  className="flex items-center gap-2 text-lg font-bold text-foreground"
                 >
                   Questions & Answers
                   {!isInfoConfirmed && (
-                    <span className="flex items-center gap-1 text-xs font-normal text-amber-500">
-                      <LockFill size={13} /> Locked
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-notice/20 bg-notice-light px-2.5 py-0.5 text-xs font-semibold text-notice">
+                      <LockFill size={12} />
+                      Locked
                     </span>
                   )}
                 </h2>
+
                 <p className="mt-1 text-sm text-muted">
                   {questionsDescription}
                 </p>
@@ -349,22 +392,43 @@ const QuizEditor = ({
               </Badge>
             </header>
 
-            {/* Lock Warning Banner */}
+            {/* =================================================
+                Lock Warning Banner
+            ================================================== */}
+
             {!isInfoConfirmed && (
-              <div className="mb-6 flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs font-medium text-amber-600 dark:text-amber-400">
-                <InfoCircleFill size={16} className="shrink-0 text-amber-500" />
-                <span>
-                  Please confirm both the <strong>Subject Name</strong> and{" "}
-                  <strong>Quiz Title</strong> above to enable question editing.
-                </span>
+              <div className="mb-6 flex items-start gap-3 rounded-xl border border-notice/30 bg-notice-light p-4 text-xs font-medium text-notice shadow-xs sm:items-center">
+                <div className="shrink-0 rounded-lg bg-notice/20 p-2 text-notice">
+                  <LockFill size={18} />
+                </div>
+
+                <div className="flex-1">
+                  <span className="mb-0.5 block text-sm font-bold">
+                    Question editing is locked
+                  </span>
+
+                  <span>
+                    Please confirm both the <strong>Subject Name</strong> and{" "}
+                    <strong>Quiz Title</strong> above to unlock and start
+                    creating questions.
+                  </span>
+                </div>
               </div>
             )}
 
             <fieldset disabled={!isInfoConfirmed} className="contents">
-              <div className="flex flex-col gap-6">
+              <div
+                className={`flex flex-col gap-6 transition-all duration-300 ${
+                  !isInfoConfirmed
+                    ? "pointer-events-none select-none opacity-40 grayscale-[25%]"
+                    : ""
+                }`}
+              >
                 {items.map((item, index) => {
                   const generationMethod = item.generationMethod || "random";
+
                   const choices = item.choices || ["", "", "", ""];
+
                   const isAnswerFilled = Boolean(
                     item.answer && item.answer.trim(),
                   );
@@ -372,17 +436,14 @@ const QuizEditor = ({
                   return (
                     <article
                       key={index}
-                      className={`group rounded-xl border border-border bg-surface-hover p-5 transition-all duration-200 ${
-                        isInfoConfirmed
-                          ? "hover:border-primary/40 hover:shadow-sm"
-                          : "opacity-60 cursor-not-allowed"
-                      }`}
+                      className="group rounded-xl border border-border bg-surface-hover p-5 transition-all duration-200 hover:border-primary/40 hover:shadow-sm"
                     >
                       <header className="mb-4 flex items-center justify-between gap-4 border-b border-border/60 pb-3">
                         <div className="flex items-center gap-2.5">
                           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
                             {index + 1}
                           </span>
+
                           <h3 className="text-sm font-semibold text-foreground">
                             Question #{index + 1}
                           </h3>
@@ -393,15 +454,11 @@ const QuizEditor = ({
                           variant="danger"
                           fit
                           onClick={() => onDeleteQuestion(index)}
-                          disabled={
-                            !isInfoConfirmed || items.length <= MIN_QUESTIONS
-                          }
+                          disabled={items.length <= MIN_QUESTIONS}
                           title={
-                            !isInfoConfirmed
-                              ? "Confirm Subject and Quiz Title to edit questions"
-                              : items.length <= MIN_QUESTIONS
-                                ? `A quiz must contain at least ${MIN_QUESTIONS} questions`
-                                : "Delete question"
+                            items.length <= MIN_QUESTIONS
+                              ? `A quiz must contain at least ${MIN_QUESTIONS} questions`
+                              : "Delete question"
                           }
                           className="opacity-80 transition-opacity hover:opacity-100 disabled:opacity-40"
                         >
@@ -409,7 +466,10 @@ const QuizEditor = ({
                         </Button>
                       </header>
 
-                      {/* Question Prompt and Correct Answer */}
+                      {/* =================================================
+                          Question Prompt and Correct Answer
+                      ================================================== */}
+
                       <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
                         <div className="lg:col-span-3">
                           <AutoAdjustingInput
@@ -419,7 +479,6 @@ const QuizEditor = ({
                             value={item.question}
                             placeholder="Write your question..."
                             onChange={(event) => onItemChange(event, index)}
-                            disabled={!isInfoConfirmed}
                             required
                           />
                         </div>
@@ -432,23 +491,25 @@ const QuizEditor = ({
                             value={item.answer}
                             placeholder="Expected answer..."
                             onChange={(event) => onItemChange(event, index)}
-                            disabled={!isInfoConfirmed}
                             required
                           />
                         </div>
                       </div>
 
-                      {/* Choice Generation Method Selector */}
+                      {/* =================================================
+                          Choice Generation Method
+                      ================================================== */}
+
                       <div className="mt-5 flex flex-col gap-2 rounded-lg border border-border/70 bg-background/40 p-3.5">
                         <div className="flex items-center justify-between">
                           <label className="text-xs font-semibold uppercase tracking-wider text-muted">
                             Generation Method
                           </label>
 
-                          {!isAnswerFilled && isInfoConfirmed && (
-                            <span className="flex items-center gap-1 text-[11px] text-amber-500">
-                              <InfoCircleFill size={11} /> Correct answer
-                              required for Custom Choices
+                          {!isAnswerFilled && (
+                            <span className="flex items-center gap-1 text-[11px] text-notice">
+                              <InfoCircleFill size={11} />
+                              Correct answer required for Custom Choices
                             </span>
                           )}
                         </div>
@@ -456,9 +517,9 @@ const QuizEditor = ({
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                           {GENERATION_METHODS.map((method) => {
                             const isSelected = generationMethod === method.id;
+
                             const isCustomAndDisabled =
-                              !isInfoConfirmed ||
-                              (method.id === "custom" && !isAnswerFilled);
+                              method.id === "custom" && !isAnswerFilled;
 
                             return (
                               <SelectableOption
@@ -466,11 +527,9 @@ const QuizEditor = ({
                                 selected={isSelected}
                                 disabled={isCustomAndDisabled}
                                 title={
-                                  !isInfoConfirmed
-                                    ? "Confirm Subject and Quiz Title to edit options"
-                                    : isCustomAndDisabled
-                                      ? "Fill in the Correct Answer above to enable Custom Choices"
-                                      : ""
+                                  isCustomAndDisabled
+                                    ? "Fill in the Correct Answer above to enable Custom Choices"
+                                    : ""
                                 }
                                 icon={method.icon}
                                 label={method.label}
@@ -491,7 +550,10 @@ const QuizEditor = ({
                           })}
                         </div>
 
-                        {/* Expandable Custom Choices */}
+                        {/* =================================================
+                            Custom Choices
+                        ================================================== */}
+
                         {generationMethod === "custom" && isAnswerFilled && (
                           <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-200">
                             <div className="rounded-xl border border-primary/20 bg-surface p-4 shadow-2xs">
@@ -499,6 +561,7 @@ const QuizEditor = ({
                                 <span className="text-xs font-semibold uppercase tracking-wider text-primary">
                                   Custom Choice Options
                                 </span>
+
                                 <span className="text-[11px] text-muted">
                                   Provide 4 multiple-choice options
                                 </span>
@@ -524,7 +587,6 @@ const QuizEditor = ({
                                         index,
                                       )
                                     }
-                                    disabled={!isInfoConfirmed}
                                     required={generationMethod === "custom"}
                                   />
                                 ))}
@@ -545,18 +607,20 @@ const QuizEditor = ({
                 )}
               </div>
 
-              <div className="mt-8 flex justify-center border-t border-border pt-6">
+              {/* =================================================
+                  Add Question
+              ================================================== */}
+
+              <div
+                className={`mt-8 flex justify-center border-t border-border pt-6 transition-opacity duration-300 ${
+                  !isInfoConfirmed ? "pointer-events-none opacity-40" : ""
+                }`}
+              >
                 <Button
                   type="button"
                   variant="secondary"
                   onClick={onAddQuestion}
-                  disabled={!isInfoConfirmed}
-                  title={
-                    !isInfoConfirmed
-                      ? "Confirm Subject Name and Quiz Title to add questions"
-                      : ""
-                  }
-                  className="inline-flex items-center gap-2 border-primary/30 text-primary hover:bg-primary-light disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-2 border-primary/30 text-primary hover:bg-primary-light"
                 >
                   <PlusCircle size={16} />
                   Add New Question
@@ -566,14 +630,22 @@ const QuizEditor = ({
           </Card>
         </section>
 
-        {/* Floating Action Footer */}
+        {/* =====================================================
+            Floating Action Footer
+        ====================================================== */}
+
         <footer className="sticky bottom-6 flex items-center justify-between gap-4 rounded-card border border-border bg-surface/90 p-4 shadow-lg backdrop-blur-md">
-          {!isInfoConfirmed && (
-            <span className="flex items-center gap-1.5 text-xs text-amber-500">
-              <InfoCircleFill size={13} /> Confirm both Subject and Quiz Title
-              to unlock and submit
+          {!isInfoConfirmed ? (
+            <span className="flex items-center gap-1.5 text-xs font-medium text-notice">
+              <LockFill size={13} className="shrink-0" />
+              Confirm both Subject and Quiz Title to unlock and submit
+            </span>
+          ) : (
+            <span className="text-xs text-muted">
+              All details confirmed. Ready to submit!
             </span>
           )}
+
           <Button
             type="submit"
             fit

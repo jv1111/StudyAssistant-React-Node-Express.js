@@ -19,13 +19,20 @@
 }
 
 @theme {
-  /* --- Warm Light Gold Palette --- */
+  /* =========================================================
+     BASE COLORS
+     ========================================================= */
+
   --color-background: #faf8f3;
   --color-background-secondary: #f3efe6;
+
   --color-surface: #ffffff;
   --color-surface-hover: #fcfaf5;
 
-  /* Gold Brand Colors */
+  /* =========================================================
+     BRAND COLORS
+     ========================================================= */
+
   --color-primary: #c59b27;
   --color-primary-hover: #a8811a;
   --color-primary-light: #fbf4e2;
@@ -33,31 +40,69 @@
   --color-accent: #d4af37;
   --color-accent-soft: #fff9e6;
 
-  /* Typography Colors */
+  /* =========================================================
+     TYPOGRAPHY
+     ========================================================= */
+
   --color-foreground: #1c1917;
   --color-muted: #78716c;
 
-  /* Borders & Dividers */
+  /* =========================================================
+     BORDERS & DIVIDERS
+     ========================================================= */
+
   --color-border: #e8e2d5;
   --color-border-hover: #d4af37;
 
-  /* --- Status & Generation Method Colors --- */
+  /* =========================================================
+     STATUS COLORS
+     ========================================================= */
+
   --color-danger: #dc2626;
+  --color-danger-light: #fef2f2;
+
   --color-success: #16a34a;
+  --color-success-light: #f0fdf4;
+
   --color-info: #2563eb;
+  --color-info-light: #eff6ff;
+
   --color-warning: #f59e0b;
+  --color-warning-light: #fffbeb;
+
+  /* =========================================================
+     QUIZ GENERATION COLORS
+     ========================================================= */
 
   --color-ai: #9333ea;
-  --color-random: #059669;
+  --color-ai-light: #faf5ff;
 
-  /* --- Elevation & Shadows --- */
+  --color-random: #059669;
+  --color-random-light: #ecfdf5;
+
+  /* =========================================================
+     NOTICE / LOCKED STATE
+     ========================================================= */
+
+  --color-notice: #d97706;
+  --color-notice-light: #fffbeb;
+
+  /* =========================================================
+     ELEVATION & SHADOWS
+     ========================================================= */
+
   --shadow-gold-glow: 0 20px 50px -10px rgba(197, 155, 39, 0.15);
+
   --shadow-card:
     0 10px 30px -5px rgba(28, 25, 23, 0.05),
     0 2px 8px -2px rgba(197, 155, 39, 0.08);
+
   --shadow-button: 0 4px 14px rgba(197, 155, 39, 0.22);
 
-  /* --- Geometry --- */
+  /* =========================================================
+     GEOMETRY
+     ========================================================= */
+
   --radius-card: 1.25rem;
   --radius-input: 0.75rem;
 }
@@ -77,6 +122,7 @@
 
   body {
     @apply m-0;
+
     color: var(--color-foreground);
     background-color: var(--color-background);
 
@@ -91,6 +137,7 @@
         rgba(197, 155, 39, 0.06),
         transparent 28rem
       );
+
     background-attachment: fixed;
 
     font-family:
@@ -106,16 +153,15 @@
     @apply no-underline;
   }
 
-  /* CUSTOM SCROLLBAR STYLING */
+  /* =========================================================
+     CUSTOM SCROLLBAR
+     ========================================================= */
 
-  /* For Firefox */
   * {
     scrollbar-width: thin;
-    /* Changed from --color-border to --color-primary */
     scrollbar-color: var(--color-primary) transparent;
   }
 
-  /* For Chrome, Edge, and Safari */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -126,13 +172,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    /* Matches your primary button background */
     background-color: var(--color-primary);
     border-radius: 9999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    /* Matches your primary button hover state */
     background-color: var(--color-primary-hover);
   }
 }
