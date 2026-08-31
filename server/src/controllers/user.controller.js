@@ -7,11 +7,11 @@ const asyncHandler = require("../utils/asyncHandler.js");
 const { successResponse } = require("../utils/response");
 
 const changePass = asyncHandler(async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
 
   const result = await userService.changePass(
     req.user._id,
-    oldPassword,
+    currentPassword,
     newPassword,
   );
 

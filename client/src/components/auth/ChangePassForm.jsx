@@ -5,30 +5,25 @@ import Button from "../common/Button";
 
 import ChangePassValidationSchema from "../../validation/passwordChange.validationSchema.js";
 
-const ChangePassForm = () => {
+const ChangePassForm = ({ onSubmit }) => {
   const initialValues = {
-    oldPassword: "",
+    currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   };
-
-  const submitHandler = async (data, resetForm) => {};
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={ChangePassValidationSchema}
-      onSubmit={async (data, { setSubmitting, resetForm }) => {
-        await submitHandler(data, resetForm);
-        setSubmitting(false);
-      }}
+      onSubmit={onSubmit}
     >
       {({ isSubmitting }) => (
         <Form className="flex flex-col gap-5">
           <div className="flex flex-col gap-4">
             <FormikTextField
               type="password"
-              name="oldPassword"
+              name="currentPassword"
               label="Current Password"
               placeholder="••••••••"
             />

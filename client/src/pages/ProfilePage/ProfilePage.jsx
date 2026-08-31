@@ -8,7 +8,12 @@ import ChangePassForm from "../../components/auth/ChangePassForm";
 import EmailForm from "../../components/auth/EmailForm";
 import Badge from "../../components/common/Badge";
 
-import { changeProfileAPI, getProfileImageAPI } from "../../api/user.api";
+import {
+  changePassAPI,
+  changeProfileAPI,
+  getProfileImageAPI,
+} from "../../api/user.api";
+
 import { sendEmailVerificationAPI } from "../../api/emailVerification.api";
 
 const ProfilePage = () => {
@@ -42,6 +47,26 @@ const ProfilePage = () => {
     formData.append("image", file);
 
     await changeProfileAPI(formData);
+  };
+
+  const handleChangePass = async (
+    values,
+    { setSubmitting, resetForm, setFieldError, setFieldValue },
+  ) => {
+    try {
+      await changePassAPI({
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+      });
+
+      resetForm();
+    } catch (error) {
+      const message = error.response?.data?.message;
+
+      setFieldError("currentPassword", message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleSendVerification = async (
@@ -120,7 +145,7 @@ const ProfilePage = () => {
               </p>
             </header>
 
-            <ChangePassForm />
+            <ChangePassForm onSubmit={handleChangePass} />
           </Card>
 
           <Card className="card-base h-fit">

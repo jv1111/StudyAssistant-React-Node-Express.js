@@ -1,7 +1,8 @@
 const {
   registerSchema,
   loginSchema,
-} = require("../validations/auth.validation.js");
+  changePassSchema,
+} = require("../validations/validation.js");
 
 const { errorResponse } = require("../utils/response");
 
@@ -47,7 +48,29 @@ const validateLogin = async (req, res, next) => {
   }
 };
 
+const validateChangePass = async (req, res, next) => {
+  try {
+    req.body = await changePassSchema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true,
+    });
+
+    next();
+  } catch (error) {
+    return errorResponse(
+      res,
+      400,
+      "Validation failed",
+      error.inner.map((validationError) => ({
+        field: validationError.path,
+        message: validationError.message,
+      })),
+    );
+  }
+};
+
 module.exports = {
   validateRegister,
   validateLogin,
+  validateChangePass,
 };

@@ -2,9 +2,16 @@ const successResponse = (res, statusCode, data) => {
   return res.status(statusCode).json(data);
 };
 
-const errorResponse = (res, statusCode, message, errors = undefined) => {
+const errorResponse = (
+  res,
+  statusCode,
+  message,
+  errors = undefined,
+  code = undefined,
+) => {
   return res.status(statusCode).json({
     message,
+    ...(code && { code }),
     ...(errors && { errors }),
   });
 };

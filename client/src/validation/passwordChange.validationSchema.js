@@ -3,14 +3,14 @@ import * as yup from "yup";
 import passwordValidation from "./password.validationSchema";
 
 const ChangePassValidationSchema = yup.object().shape({
-  oldPassword: yup.string().required("Old password is required"),
+  currentPassword: yup.string().required("Please enter your current password"),
 
   newPassword: passwordValidation,
 
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("newPassword"), null], "Passwords must match")
-    .required("Confirm password is required"),
+    .required("Please confirm your new password"),
 });
 
 export default ChangePassValidationSchema;
