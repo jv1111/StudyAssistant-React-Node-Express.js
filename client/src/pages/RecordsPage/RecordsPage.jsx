@@ -41,7 +41,7 @@ const RecordsPage = () => {
       {records.length > 0 ? (
         <GlassScrollableGrid onScroll={handleScroll}>
           {records.map((record) => (
-            <li key={record._id} className="h-full">
+            <li key={record._id} className="h-fit">
               <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
                 <QuizRecordCardContent
                   record={record}

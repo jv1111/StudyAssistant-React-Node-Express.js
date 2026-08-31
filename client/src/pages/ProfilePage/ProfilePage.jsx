@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import Card from "../../components/common/Card";
 import ProfileImage from "../../components/profile/ProfileImage";
@@ -6,8 +8,65 @@ import ChangePassForm from "../../components/auth/ChangePassForm";
 import EmailForm from "../../components/auth/EmailForm";
 import Badge from "../../components/common/Badge";
 
+import { changeProfileAPI, getProfileImageAPI } from "../../api/user.api";
+import { sendEmailVerificationAPI } from "../../api/emailVerification.api";
+
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
+
+  const [imgSrc, setImgSrc] = useState(null);
+
+  useEffect(() => {
+    const getImage = async () => {
+      const response = await getProfileImageAPI();
+
+      if (response.url) {
+        setImgSrc(`${import.meta.env.VITE_API_API_URL}${response.url}`);
+      }
+    };
+
+    getImage();
+  }, []);
+
+  const handleImageChange = async (file) => {
+    const reader = new FileReader();
+
+    reader.onload = (loadEvent) => {
+      setImgSrc(loadEvent.target.result);
+    };
+
+    reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    await changeProfileAPI(formData);
+  };
+
+  const handleSendVerification = async (
+    values,
+    { setSubmitting, setFieldError },
+  ) => {
+    try {
+      const type = user?.email ? "update" : "add";
+
+      const response = await sendEmailVerificationAPI(values.email, type);
+
+      if (!response.email) {
+        setFieldError("email", response.message);
+        return;
+      }
+
+      navigate("/verify-email", {
+        state: {
+          email: response.email,
+        },
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex h-full flex-col">
@@ -31,7 +90,7 @@ const ProfilePage = () => {
       <div className="flex flex-col gap-6 pb-12">
         <Card className="card-base">
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
-            <ProfileImage />
+            <ProfileImage imgSrc={imgSrc} onChange={handleImageChange} />
 
             <div className="flex flex-col gap-1">
               <span className="text-xs font-semibold uppercase tracking-wider text-primary">
@@ -77,7 +136,7 @@ const ProfilePage = () => {
               </p>
             </header>
 
-            <EmailForm email={user?.email} />
+            <EmailForm email={user?.email} onSubmit={handleSendVerification} />
           </Card>
         </div>
       </div>

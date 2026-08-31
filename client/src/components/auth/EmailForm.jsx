@@ -1,46 +1,25 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 
 import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
 
-import { sendEmailVerificationAPI } from "../../api/emailVerification.api";
-
-const EmailForm = ({ email }) => {
-  const navigate = useNavigate();
+const EmailForm = ({ email, onSubmit }) => {
   const [isEditing, setIsEditing] = useState(!email);
 
   const initialValues = {
     email: "",
   };
 
-  const handleSendVerification = async (
-    values,
-    { setSubmitting, setFieldError },
-  ) => {
-    try {
-      const type = email ? "update" : "add";
-
-      const response = await sendEmailVerificationAPI(values.email, type);
-
-      if (!response.success) {
-        setFieldError("email", response.message);
-        return;
-      }
-
-      navigate("/verify-email", {
-        state: {
-          email: response.email,
-        },
-      });
-    } finally {
-      setSubmitting(false);
-    }
+  const handleSubmit = async (values, formikHelpers) => {
+    await onSubmit(values, {
+      ...formikHelpers,
+      onSuccess: () => setIsEditing(false),
+    });
   };
 
   return isEditing || !email ? (
-    <Formik initialValues={initialValues} onSubmit={handleSendVerification}>
+    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       {({ isSubmitting }) => (
         <Form className="flex flex-col gap-5">
           <div className="flex flex-col gap-4">

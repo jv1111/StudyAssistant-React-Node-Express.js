@@ -1,47 +1,26 @@
 import api from "./axios";
 
 const sendEmailVerificationAPI = async (email, type) => {
-  try {
-    const response = await api.post("/email-verification/send", {
-      email,
-      type,
-    });
+  const response = await api.post("/email-verification/send", {
+    email,
+    type,
+  });
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Something went wrong.",
-    };
-  }
+  return response.data;
 };
 
 const verifyEmailAPI = async (code) => {
-  try {
-    const response = await api.post("/email-verification/verify", {
-      code,
-    });
+  const response = await api.post("/email-verification/verify", {
+    code,
+  });
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Something went wrong.",
-    };
-  }
+  return response.data;
 };
 
 const resendEmailVerificationAPI = async () => {
-  try {
-    const response = await api.post("/email-verification/resend");
+  const response = await api.post("/email-verification/resend");
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Something went wrong.",
-    };
-  }
+  return response.data;
 };
 
 export { sendEmailVerificationAPI, verifyEmailAPI, resendEmailVerificationAPI };

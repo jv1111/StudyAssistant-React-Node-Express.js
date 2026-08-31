@@ -10,7 +10,7 @@ const Card = ({
         ${width} 
         rounded-card 
         border border-border/80 
-        bg-surface 
+        bg-surface
         p-6 
         shadow-(--shadow-card) 
         transition-all 

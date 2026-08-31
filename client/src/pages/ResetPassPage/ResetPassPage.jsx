@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import ResetPassForm from "../../components/auth/ResetPassForm";
 import AuthFormLayout from "../../components/auth/AuthFormLayout";
@@ -7,9 +7,13 @@ import AuthFormHeader from "../../components/auth/AuthFormHeader";
 import Button from "../../components/common/Button";
 import Card from "../../components/common/Card";
 
-import { validateResetTokenAPI } from "../../api/passwordReset.api";
+import {
+  resetPasswordAPI,
+  validateResetTokenAPI,
+} from "../../api/passwordReset.api";
 
 const ResetPassPage = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const token = searchParams.get("token");
@@ -25,19 +29,36 @@ const ResetPassPage = () => {
         return;
       }
 
-      const response = await validateResetTokenAPI(token);
+      try {
+        await validateResetTokenAPI(token);
 
-      if (!response.success) {
-        setMessage(response.message);
+        setIsValid(true);
+      } catch (error) {
+        setMessage(
+          error.response?.data?.message ||
+            "This password reset link is invalid or expired.",
+        );
+
         setIsValid(false);
-        return;
       }
-
-      setIsValid(true);
     };
 
     validateToken();
   }, [token]);
+
+  const handleResetPassword = async (values, { setSubmitting, setStatus }) => {
+    setStatus("");
+
+    try {
+      await resetPasswordAPI(token, values.password);
+
+      navigate("/auth");
+    } catch (error) {
+      setStatus(error.response?.data?.message || "Failed to reset password");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   if (isValid === null) {
     return (
@@ -73,7 +94,7 @@ const ResetPassPage = () => {
 
   return (
     <Card width="w-95" className="m-auto">
-      <ResetPassForm token={token} />
+      <ResetPassForm onSubmit={handleResetPassword} />
     </Card>
   );
 };

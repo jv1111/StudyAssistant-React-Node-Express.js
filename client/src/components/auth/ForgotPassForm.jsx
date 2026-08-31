@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Formik, Form } from "formik";
 import { Link } from "react-router-dom";
 
@@ -7,32 +6,9 @@ import Button from "../common/Button";
 import AuthFormLayout from "./AuthFormLayout";
 import AuthFormHeader from "./AuthFormHeader";
 
-import { requestPasswordResetAPI } from "../../api/passwordReset.api";
-
-const ForgotPassForm = () => {
-  const [isSent, setIsSent] = useState(false);
-  const [sentEmail, setSentEmail] = useState("");
-
+const ForgotPassForm = ({ isSent, sentEmail, onSubmit }) => {
   const initialValues = {
     email: "",
-  };
-
-  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
-    setStatus("");
-
-    try {
-      const response = await requestPasswordResetAPI(values.email);
-
-      if (!response.success) {
-        setStatus(response.message);
-        return;
-      }
-
-      setSentEmail(values.email);
-      setIsSent(true);
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   if (isSent) {
@@ -75,7 +51,7 @@ const ForgotPassForm = () => {
   }
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {({ isSubmitting, status }) => (
         <AuthFormLayout>
           <AuthFormHeader

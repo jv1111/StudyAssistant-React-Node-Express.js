@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { Formik } from "formik";
 
 import FormikTextField from "../forms/FormikTextField";
@@ -6,30 +5,9 @@ import Button from "../common/Button";
 import AuthFormLayout from "./AuthFormLayout";
 import AuthFormHeader from "./AuthFormHeader";
 
-import { verifyEmailAPI } from "../../api/emailVerification.api";
-import { updateUser } from "../../redux/slice/authSlice";
-
-const VerifyEmailForm = ({ email, onSuccess }) => {
-  const dispatch = useDispatch();
-
-  const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
-    try {
-      const response = await verifyEmailAPI(values.code);
-
-      if (!response.success) {
-        setFieldError("code", response.message);
-        return;
-      }
-
-      dispatch(updateUser(response.user));
-      onSuccess();
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
+const VerifyEmailForm = ({ email, onSubmit }) => {
   return (
-    <Formik initialValues={{ code: "" }} onSubmit={handleSubmit}>
+    <Formik initialValues={{ code: "" }} onSubmit={onSubmit}>
       {({ isSubmitting }) => (
         <AuthFormLayout>
           <AuthFormHeader

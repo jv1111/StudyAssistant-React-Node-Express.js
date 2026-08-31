@@ -1,12 +1,47 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import Card from "../../components/common/Card";
 import LoginForm from "../../components/auth/LoginForm";
 import SignUpForm from "../../components/auth/SignUpForm";
 import Modal from "../../components/common/Modal";
 import Eyebrow from "../../components/common/Eyebrow";
 
+import { loginAPI, signUpAPI } from "../../api/auth.api";
+import { login } from "../../redux/slice/authSlice";
+
 const AuthPage = () => {
+  const dispatch = useDispatch();
+
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
+
+  const handleLogin = async (values, { setSubmitting, setStatus }) => {
+    try {
+      setStatus("");
+
+      const response = await loginAPI(values.usernameOrEmail, values.password);
+
+      dispatch(login(response.user));
+    } catch (error) {
+      setStatus(error.response?.data?.message || "Login failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSignUp = async (userData, { setSubmitting, setStatus }) => {
+    try {
+      setStatus("");
+
+      const response = await signUpAPI(userData);
+
+      dispatch(login(response.user));
+    } catch (error) {
+      setStatus(error.response?.data?.message || "Registration failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -30,13 +65,15 @@ const AuthPage = () => {
 
             <div className="mt-10 flex flex-col gap-6">
               <div className="flex gap-4 rounded-xl border border-border/60 bg-surface/60 p-4 shadow-sm backdrop-blur-xs">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary font-bold">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light font-bold text-primary">
                   ✦
                 </div>
+
                 <div>
                   <strong className="block font-semibold text-foreground">
                     Create and practice quizzes
                   </strong>
+
                   <p className="mt-1 text-sm leading-relaxed text-muted">
                     Build multiple-choice quizzes easily and use them for quick
                     self-assessment and exam prep.
@@ -45,13 +82,15 @@ const AuthPage = () => {
               </div>
 
               <div className="flex gap-4 rounded-xl border border-border/60 bg-surface/60 p-4 shadow-sm backdrop-blur-xs">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light text-primary font-bold">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-light font-bold text-primary">
                   ✓
                 </div>
+
                 <div>
                   <strong className="block font-semibold text-foreground">
                     Track your learning progress
                   </strong>
+
                   <p className="mt-1 text-sm leading-relaxed text-muted">
                     Review detailed quiz results, identify weak spots, and
                     monitor growth over time.
@@ -63,15 +102,18 @@ const AuthPage = () => {
         </section>
 
         <section aria-label="Login">
-          <Card className="max-w-md mx-auto w-full">
-            <LoginForm onSignUp={() => setIsSignUpOpen(true)} />
+          <Card className="mx-auto w-full max-w-md">
+            <LoginForm
+              onSubmit={handleLogin}
+              onSignUp={() => setIsSignUpOpen(true)}
+            />
           </Card>
         </section>
       </div>
 
       <Modal isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
-        <Card className="max-w-md w-full">
-          <SignUpForm />
+        <Card className="w-full max-w-md">
+          <SignUpForm onSubmit={handleSignUp} />
         </Card>
       </Modal>
     </>

@@ -1,5 +1,4 @@
 import { Formik } from "formik";
-import { useDispatch } from "react-redux";
 
 import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
@@ -7,36 +6,18 @@ import AuthFormLayout from "./AuthFormLayout";
 import AuthFormHeader from "./AuthFormHeader";
 
 import UserValidationSchema from "../../validation/user.validationSchema";
-import { signUpAPI } from "../../api/auth.api";
-import { login } from "../../redux/slice/authSlice";
 
-const SignUpForm = () => {
-  const dispatch = useDispatch();
-
+const SignUpForm = ({ onSubmit }) => {
   const initialValues = {
     username: "",
     password: "",
-  };
-
-  const handleSubmit = async (userData, { setSubmitting, setStatus }) => {
-    try {
-      setStatus("");
-
-      const response = await signUpAPI(userData);
-
-      dispatch(login(response.user));
-    } catch (error) {
-      setStatus(error.response?.data?.message || "Registration failed");
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={UserValidationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
     >
       {({ isSubmitting, status }) => (
         <AuthFormLayout>
@@ -48,6 +29,7 @@ const SignUpForm = () => {
 
           <div className="flex flex-col gap-4">
             <FormikTextField type="text" name="username" label="Username" />
+
             <FormikTextField type="password" name="password" label="Password" />
 
             {status && (

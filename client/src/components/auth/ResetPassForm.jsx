@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
@@ -7,37 +7,18 @@ import AuthFormLayout from "./AuthFormLayout";
 import AuthFormHeader from "./AuthFormHeader";
 
 import PasswordResetValidationSchema from "../../validation/passwordReset.validationSchema";
-import { resetPasswordAPI } from "../../api/passwordReset.api";
 
-const ResetPassForm = ({ token }) => {
-  const navigate = useNavigate();
-
+const ResetPassForm = ({ onSubmit }) => {
   const initialValues = {
     password: "",
     confirmPassword: "",
-  };
-
-  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
-    setStatus("");
-
-    try {
-      const response = await resetPasswordAPI(token, values.password);
-
-      if (!response.success) {
-        setStatus(response.message);
-        return;
-      }
-      navigate("/auth");
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={PasswordResetValidationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
     >
       {({ isSubmitting, status }) => (
         <AuthFormLayout>

@@ -1,50 +1,28 @@
 import api from "./axios";
 
 const requestPasswordResetAPI = async (email) => {
-  try {
-    const response = await api.post("/password-reset/request", {
-      email,
-    });
+  const response = await api.post("/password-reset/request", {
+    email,
+  });
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message:
-        error.response?.data?.message || "Failed to request password reset",
-    };
-  }
+  return response.data;
 };
 
 const validateResetTokenAPI = async (token) => {
-  try {
-    const response = await api.post("/password-reset/validate", {
-      token,
-    });
+  const response = await api.post("/password-reset/validate", {
+    token,
+  });
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Invalid or expired reset link",
-    };
-  }
+  return response.data;
 };
 
 const resetPasswordAPI = async (token, newPassword) => {
-  try {
-    const response = await api.post("/password-reset/reset", {
-      token,
-      newPassword,
-    });
+  const response = await api.post("/password-reset/reset", {
+    token,
+    newPassword,
+  });
 
-    return response.data;
-  } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || "Failed to reset password",
-    };
-  }
+  return response.data;
 };
 
 export { requestPasswordResetAPI, validateResetTokenAPI, resetPasswordAPI };

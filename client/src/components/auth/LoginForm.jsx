@@ -1,39 +1,20 @@
 import { Formik } from "formik";
-import { useDispatch } from "react-redux";
 
 import env from "../../config/env";
 import FormikTextField from "../forms/FormikTextField";
 import Button from "../common/Button";
-import { loginAPI } from "../../api/auth.api";
-import { login } from "../../redux/slice/authSlice";
 import AuthFormLayout from "./AuthFormLayout";
 import AuthFormHeader from "./AuthFormHeader";
 import GoogleSignInButton from "./GoogleSignInButton";
 
-const LoginForm = ({ onSignUp }) => {
-  const dispatch = useDispatch();
-
+const LoginForm = ({ onSubmit, onSignUp }) => {
   const initialValues = {
     usernameOrEmail: "",
     password: "",
   };
 
-  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
-    try {
-      setStatus("");
-
-      const response = await loginAPI(values.usernameOrEmail, values.password);
-
-      dispatch(login(response.user));
-    } catch (error) {
-      setStatus(error.response?.data?.message || "Login failed");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
       {({ isSubmitting, status }) => (
         <AuthFormLayout>
           <AuthFormHeader
@@ -72,11 +53,13 @@ const LoginForm = ({ onSignUp }) => {
               {isSubmitting ? "Logging in..." : "Login"}
             </Button>
 
-            <div className="flex items-center gap-4 my-1">
+            <div className="my-1 flex items-center gap-4">
               <div className="h-px flex-1 bg-border" />
+
               <span className="text-xs font-bold tracking-wider text-muted/70">
                 OR
               </span>
+
               <div className="h-px flex-1 bg-border" />
             </div>
 
