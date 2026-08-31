@@ -12,6 +12,8 @@ router.post("/preview", quizController.previewQuiz);
 
 router.post("/create", quizController.createQuiz);
 
+router.post("/createMany", quizController.createManyQuizzes);
+
 router.get("/subjectsList", quizController.getSubjects);
 
 router.get("/quizList", quizController.getQuizzes);

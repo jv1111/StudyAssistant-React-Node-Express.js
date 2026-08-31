@@ -1,7 +1,8 @@
-const infinitScroller = async (event, data, setSkipCount) => {
+const infinitScroller = (event, data, setSkipCount) => {
   const { offsetHeight, scrollTop, scrollHeight } = event.target;
-  if (offsetHeight + scrollTop >= scrollHeight) {
-    setSkipCount(data?.length); //set the number of skip === to the lenght of the post (this will trigger the useSubjectsFetcher)
+
+  if (offsetHeight + scrollTop >= scrollHeight - 1) {
+    setSkipCount(data.length);
   }
 };
 

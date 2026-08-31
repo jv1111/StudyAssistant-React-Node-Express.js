@@ -20,25 +20,25 @@
 
 @theme {
   /* --- Warm Light Gold Palette --- */
-  --color-background: #faf8f3; /* Soft warm ivory */
-  --color-background-secondary: #f3efe6; /* Deeper warm beige */
-  --color-surface: #ffffff; /* Clean white card background */
+  --color-background: #faf8f3;
+  --color-background-secondary: #f3efe6;
+  --color-surface: #ffffff;
   --color-surface-hover: #fcfaf5;
 
   /* Gold Brand Colors */
-  --color-primary: #c59b27; /* Classic warm gold */
-  --color-primary-hover: #a8811a; /* Deeper gold for hover states */
-  --color-primary-light: #fbf4e2; /* Subtle warm gold tint */
+  --color-primary: #c59b27;
+  --color-primary-hover: #a8811a;
+  --color-primary-light: #fbf4e2;
 
-  --color-accent: #d4af37; /* Bright metallic gold */
-  --color-accent-soft: #fff9e6; /* Soft badge background */
+  --color-accent: #d4af37;
+  --color-accent-soft: #fff9e6;
 
   /* Typography Colors */
-  --color-foreground: #1c1917; /* Deep warm dark stone */
-  --color-muted: #78716c; /* Muted warm gray */
+  --color-foreground: #1c1917;
+  --color-muted: #78716c;
 
   /* Borders & Dividers */
-  --color-border: #e8e2d5; /* Warm neutral border */
+  --color-border: #e8e2d5;
   --color-border-hover: #d4af37;
 
   /* --- Status & Generation Method Colors --- */
@@ -80,7 +80,6 @@
     color: var(--color-foreground);
     background-color: var(--color-background);
 
-    /* Subtle warm ambient ambient lighting */
     background-image:
       radial-gradient(
         circle at 15% 15%,
@@ -105,5 +104,35 @@
   a {
     color: inherit;
     @apply no-underline;
+  }
+
+  /* CUSTOM SCROLLBAR STYLING */
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    /* Changed from --color-border to --color-primary */
+    scrollbar-color: var(--color-primary) transparent;
+  }
+
+  /* For Chrome, Edge, and Safari */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    /* Matches your primary button background */
+    background-color: var(--color-primary);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    /* Matches your primary button hover state */
+    background-color: var(--color-primary-hover);
   }
 }

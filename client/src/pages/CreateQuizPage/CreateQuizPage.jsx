@@ -8,6 +8,7 @@ import AppHeaderContent from "../../components/common/AppHeaderContent";
 import OptionBox from "../../components/common/OptionBox";
 import Card from "../../components/common/Card";
 import Modal from "../../components/common/Modal";
+import LoadingPage from "../Loading/LoadingPage";
 
 const CreateQuizPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,14 +38,11 @@ const CreateQuizPage = () => {
   useEffect(() => {
     if (isLoadingDraft) return;
 
-    // Only ask about the draft once.
     if (hasDraft && !hasHandledDraft) {
       setShowDraftModal(true);
       return;
     }
 
-    // If the existing draft is already in preview mode,
-    // continue to the preview page after the draft has been handled.
     if (hasHandledDraft && isPreview) {
       navigate("/quiz/create/preview", {
         state: {
@@ -101,22 +99,16 @@ const CreateQuizPage = () => {
   };
 
   if (isLoadingDraft) {
-    return (
-      <div className="flex min-h-64 items-center justify-center text-sm text-muted">
-        Loading quiz draft...
-      </div>
-    );
+    return <LoadingPage />;
   }
 
-  // Don't render the editor while the existing draft is already
-  // in preview mode. The modal still needs to be rendered.
   const shouldHideEditor = isPreview && !showDraftModal;
 
   return (
-    <>
+    <div className="flex h-full flex-col">
       {!shouldHideEditor && (
         <>
-          <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <AppHeaderContent
               eyebrow="Quiz Builder"
               title="Create New Quiz"
@@ -165,7 +157,7 @@ const CreateQuizPage = () => {
           />
         </Card>
       </Modal>
-    </>
+    </div>
   );
 };
 

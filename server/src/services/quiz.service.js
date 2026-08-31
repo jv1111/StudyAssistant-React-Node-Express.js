@@ -90,6 +90,90 @@ const createQuiz = async (userId, subject, quizName, items) => {
   return quiz;
 };
 
+const createManyQuizzes = async (userId, subjects) => {
+  if (!Array.isArray(subjects) || subjects.length === 0) {
+    throw new AppError("At least one subject is required", 400);
+  }
+
+  const quizDocuments = [];
+
+  for (const subjectData of subjects) {
+    const { subject, quizzes } = subjectData;
+
+    if (!subject || !subject.trim()) {
+      throw new AppError("Subject is required", 400);
+    }
+
+    if (!Array.isArray(quizzes) || quizzes.length === 0) {
+      throw new AppError(
+        `At least one quiz is required for subject "${subject}"`,
+        400,
+      );
+    }
+
+    const subjectName = subject.trim();
+
+    let subjectDocument = await Subject.findOne({
+      userId,
+      name: subjectName,
+    });
+
+    if (!subjectDocument) {
+      subjectDocument = await Subject.create({
+        userId,
+        name: subjectName,
+      });
+    }
+
+    const quizNames = quizzes.map((quiz) => quiz.quizName?.trim());
+
+    // Validate every quiz
+    for (const quiz of quizzes) {
+      validateQuizInput(subjectName, quiz.quizName, quiz.items);
+      validateQuizChoices(quiz.items);
+    }
+
+    // Prevent duplicate quiz names within this subject/request
+    const uniqueQuizNames = new Set(quizNames);
+
+    if (uniqueQuizNames.size !== quizNames.length) {
+      throw new AppError(
+        `Quiz names must be unique within subject "${subjectName}"`,
+        400,
+      );
+    }
+
+    // Check existing quizzes
+    const existingQuizzes = await Quiz.find({
+      userId,
+      subjectId: subjectDocument._id,
+      quizName: { $in: quizNames },
+    }).select("quizName");
+
+    if (existingQuizzes.length > 0) {
+      throw new AppError(
+        `Quiz with the same name already exists in "${subjectName}": ${existingQuizzes
+          .map((quiz) => quiz.quizName)
+          .join(", ")}`,
+        400,
+      );
+    }
+
+    // Prepare documents for insertMany
+    quizDocuments.push(
+      ...quizzes.map((quiz) => ({
+        userId,
+        subjectId: subjectDocument._id,
+        quizName: quiz.quizName.trim(),
+        items: quiz.items,
+        numberOfItems: quiz.items.length,
+      })),
+    );
+  }
+
+  return Quiz.insertMany(quizDocuments);
+};
+
 const getSubjects = async (userId, searchQuery, skipCount = 0) => {
   const filter = {
     userId,
@@ -258,6 +342,7 @@ const downloadPdf = async (userId, quizId) => {
 module.exports = {
   previewQuiz,
   createQuiz,
+  createManyQuizzes,
   getSubjects,
   getQuiz,
   getQuizzes,

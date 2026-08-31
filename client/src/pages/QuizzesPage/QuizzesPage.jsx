@@ -9,6 +9,7 @@ import Card from "../../components/common/Card";
 import Modal from "../../components/common/Modal";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
+import GlassScrollableGrid from "../../components/common/GlassScrollableGrid"; // <-- Import the new component
 
 import useQuizzes from "../../hooks/useQuizzes";
 import { downloadPdf } from "../../api/quiz.api";
@@ -58,8 +59,9 @@ const QuizzesPage = () => {
   }
 
   return (
-    <div>
-      <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    // Changed root wrapper to flex column so the glass grid can expand to fill the remaining height
+    <div className="flex h-full flex-col">
+      <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <AppHeaderContent
           eyebrow="Overview"
           title="Quizzes"
@@ -76,10 +78,7 @@ const QuizzesPage = () => {
       </header>
 
       {quizzes.length > 0 ? (
-        <ul
-          onScroll={handleScroll}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
+        <GlassScrollableGrid onScroll={handleScroll}>
           {quizzes.map((quiz) => (
             <li key={quiz._id} className="h-full">
               <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
@@ -92,12 +91,14 @@ const QuizzesPage = () => {
               </Card>
             </li>
           ))}
-        </ul>
+        </GlassScrollableGrid>
       ) : (
-        <EmptyState
-          title="No quizzes found"
-          description="There are no quizzes matching your search."
-        />
+        <div className="flex-1">
+          <EmptyState
+            title="No quizzes found"
+            description="There are no quizzes matching your search."
+          />
+        </div>
       )}
 
       <Modal isOpen={selectedQuiz !== null} onClose={handleQuizOptionClose}>

@@ -10,25 +10,25 @@ const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
 
   return (
-    <div>
-      {/* Page Header */}
-      <header className="mb-8">
-        <Badge variant="primary" shape="rounded">
-          Account Settings
-        </Badge>
+    <div className="flex h-full flex-col">
+      <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4">
+        <div>
+          <Badge variant="primary" shape="rounded">
+            Account Settings
+          </Badge>
 
-        <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-          Profile Settings
-        </h1>
+          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            Profile Settings
+          </h1>
 
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-          Manage your personal details, profile picture, and account
-          credentials.
-        </p>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+            Manage your personal details, profile picture, and account
+            credentials.
+          </p>
+        </div>
       </header>
 
-      <div className="flex flex-col gap-6">
-        {/* User Identity Banner Card */}
+      <div className="flex flex-col gap-6 pb-12">
         <Card className="card-base">
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
             <ProfileImage />
@@ -49,9 +49,7 @@ const ProfilePage = () => {
           </div>
         </Card>
 
-        {/* Account Credentials Grid */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Security / Password Section */}
           <Card className="card-base">
             <header className="mb-6 border-b border-border pb-4">
               <h2 className="text-lg font-bold text-foreground">
@@ -66,7 +64,6 @@ const ProfilePage = () => {
             <ChangePassForm />
           </Card>
 
-          {/* Email Address Section */}
           <Card className="card-base h-fit">
             <header className="mb-6 border-b border-border pb-4">
               <h2 className="text-lg font-bold text-foreground">

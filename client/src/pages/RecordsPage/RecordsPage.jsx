@@ -6,6 +6,7 @@ import Card from "../../components/common/Card";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
 import LoadingPage from "../Loading/LoadingPage";
+import GlassScrollableGrid from "../../components/common/GlassScrollableGrid";
 
 import useRecords from "../../hooks/useRecords";
 
@@ -20,8 +21,8 @@ const RecordsPage = () => {
   }
 
   return (
-    <div>
-      <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex h-full flex-col">
+      <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <AppHeaderContent
           eyebrow="History"
           title="Quiz Records"
@@ -38,10 +39,7 @@ const RecordsPage = () => {
       </header>
 
       {records.length > 0 ? (
-        <ul
-          onScroll={handleScroll}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
+        <GlassScrollableGrid onScroll={handleScroll}>
           {records.map((record) => (
             <li key={record._id} className="h-full">
               <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
@@ -52,12 +50,14 @@ const RecordsPage = () => {
               </Card>
             </li>
           ))}
-        </ul>
+        </GlassScrollableGrid>
       ) : (
-        <EmptyState
-          title="No records found"
-          description="There are no quiz records matching your search. Try adjusting your query."
-        />
+        <div className="flex-1">
+          <EmptyState
+            title="No records found"
+            description="There are no quiz records matching your search. Try adjusting your query."
+          />
+        </div>
       )}
     </div>
   );

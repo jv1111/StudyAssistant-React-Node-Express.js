@@ -29,6 +29,17 @@ const createQuiz = asyncHandler(async (req, res) => {
   successResponse(res, 201, createQuizResponse(quiz));
 });
 
+const createManyQuizzes = asyncHandler(async (req, res) => {
+  const { subjects } = req.body;
+
+  const createdQuizzes = await quizService.createManyQuizzes(
+    req.user._id,
+    subjects,
+  );
+
+  successResponse(res, 201, createdQuizzes.map(createQuizResponse));
+});
+
 const getSubjects = asyncHandler(async (req, res) => {
   const { searchQuery, skipCount } = req.query;
 
@@ -124,6 +135,7 @@ const downloadPdf = asyncHandler(async (req, res) => {
 
 module.exports = {
   createQuiz,
+  createManyQuizzes,
   getSubjects,
   getQuizzes,
   saveData,
