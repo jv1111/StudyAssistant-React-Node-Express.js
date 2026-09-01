@@ -135,28 +135,26 @@ const CreateQuizPage = () => {
         </>
       )}
 
-      <Modal isOpen={showDraftModal} onClose={() => setShowDraftModal(false)}>
-        <Card className="max-w-md">
-          <OptionBox
-            eyebrow="QUIZ DRAFT"
-            title="Draft found"
-            description="You have an existing quiz draft. Would you like to continue working on it or start a new quiz?"
-            options={[
-              {
-                label: "Continue with draft",
-                value: "continue",
-              },
-              {
-                label: "Create new",
-                value: "new",
-              },
-            ]}
-            onSelect={handleDraftOption}
-            onClose={() => setShowDraftModal(false)}
-            closeLabel="Cancel"
-          />
-        </Card>
-      </Modal>
+      <OptionBox
+        isOpen={showDraftModal}
+        onClose={() => setShowDraftModal(false)}
+        eyebrow="QUIZ DRAFT"
+        title="Draft found"
+        description="You have an existing quiz draft. Would you like to continue working on it or start a new quiz?"
+        options={[
+          {
+            label: "Continue with draft",
+            value: "continue",
+          },
+          {
+            label: "Create new",
+            value: "new",
+            variant: "secondary",
+          },
+        ]}
+        onSelect={handleDraftOption}
+        showCancel={false}
+      />
     </div>
   );
 };

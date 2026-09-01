@@ -1,7 +1,10 @@
 import AuthFormHeader from "../auth/AuthFormHeader";
 import Button from "./Button";
+import Card from "./Card";
+import Modal from "./Modal";
 
 const OptionBox = ({
+  isOpen,
   eyebrow,
   title,
   description,
@@ -9,33 +12,39 @@ const OptionBox = ({
   onSelect,
   onClose,
   closeLabel = "Cancel",
+  showCancel = true,
+  cardClassName = "max-w-md",
 }) => {
   return (
-    <div>
-      <AuthFormHeader
-        eyebrow={eyebrow}
-        title={title}
-        description={description}
-      />
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <Card className={cardClassName}>
+        <AuthFormHeader
+          eyebrow={eyebrow}
+          title={title}
+          description={description}
+        />
 
-      <div className="mt-7 flex gap-3">
-        {options.map((option) => (
-          <Button
-            key={option.value}
-            type="button"
-            variant={option.variant}
-            onClick={() => onSelect(option.value)}
-            disabled={option.disabled}
-          >
-            {option.label}
-          </Button>
-        ))}
+        <div className="mt-7 flex gap-3">
+          {options.map((option) => (
+            <Button
+              key={option.value}
+              type="button"
+              variant={option.variant}
+              onClick={() => onSelect(option.value)}
+              disabled={option.disabled}
+            >
+              {option.label}
+            </Button>
+          ))}
 
-        <Button type="button" variant="danger" onClick={onClose}>
-          {closeLabel}
-        </Button>
-      </div>
-    </div>
+          {showCancel && (
+            <Button type="button" variant="danger" onClick={onClose}>
+              {closeLabel}
+            </Button>
+          )}
+        </div>
+      </Card>
+    </Modal>
   );
 };
 

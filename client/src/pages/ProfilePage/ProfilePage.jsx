@@ -10,6 +10,7 @@ import ChangePassForm from "../../components/auth/ChangePassForm";
 import EmailForm from "../../components/auth/EmailForm";
 import AddPasswordForm from "../../components/auth/AddPasswordForm";
 import Badge from "../../components/common/Badge";
+import FeedbackModal from "../../components/common/FeedbackModal";
 
 import { changeProfileAPI, getProfileImageAPI } from "../../api/user.api";
 
@@ -24,6 +25,13 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   const [imgSrc, setImgSrc] = useState(null);
+
+  const [feedback, setFeedback] = useState({
+    isOpen: false,
+    type: "info",
+    title: "",
+    message: "",
+  });
 
   useEffect(() => {
     const getImage = async () => {
@@ -63,6 +71,13 @@ const ProfilePage = () => {
       });
 
       resetForm();
+
+      setFeedback({
+        isOpen: true,
+        type: "success",
+        title: "Password Changed",
+        message: "Your password has been successfully changed.",
+      });
     } catch (error) {
       const message = error.response?.data?.message;
 
@@ -86,6 +101,13 @@ const ProfilePage = () => {
       );
 
       resetForm();
+
+      setFeedback({
+        isOpen: true,
+        type: "success",
+        title: "Password Added",
+        message: "Your password has been successfully added to your account.",
+      });
     } catch (error) {
       const message = error.response?.data?.message || "Failed to add password";
 
@@ -105,7 +127,18 @@ const ProfilePage = () => {
       const response = await sendEmailVerificationAPI(values.email, type);
 
       if (!response.email) {
-        setFieldError("email", response.message);
+        const message =
+          response.message || "Failed to send verification email.";
+
+        setFieldError("email", message);
+
+        setFeedback({
+          isOpen: true,
+          type: "error",
+          title: "Verification Failed",
+          message,
+        });
+
         return;
       }
 
@@ -114,9 +147,28 @@ const ProfilePage = () => {
           email: response.email,
         },
       });
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Failed to send verification email.";
+
+      setFieldError("email", message);
+
+      setFeedback({
+        isOpen: true,
+        type: "error",
+        title: "Verification Failed",
+        message,
+      });
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleCloseFeedback = () => {
+    setFeedback((prev) => ({
+      ...prev,
+      isOpen: false,
+    }));
   };
 
   return (
@@ -197,6 +249,14 @@ const ProfilePage = () => {
           </Card>
         </div>
       </div>
+
+      <FeedbackModal
+        isOpen={feedback.isOpen}
+        onClose={handleCloseFeedback}
+        type={feedback.type}
+        title={feedback.title}
+        message={feedback.message}
+      />
     </div>
   );
 };

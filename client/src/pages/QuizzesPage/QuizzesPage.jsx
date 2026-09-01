@@ -101,29 +101,26 @@ const QuizzesPage = () => {
         </div>
       )}
 
-      <Modal isOpen={selectedQuiz !== null} onClose={handleQuizOptionClose}>
-        <Card className="max-w-md">
-          <OptionBox
-            eyebrow="QUIZ MODE"
-            title="Select quiz type"
-            description="Choose how you want to take this quiz."
-            options={[
-              {
-                label: "Multiple choices",
-                value: "multiple_choice",
-              },
-              {
-                label: "Enumeration",
-                value: "enumeration",
-              },
-            ]}
-            onSelect={(quizType) => {
-              handleStartQuiz(selectedQuiz, quizType, false);
-            }}
-            onClose={handleQuizOptionClose}
-          />
-        </Card>
-      </Modal>
+      <OptionBox
+        isOpen={selectedQuiz !== null}
+        onClose={handleQuizOptionClose}
+        eyebrow="QUIZ MODE"
+        title="Select quiz type"
+        description="Choose how you want to take this quiz."
+        options={[
+          {
+            label: "Multiple choices",
+            value: "multiple_choice",
+          },
+          {
+            label: "Enumeration",
+            value: "enumeration",
+          },
+        ]}
+        onSelect={(quizType) => {
+          handleStartQuiz(selectedQuiz, quizType, false);
+        }}
+      />
     </div>
   );
 };

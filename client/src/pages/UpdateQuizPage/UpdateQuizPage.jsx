@@ -114,28 +114,25 @@ const UpdateQuizPage = () => {
         description="Review your changes and save the quiz when you're finished."
       />
 
-      <Modal isOpen={showDraftModal} onClose={() => setShowDraftModal(false)}>
-        <Card className="max-w-md">
-          <OptionBox
-            eyebrow="QUIZ DRAFT"
-            title="Draft found"
-            description="You have unsaved changes for this quiz. Would you like to continue with the draft or clear it and use the saved quiz?"
-            options={[
-              {
-                label: "Continue with draft",
-                value: "continue",
-              },
-              {
-                label: "Clear draft",
-                value: "clear",
-              },
-            ]}
-            onSelect={handleDraftOption}
-            onClose={() => setShowDraftModal(false)}
-            closeLabel="Cancel"
-          />
-        </Card>
-      </Modal>
+      <OptionBox
+        isOpen={showDraftModal}
+        onClose={() => setShowDraftModal(false)}
+        eyebrow="QUIZ DRAFT"
+        title="Draft found"
+        description="You have unsaved changes for this quiz. Would you like to continue with the draft or clear it and use the saved quiz?"
+        options={[
+          {
+            label: "Continue with draft",
+            value: "continue",
+          },
+          {
+            label: "Clear draft",
+            value: "clear",
+          },
+        ]}
+        onSelect={handleDraftOption}
+        showCancel={false}
+      />
     </>
   );
 };
