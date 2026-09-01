@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const userService = require("./user.service");
 
 const { generateUniqueUsername } = require("../utils/uniqueUsernameGenerator");
+const { saveGoogleProfileImage } = require("../utils/googleProfileImage");
 
 const AppError = require("../utils/AppError");
 
@@ -54,16 +55,22 @@ const findOrCreateGoogleUser = async ({
     userService.isUsernameAvailable,
   );
 
-  return userService.createUser({
+  const user = await userService.createUser({
     username,
     email,
     emailVerified,
     password: null,
-    profileImg: {
-      url: picture || null,
-      filePath: null,
-    },
   });
+
+  if (picture) {
+    const profileImg = await saveGoogleProfileImage(picture);
+
+    user.profileImg = profileImg;
+
+    await user.save();
+  }
+
+  return user;
 };
 
 module.exports = {

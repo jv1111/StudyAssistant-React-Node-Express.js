@@ -27,7 +27,7 @@ const ProfilePage = () => {
       const response = await getProfileImageAPI();
 
       if (response.url) {
-        setImgSrc(`${import.meta.env.VITE_API_API_URL}${response.url}`);
+        setImgSrc(response.url);
       }
     };
 

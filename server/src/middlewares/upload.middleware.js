@@ -2,6 +2,8 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
+const generateFilename = require("../utils/generateFilename");
+
 const uploadDir = path.join(__dirname, "../uploads/profile");
 
 if (!fs.existsSync(uploadDir)) {
@@ -15,8 +17,9 @@ const storage = multer.diskStorage({
 
   filename: (req, file, cb) => {
     const extension = path.extname(file.originalname);
+    const filename = generateFilename(extension);
 
-    cb(null, `${req.user._id}${extension}`);
+    cb(null, filename);
   },
 });
 

@@ -1,3 +1,4 @@
+const env = require("../config/env");
 const bcrypt = require("bcrypt");
 
 const User = require("../models/user.model");
@@ -60,7 +61,7 @@ const getProfileImg = async (userId) => {
   const user = await getUserById(userId);
 
   return {
-    url: user.profileImg.url,
+    url: `${env.baseUrl}${user.profileImg.url}`,
   };
 };
 
