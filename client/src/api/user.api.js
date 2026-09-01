@@ -1,11 +1,5 @@
 import api from "./axios";
 
-const changePassAPI = async (data) => {
-  const response = await api.post("/user/changePass", data);
-
-  return response.data;
-};
-
 const changeProfileAPI = async (formData) => {
   const response = await api.post("/user/changeProfileImg", formData);
 
@@ -18,4 +12,4 @@ const getProfileImageAPI = async () => {
   return response.data;
 };
 
-export { changePassAPI, changeProfileAPI, getProfileImageAPI };
+export { changeProfileAPI, getProfileImageAPI };

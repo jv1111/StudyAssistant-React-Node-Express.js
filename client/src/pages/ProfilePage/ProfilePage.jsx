@@ -11,13 +11,10 @@ import EmailForm from "../../components/auth/EmailForm";
 import AddPasswordForm from "../../components/auth/AddPasswordForm";
 import Badge from "../../components/common/Badge";
 
-import {
-  changePassAPI,
-  changeProfileAPI,
-  getProfileImageAPI,
-} from "../../api/user.api";
+import { changeProfileAPI, getProfileImageAPI } from "../../api/user.api";
 
-import { addPasswordAPI } from "../../api/auth.api";
+import { addPasswordAPI, changePassAPI } from "../../api/auth.api";
+
 import { sendEmailVerificationAPI } from "../../api/emailVerification.api";
 
 const ProfilePage = () => {

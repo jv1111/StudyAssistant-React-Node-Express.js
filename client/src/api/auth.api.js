@@ -37,6 +37,12 @@ const addPasswordAPI = async (password) => {
   return response.data;
 };
 
+const changePassAPI = async (data) => {
+  const response = await api.post("/auth/change-password", data);
+
+  return response.data;
+};
+
 const logoutAPI = async () => {
   const response = await api.post("/auth/logout");
 
@@ -49,5 +55,6 @@ export {
   googleLoginAPI,
   getMeAPI,
   addPasswordAPI,
+  changePassAPI,
   logoutAPI,
 };

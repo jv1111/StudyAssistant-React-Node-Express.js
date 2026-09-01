@@ -98,9 +98,39 @@ const addPassword = async (userId, password) => {
   };
 };
 
+const changePass = async (userId, currentPassword, newPassword) => {
+  const user = await userService.getUserById(userId);
+
+  if (!user.password) {
+    throw new AppError(
+      "Password change is not available for this account",
+      400,
+    );
+  }
+
+  const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+  if (!passwordMatch) {
+    throw new AppError(
+      "Current password is incorrect",
+      401,
+      "INVALID_CURRENT_PASSWORD",
+    );
+  }
+
+  user.password = await bcrypt.hash(newPassword, 10);
+
+  await user.save();
+
+  return {
+    message: "Password changed successfully",
+  };
+};
+
 module.exports = {
   register,
   verifyCredentials,
   findOrCreateGoogleUser,
   addPassword,
+  changePass,
 };

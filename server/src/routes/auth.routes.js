@@ -5,6 +5,7 @@ const authController = require("../controllers/auth.controller");
 const {
   validateRegister,
   validateLogin,
+  validateChangePass,
 } = require("../middlewares/validate.middleware");
 
 const { verifyAuth } = require("../middlewares/auth.middleware");
@@ -20,6 +21,13 @@ router.post("/google", authController.googleLogin);
 router.get("/me", authController.getMe);
 
 router.post("/add-password", verifyAuth, authController.addPassword);
+
+router.post(
+  "/change-password",
+  verifyAuth,
+  validateChangePass,
+  authController.changePass,
+);
 
 router.post("/logout", authController.logout);
 

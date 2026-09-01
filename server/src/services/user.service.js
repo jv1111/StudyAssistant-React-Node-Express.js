@@ -1,5 +1,4 @@
 const env = require("../config/env");
-const bcrypt = require("bcrypt");
 
 const User = require("../models/user.model");
 const AppError = require("../utils/AppError");
@@ -65,35 +64,6 @@ const getProfileImg = async (userId) => {
   };
 };
 
-const changePass = async (userId, currentPassword, newPassword) => {
-  const user = await getUserById(userId);
-
-  if (!user.password) {
-    throw new AppError(
-      "Password change is not available for this account",
-      400,
-    );
-  }
-
-  const passwordMatch = await bcrypt.compare(currentPassword, user.password);
-
-  if (!passwordMatch) {
-    throw new AppError(
-      "Current password is incorrect",
-      401,
-      "INVALID_CURRENT_PASSWORD",
-    );
-  }
-
-  user.password = await bcrypt.hash(newPassword, 10);
-
-  await user.save();
-
-  return {
-    message: "Password changed successfully",
-  };
-};
-
 module.exports = {
   getUserById,
   getUserByEmail,
@@ -103,5 +73,4 @@ module.exports = {
   createUser,
   changeProfile,
   getProfileImg,
-  changePass,
 };

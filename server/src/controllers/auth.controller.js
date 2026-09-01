@@ -78,6 +78,22 @@ const addPassword = asyncHandler(async (req, res) => {
   successResponse(res, 200, result);
 });
 
+const changePass = asyncHandler(async (req, res) => {
+  if (!req.session.userId) {
+    throw new AppError("There is no active session", 401);
+  }
+
+  const { currentPassword, newPassword } = req.body;
+
+  const result = await authService.changePass(
+    req.session.userId,
+    currentPassword,
+    newPassword,
+  );
+
+  successResponse(res, 200, result);
+});
+
 const logout = asyncHandler(async (req, res) => {
   await new Promise((resolve, reject) => {
     req.session.destroy((error) => {
@@ -102,5 +118,6 @@ module.exports = {
   googleLogin,
   getMe,
   addPassword,
+  changePass,
   logout,
 };

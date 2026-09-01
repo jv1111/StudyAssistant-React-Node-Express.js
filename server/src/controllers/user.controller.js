@@ -6,18 +6,6 @@ const asyncHandler = require("../utils/asyncHandler.js");
 
 const { successResponse } = require("../utils/response");
 
-const changePass = asyncHandler(async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-
-  const result = await userService.changePass(
-    req.user._id,
-    currentPassword,
-    newPassword,
-  );
-
-  successResponse(res, 200, result);
-});
-
 const changeProfile = asyncHandler(async (req, res) => {
   if (!req.file) {
     throw new AppError("Profile image is required", 400);
@@ -43,7 +31,6 @@ const resetPass = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  changePass,
   changeProfile,
   getProfileImg,
   resetPass,

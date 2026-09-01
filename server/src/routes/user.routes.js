@@ -6,16 +6,7 @@ const upload = require("../middlewares/upload.middleware.js");
 
 const { verifyAuth } = require("../middlewares/auth.middleware.js");
 
-const { validateChangePass } = require("../middlewares/validate.middleware.js");
-
 const router = express.Router();
-
-router.post(
-  "/changePass",
-  verifyAuth,
-  validateChangePass,
-  userController.changePass,
-);
 
 router.post(
   "/changeProfileImg",
