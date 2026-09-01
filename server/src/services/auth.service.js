@@ -38,18 +38,11 @@ const verifyCredentials = async (usernameOrEmail, password) => {
 };
 
 const findOrCreateGoogleUser = async ({
-  sub: googleId,
   given_name,
   picture,
   email,
   email_verified: emailVerified,
 }) => {
-  const user = await userService.getUserByGoogleId(googleId);
-
-  if (user) {
-    return user;
-  }
-
   const existingUser = await userService.getUserByEmail(email);
 
   if (existingUser) {
@@ -62,7 +55,6 @@ const findOrCreateGoogleUser = async ({
   );
 
   return userService.createUser({
-    googleId,
     username,
     email,
     emailVerified,

@@ -13,10 +13,6 @@ const getUserById = async (userId) => {
   return user;
 };
 
-const getUserByGoogleId = async (googleId) => {
-  return User.findOne({ googleId });
-};
-
 const getUserByEmail = async (email) => {
   return User.findOne({ email });
 };
@@ -99,7 +95,6 @@ const changePass = async (userId, currentPassword, newPassword) => {
 
 module.exports = {
   getUserById,
-  getUserByGoogleId,
   getUserByEmail,
   getUserByUsername,
   getUserByUsernameOrEmail,

@@ -1,13 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import env from "../../config/env";
 import { googleLoginAPI } from "../../api/auth.api";
 import { login } from "../../redux/slice/authSlice";
 
+import FeedbackModal from "../common/FeedbackModal";
+
 const GoogleSignInButton = () => {
   const buttonRef = useRef(null);
   const dispatch = useDispatch();
+
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const initializeGoogle = () => {
@@ -18,18 +23,22 @@ const GoogleSignInButton = () => {
       window.google.accounts.id.initialize({
         client_id: env.googleClientId,
         callback: async (response) => {
-          console.log("Google credential:", response.credential);
+          try {
+            const result = await googleLoginAPI(response.credential);
 
-          const result = await googleLoginAPI(response.credential);
+            console.log("Google login successful:", result);
 
-          if (!result.success) {
-            console.error("Google login failed:", result.message);
-            return;
+            dispatch(login(result.user));
+          } catch (error) {
+            const message =
+              error.response?.data?.message ||
+              "Unable to sign in with Google. Please try again.";
+
+            console.error("Google login failed:", message);
+
+            setErrorMessage(message);
+            setIsErrorModalOpen(true);
           }
-
-          console.log("Google login successful:", result);
-
-          dispatch(login(result.user));
         },
       });
 
@@ -61,7 +70,18 @@ const GoogleSignInButton = () => {
     };
   }, [dispatch]);
 
-  return <div ref={buttonRef} />;
+  return (
+    <>
+      <div ref={buttonRef} />
+      <FeedbackModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+        type="error"
+        title="Google Sign-In Failed"
+        message={errorMessage}
+      />
+    </>
+  );
 };
 
 export default GoogleSignInButton;
