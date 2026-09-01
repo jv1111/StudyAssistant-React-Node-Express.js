@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const sendEmail = require("../src/utils/sendEmail");
 const verificationEmail = require("../src/emails/verificationEmail");
 

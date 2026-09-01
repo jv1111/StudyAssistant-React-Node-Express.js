@@ -1,5 +1,7 @@
+const env = require("../config/env");
+
 const passwordResetEmail = (token, expirationMinutes) => {
-  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+  const resetUrl = `${env.clientUrl}/reset-password?token=${token}`;
 
   return `
     <!DOCTYPE html>

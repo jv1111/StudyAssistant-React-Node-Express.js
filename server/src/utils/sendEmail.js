@@ -1,18 +1,19 @@
 const nodemailer = require("nodemailer");
+const env = require("../config/env");
 
 const transporter = nodemailer.createTransport({
-  host: process.env.BREVO_SMTP_HOST,
-  port: Number(process.env.BREVO_SMTP_PORT),
+  host: env.brevo.smtpHost,
+  port: env.brevo.smtpPort,
   secure: false,
   auth: {
-    user: process.env.BREVO_SMTP_USER,
-    pass: process.env.BREVO_SMTP_KEY,
+    user: env.brevo.smtpUser,
+    pass: env.brevo.smtpKey,
   },
 });
 
 const sendEmail = async (to, subject, html) => {
   const info = await transporter.sendMail({
-    from: `"${process.env.BREVO_FROM_NAME}" <${process.env.BREVO_FROM_EMAIL}>`,
+    from: `"${env.brevo.fromName}" <${env.brevo.fromEmail}>`,
     to,
     subject,
     html,
