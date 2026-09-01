@@ -1,6 +1,8 @@
 const Quiz = require("../models/quiz.model");
 const Subject = require("../models/subject.model");
 
+const sampleQuizzes = require("../data/sampleQuiz");
+
 const { savePDF } = require("../utils/pdfHandler");
 const { getPagination } = require("../utils/pagination");
 
@@ -127,13 +129,11 @@ const createManyQuizzes = async (userId, subjects) => {
 
     const quizNames = quizzes.map((quiz) => quiz.quizName?.trim());
 
-    // Validate every quiz
     for (const quiz of quizzes) {
       validateQuizInput(subjectName, quiz.quizName, quiz.items);
       validateQuizChoices(quiz.items);
     }
 
-    // Prevent duplicate quiz names within this subject/request
     const uniqueQuizNames = new Set(quizNames);
 
     if (uniqueQuizNames.size !== quizNames.length) {
@@ -143,7 +143,6 @@ const createManyQuizzes = async (userId, subjects) => {
       );
     }
 
-    // Check existing quizzes
     const existingQuizzes = await Quiz.find({
       userId,
       subjectId: subjectDocument._id,
@@ -159,7 +158,6 @@ const createManyQuizzes = async (userId, subjects) => {
       );
     }
 
-    // Prepare documents for insertMany
     quizDocuments.push(
       ...quizzes.map((quiz) => ({
         userId,
@@ -172,6 +170,10 @@ const createManyQuizzes = async (userId, subjects) => {
   }
 
   return Quiz.insertMany(quizDocuments);
+};
+
+const createSampleQuiz = async (userId) => {
+  return createManyQuizzes(userId, sampleQuizzes);
 };
 
 const getSubjects = async (userId, searchQuery, skipCount = 0) => {
@@ -343,6 +345,7 @@ module.exports = {
   previewQuiz,
   createQuiz,
   createManyQuizzes,
+  createSampleQuiz,
   getSubjects,
   getQuiz,
   getQuizzes,

@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 
 const userService = require("./user.service");
+const quizService = require("./quiz.service");
 
 const { generateUniqueUsername } = require("../utils/uniqueUsernameGenerator");
 const { saveGoogleProfileImage } = require("../utils/googleProfileImage");
@@ -16,10 +17,14 @@ const register = async ({ username, password }) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  return userService.createUser({
+  const user = await userService.createUser({
     username,
     password: hashedPassword,
   });
+
+  await quizService.createSampleQuiz(user._id);
+
+  return user;
 };
 
 const verifyCredentials = async (usernameOrEmail, password) => {
@@ -69,6 +74,8 @@ const findOrCreateGoogleUser = async ({
 
     await user.save();
   }
+
+  await quizService.createSampleQuiz(user._id);
 
   return user;
 };
