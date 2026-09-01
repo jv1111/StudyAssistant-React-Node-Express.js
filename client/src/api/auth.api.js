@@ -29,10 +29,25 @@ const getMeAPI = async () => {
   return response.data;
 };
 
+const addPasswordAPI = async (password) => {
+  const response = await api.post("/auth/add-password", {
+    password,
+  });
+
+  return response.data;
+};
+
 const logoutAPI = async () => {
   const response = await api.post("/auth/logout");
 
   return response.data;
 };
 
-export { loginAPI, signUpAPI, googleLoginAPI, getMeAPI, logoutAPI };
+export {
+  loginAPI,
+  signUpAPI,
+  googleLoginAPI,
+  getMeAPI,
+  addPasswordAPI,
+  logoutAPI,
+};

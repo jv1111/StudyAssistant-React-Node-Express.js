@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import { updateUser } from "../../redux/slice/authSlice";
 
 import Card from "../../components/common/Card";
 import ProfileImage from "../../components/profile/ProfileImage";
 import ChangePassForm from "../../components/auth/ChangePassForm";
 import EmailForm from "../../components/auth/EmailForm";
+import AddPasswordForm from "../../components/auth/AddPasswordForm";
 import Badge from "../../components/common/Badge";
 
 import {
@@ -14,10 +17,13 @@ import {
   getProfileImageAPI,
 } from "../../api/user.api";
 
+import { addPasswordAPI } from "../../api/auth.api";
 import { sendEmailVerificationAPI } from "../../api/emailVerification.api";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [imgSrc, setImgSrc] = useState(null);
@@ -51,7 +57,7 @@ const ProfilePage = () => {
 
   const handleChangePass = async (
     values,
-    { setSubmitting, resetForm, setFieldError, setFieldValue },
+    { setSubmitting, resetForm, setFieldError },
   ) => {
     try {
       await changePassAPI({
@@ -64,6 +70,29 @@ const ProfilePage = () => {
       const message = error.response?.data?.message;
 
       setFieldError("currentPassword", message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleAddPassword = async (
+    values,
+    { setSubmitting, resetForm, setFieldError },
+  ) => {
+    try {
+      await addPasswordAPI(values.password);
+
+      dispatch(
+        updateUser({
+          hasPassword: true,
+        }),
+      );
+
+      resetForm();
+    } catch (error) {
+      const message = error.response?.data?.message || "Failed to add password";
+
+      setFieldError("password", message);
     } finally {
       setSubmitting(false);
     }
@@ -137,15 +166,21 @@ const ProfilePage = () => {
           <Card className="card-base">
             <header className="mb-6 border-b border-border pb-4">
               <h2 className="text-lg font-bold text-foreground">
-                Change Password
+                {user?.hasPassword ? "Change Password" : "Add Password"}
               </h2>
 
               <p className="mt-1 text-sm leading-relaxed text-muted">
-                Update your security password to keep your account safe.
+                {user?.hasPassword
+                  ? "Update your security password to keep your account safe."
+                  : "Add a password to your account for password-based sign in."}
               </p>
             </header>
 
-            <ChangePassForm onSubmit={handleChangePass} />
+            {user?.hasPassword ? (
+              <ChangePassForm onSubmit={handleChangePass} />
+            ) : (
+              <AddPasswordForm onSubmit={handleAddPassword} />
+            )}
           </Card>
 
           <Card className="card-base h-fit">

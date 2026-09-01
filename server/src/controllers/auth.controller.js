@@ -66,6 +66,18 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
+const addPassword = asyncHandler(async (req, res) => {
+  if (!req.session.userId) {
+    throw new AppError("There is no active session", 401);
+  }
+
+  const { password } = req.body;
+
+  const result = await authService.addPassword(req.session.userId, password);
+
+  successResponse(res, 200, result);
+});
+
 const logout = asyncHandler(async (req, res) => {
   await new Promise((resolve, reject) => {
     req.session.destroy((error) => {
@@ -89,5 +101,6 @@ module.exports = {
   login,
   googleLogin,
   getMe,
+  addPassword,
   logout,
 };

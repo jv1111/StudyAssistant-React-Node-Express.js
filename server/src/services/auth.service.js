@@ -80,8 +80,27 @@ const findOrCreateGoogleUser = async ({
   return user;
 };
 
+const addPassword = async (userId, password) => {
+  const user = await userService.getUserById(userId);
+
+  if (user.password) {
+    throw new AppError("Password already exists", 400);
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  user.password = hashedPassword;
+
+  await user.save();
+
+  return {
+    message: "Password added successfully",
+  };
+};
+
 module.exports = {
   register,
   verifyCredentials,
   findOrCreateGoogleUser,
+  addPassword,
 };

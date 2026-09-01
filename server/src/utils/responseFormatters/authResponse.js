@@ -4,6 +4,7 @@ const createUserResponse = (user) => ({
   username: user.username,
   emailVerified: user.emailVerified,
   createdAt: user.createdAt,
+  hasPassword: user.password !== null,
 });
 
 module.exports = {
