@@ -13,6 +13,7 @@ const FeedbackModal = ({
   title,
   message,
   onConfirm,
+  options,
 }) => {
   const handleConfirm = () => {
     if (onConfirm) onConfirm();
@@ -42,6 +43,7 @@ const FeedbackModal = ({
     iconClass: "text-primary bg-primary/10 border-primary/20",
     buttonVariant: "primary",
   };
+
   const IconComponent = config.icon;
 
   return (
@@ -55,17 +57,33 @@ const FeedbackModal = ({
           </div>
 
           <h3 className="text-lg font-bold text-foreground">{title}</h3>
+
           <p className="mt-2 text-sm text-muted">{message}</p>
 
-          <div className="mt-6 flex w-full justify-center">
-            <Button
-              type="button"
-              variant={config.buttonVariant}
-              onClick={handleConfirm}
-              className="w-full sm:w-auto sm:px-8"
-            >
-              OK
-            </Button>
+          <div className="mt-6 flex w-full justify-center gap-3">
+            {options?.length > 0 ? (
+              options.map((option) => (
+                <Button
+                  key={option.value}
+                  type="button"
+                  variant={option.variant || config.buttonVariant}
+                  onClick={option.onClick}
+                  disabled={option.disabled}
+                  className="sm:px-8"
+                >
+                  {option.label}
+                </Button>
+              ))
+            ) : (
+              <Button
+                type="button"
+                variant={config.buttonVariant}
+                onClick={handleConfirm}
+                className="w-full sm:w-auto sm:px-8"
+              >
+                OK
+              </Button>
+            )}
           </div>
         </div>
       </div>

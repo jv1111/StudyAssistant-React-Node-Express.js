@@ -30,6 +30,8 @@ const env = {
   sessionSecret: requiredEnv("SESSION_SECRET"),
 
   googleClientId: requiredEnv("GOOGLE_CLIENT_ID"),
+
+  geminiApiKey: requiredEnv("GEMINI_API_KEY"),
 };
 
 module.exports = env;

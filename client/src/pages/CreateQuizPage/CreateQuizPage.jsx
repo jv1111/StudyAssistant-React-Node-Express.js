@@ -6,14 +6,21 @@ import { previewQuiz } from "../../api/quiz.api";
 import useCreateQuizDraft from "../../hooks/useCreateQuizDraft";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import OptionBox from "../../components/common/OptionBox";
-import Card from "../../components/common/Card";
-import Modal from "../../components/common/Modal";
+import FeedbackModal from "../../components/common/FeedbackModal";
 import LoadingPage from "../Loading/LoadingPage";
 
 const CreateQuizPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDraftModal, setShowDraftModal] = useState(false);
   const [hasHandledDraft, setHasHandledDraft] = useState(false);
+
+  const [feedback, setFeedback] = useState({
+    isOpen: false,
+    type: "error",
+    title: "",
+    message: "",
+    isAIError: false,
+  });
 
   const navigate = useNavigate();
 
@@ -28,6 +35,7 @@ const CreateQuizPage = () => {
     hasDraft,
     addQuestion,
     deleteQuestion,
+    switchAIToRandom,
     handleItemChange,
     handleChoiceChange,
     saveCurrentDraft,
@@ -74,9 +82,16 @@ const CreateQuizPage = () => {
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleCloseFeedback = () => {
+    if (isSubmitting) return;
 
+    setFeedback((previous) => ({
+      ...previous,
+      isOpen: false,
+    }));
+  };
+
+  const submitQuizPreview = async () => {
     if (isSubmitting) return;
 
     setIsSubmitting(true);
@@ -93,9 +108,60 @@ const CreateQuizPage = () => {
       });
     } catch (error) {
       console.error("Failed to preview quiz:", error);
+
+      const errorCode = error.response?.data?.code;
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to preview quiz. Please try again.";
+
+      if (errorCode === "AI_GENERATION_FAILED") {
+        setFeedback({
+          isOpen: true,
+          type: "error",
+          title: "AI Generation Failed",
+          message: errorMessage,
+          isAIError: true,
+        });
+
+        return;
+      }
+
+      setFeedback({
+        isOpen: true,
+        type: "error",
+        title: "Unable to Preview Quiz",
+        message: errorMessage,
+        isAIError: false,
+      });
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSwitchToRandomize = () => {
+    switchAIToRandom();
+
+    setFeedback((previous) => ({
+      ...previous,
+      isOpen: false,
+    }));
+  };
+
+  const handleTryAgainWithAI = async () => {
+    if (isSubmitting) return;
+
+    setFeedback((previous) => ({
+      ...previous,
+      message: "Generating choices with AI. Please wait...",
+    }));
+
+    await submitQuizPreview();
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    await submitQuizPreview();
   };
 
   if (isLoadingDraft) {
@@ -154,6 +220,33 @@ const CreateQuizPage = () => {
         ]}
         onSelect={handleDraftOption}
         showCancel={false}
+      />
+
+      <FeedbackModal
+        isOpen={feedback.isOpen}
+        onClose={handleCloseFeedback}
+        type={feedback.type}
+        title={feedback.title}
+        message={feedback.message}
+        options={
+          feedback.isAIError
+            ? [
+                {
+                  label: "Switch to Randomize",
+                  value: "random",
+                  variant: "secondary",
+                  onClick: handleSwitchToRandomize,
+                  disabled: isSubmitting,
+                },
+                {
+                  label: isSubmitting ? "Generating..." : "Try Again with AI",
+                  value: "ai",
+                  onClick: handleTryAgainWithAI,
+                  disabled: isSubmitting,
+                },
+              ]
+            : undefined
+        }
       />
     </div>
   );

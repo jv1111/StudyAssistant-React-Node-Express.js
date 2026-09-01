@@ -179,6 +179,21 @@ const useCreateQuizDraft = (initialIsPreview = false) => {
     );
   };
 
+  const switchAIToRandom = () => {
+    isDirty.current = true;
+
+    setItems((currentItems) =>
+      currentItems.map((item) =>
+        item.generationMethod === "ai"
+          ? {
+              ...item,
+              generationMethod: "random",
+            }
+          : item,
+      ),
+    );
+  };
+
   const saveCurrentDraft = async (
     updatedItems = items,
     preview = isPreview,
@@ -230,6 +245,7 @@ const useCreateQuizDraft = (initialIsPreview = false) => {
     addQuestion,
     deleteQuestion,
     updateItem,
+    switchAIToRandom,
     handleItemChange,
     handleChoiceChange,
     saveCurrentDraft,

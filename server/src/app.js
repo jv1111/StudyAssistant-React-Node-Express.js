@@ -17,6 +17,7 @@ const emailVerificationRoutes = require("./routes/emailVerification.routes");
 const passwordResetRoutes = require("./routes/passwordReset.routes");
 const quizDraftRoutes = require("./routes/quizDraft.routes");
 const quizRecordRoutes = require("./routes/quizRecord.routes");
+const aiRoutes = require("./routes/ai.routes");
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use("/quiz-record", quizRecordRoutes);
 app.use("/user", userRoutes);
 app.use("/email-verification", emailVerificationRoutes);
 app.use("/password-reset", passwordResetRoutes);
+app.use("/ai", aiRoutes);
 
 app.use(errorHandler);
 

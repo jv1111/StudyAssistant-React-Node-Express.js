@@ -1,42 +1,61 @@
+const fs = require("fs");
+const path = require("path");
+
 const Quiz = require("../models/quiz.model");
 const Subject = require("../models/subject.model");
 
 const sampleQuizzes = require("../data/sampleQuiz");
+const { generateQuizContent } = require("./ai.service");
 
 const { savePDF } = require("../utils/pdfHandler");
 const { getPagination } = require("../utils/pagination");
 
 const AppError = require("../utils/AppError");
 
+const quizChoicesPrompt = fs.readFileSync(
+  path.join(__dirname, "../prompts/quizChoices.prompt.txt"),
+  "utf-8",
+);
+
 const previewQuiz = async (subject, quizName, items) => {
   validateQuizInput(subject, quizName, items);
 
   const answers = items.map((item) => item.answer);
 
-  const previewItems = items.map((item) => {
-    let choices = item.choices || [];
-    const generationMethod = item.generationMethod || "random";
+  const aiItems = getAIItems(items);
 
-    if (generationMethod === "random") {
-      const otherAnswers = answers.filter((answer) => answer !== item.answer);
+  let aiChoices = [];
 
-      const shuffledAnswers = [...otherAnswers].sort(() => Math.random() - 0.5);
+  if (aiItems.length > 0) {
+    try {
+      const aiPrompt = buildAIChoicesPrompt(aiItems);
+      const aiResponse = await generateQuizContent(aiPrompt);
 
-      choices = [item.answer, ...shuffledAnswers.slice(0, 3)];
+      aiChoices = JSON.parse(aiResponse);
+    } catch (error) {
+      console.error("AI quiz choice generation failed:", error);
 
-      while (choices.length < 4) {
-        choices.push(item.answer);
-      }
+      throw new AppError(
+        "We couldn't generate choices using AI. Your AI usage limit may have been reached. If so, please try again tomorrow. Otherwise, the AI service may be temporarily unavailable or under maintenance.",
+        503,
+        "AI_GENERATION_FAILED",
+      );
+    }
+  }
 
-      choices.sort(() => Math.random() - 0.5);
+  const previewItems = items.map((item, index) => {
+    if (item.generationMethod === "ai") {
+      const aiItem = aiChoices.find((choice) => choice.index === index);
+
+      return {
+        question: item.question,
+        answer: item.answer,
+        choices: aiItem?.choices || [],
+        generationMethod: "ai",
+      };
     }
 
-    return {
-      question: item.question,
-      answer: item.answer,
-      choices,
-      generationMethod,
-    };
+    return buildPreviewItem(item, answers);
   });
 
   return {
@@ -44,6 +63,72 @@ const previewQuiz = async (subject, quizName, items) => {
     quizName: quizName.trim(),
     numberOfItems: previewItems.length,
     items: previewItems,
+  };
+};
+
+const getAIItems = (items) => {
+  return items
+    .map((item, index) => {
+      if (item.generationMethod !== "ai") {
+        return null;
+      }
+
+      return {
+        index,
+        question: item.question,
+        answer: item.answer,
+      };
+    })
+    .filter(Boolean);
+};
+
+const buildAIChoicesPrompt = (aiItems) => {
+  return quizChoicesPrompt.replace(
+    "{{AI_ITEMS}}",
+    JSON.stringify(aiItems, null, 2),
+  );
+};
+
+const generateRandomChoices = (item, answers) => {
+  const otherAnswers = answers.filter((answer) => answer !== item.answer);
+
+  const shuffledAnswers = shuffleArray(otherAnswers);
+
+  let choices = [item.answer, ...shuffledAnswers.slice(0, 3)];
+
+  while (choices.length < 4) {
+    choices.push(`Option ${choices.length + 1}`);
+  }
+
+  return shuffleArray(choices);
+};
+
+const shuffleArray = (array) => {
+  const shuffled = [...array];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+
+    [shuffled[i], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[i]];
+  }
+
+  return shuffled;
+};
+
+const buildPreviewItem = (item, answers) => {
+  const generationMethod = item.generationMethod || "random";
+
+  let choices = item.choices || [];
+
+  if (generationMethod === "random") {
+    choices = generateRandomChoices(item, answers);
+  }
+
+  return {
+    question: item.question,
+    answer: item.answer,
+    choices,
+    generationMethod,
   };
 };
 
