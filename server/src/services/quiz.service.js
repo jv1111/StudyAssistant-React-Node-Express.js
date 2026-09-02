@@ -27,18 +27,18 @@ const previewQuiz = async (subject, quizName, items) => {
   let aiChoices = [];
 
   if (aiItems.length > 0) {
-    try {
-      const aiPrompt = buildAIChoicesPrompt(aiItems);
-      const aiResponse = await generateQuizContent(aiPrompt);
+    const aiPrompt = buildAIChoicesPrompt(aiItems);
+    const aiResponse = await generateQuizContent(aiPrompt);
 
+    try {
       aiChoices = JSON.parse(aiResponse);
     } catch (error) {
-      console.error("AI quiz choice generation failed:", error);
+      console.error("Failed to parse AI response:", error);
 
       throw new AppError(
-        "We couldn't generate choices using AI. Your AI usage limit may have been reached. If so, please try again tomorrow. Otherwise, the AI service may be temporarily unavailable or under maintenance.",
+        "AI returned an invalid response.",
         503,
-        "AI_GENERATION_FAILED",
+        "AI_INVALID_RESPONSE",
       );
     }
   }

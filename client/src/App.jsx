@@ -1,8 +1,8 @@
 import { RouterProvider } from "react-router-dom";
 
-import LoadingPage from "./pages/Loading/LoadingPage";
+import LoadingPage from "./pages/common/LoadingPage";
 import router from "./router";
-import useSessionChecker from "./hooks/useSessionChecker";
+import useSessionChecker from "./hooks/auth/useSessionChecker";
 
 function App() {
   const { isLoading } = useSessionChecker();

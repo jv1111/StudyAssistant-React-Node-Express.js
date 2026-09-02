@@ -4,7 +4,7 @@ import Modal from "../common/Modal";
 import Card from "../common/Card";
 import Input from "../common/Input";
 
-import useSubjects from "../../hooks/useSubjects";
+import useSubjects from "../../hooks/quiz/useSubjects";
 import Button from "../common/Button";
 
 const SubjectSelectorModal = ({ isOpen, onClose, onSelect }) => {

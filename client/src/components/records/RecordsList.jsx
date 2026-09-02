@@ -4,9 +4,9 @@ import EmptyState from "../common/EmptyState";
 import RecordCard from "./RecordCard";
 import SearchInput from "../common/SearchInput";
 
-import useRecords from "../../hooks/useRecords";
+import useRecords from "../../hooks/records/useRecords";
 
-import LoadingPage from "../../pages/Loading/LoadingPage";
+import LoadingPage from "../../pages/common/LoadingPage";
 
 const RecordsList = () => {
   const { records, isLoading, searchInput, handleSearch, handleScroll } =

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import env from "../../config/env";
-import { googleLoginAPI } from "../../api/auth.api";
+import { googleLoginAPI } from "../../api/auth/auth.api";
 import { login } from "../../redux/slice/authSlice";
 
 import FeedbackModal from "../common/FeedbackModal";

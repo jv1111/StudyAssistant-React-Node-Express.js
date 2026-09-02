@@ -1,14 +1,14 @@
-import HomePage from "../pages/Home/HomePage";
-import ProfilePage from "../pages/ProfilePage/ProfilePage";
-import CreateQuizPage from "../pages/CreateQuizPage/CreateQuizPage";
-import QuizPreviewPage from "../pages/QuizPreviewPage/QuizPreviewPage";
-import UpdateQuizPage from "../pages/UpdateQuizPage/UpdateQuizPage";
-import RecordsPage from "../pages/RecordsPage/RecordsPage";
-import RecordPage from "../pages/RecordPage/RecordPage";
-import QuizzesPage from "../pages/QuizzesPage/QuizzesPage";
-import QuizPage from "../pages/QuizPage/QuizPage";
-import EnumerationQuizPage from "../pages/EnumerationQuizPage/EnumerationQuizPage";
-import VerifyEmailPage from "../pages/VerifyEmailPage/VerifyEmailPage";
+import SubjectsPage from "../pages/quiz/SubjectsPage";
+import ProfilePage from "../pages/profile/ProfilePage";
+import CreateQuizPage from "../pages/quiz/CreateQuizPage";
+import QuizPreviewPage from "../pages/quiz/QuizPreviewPage";
+import UpdateQuizPage from "../pages/quiz/UpdateQuizPage";
+import RecordsPage from "../pages/records/RecordsPage";
+import RecordPage from "../pages/records/RecordPage";
+import QuizzesPage from "../pages/quiz/QuizzesPage";
+import QuizPage from "../pages/quiz/QuizPage";
+import EnumerationQuizPage from "../pages/quiz/EnumerationQuizPage";
+import VerifyEmailPage from "../pages/auth/VerifyEmailPage";
 
 import ProtectedRoute from "./guards/ProtectedRoute";
 import AppLayout from "../layouts/AppLayout";
@@ -21,7 +21,7 @@ export const appRoutes = {
       children: [
         {
           path: "/",
-          element: <HomePage />,
+          element: <SubjectsPage />,
         },
         {
           path: "/profile",

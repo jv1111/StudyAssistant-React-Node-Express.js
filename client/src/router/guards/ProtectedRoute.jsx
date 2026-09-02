@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import useSessionChecker from "../../hooks/useSessionChecker";
+import useSessionChecker from "../../hooks/auth/useSessionChecker";
 
 const ProtectedRoute = ({ requireAuth = true }) => {
   const { auth } = useSessionChecker();

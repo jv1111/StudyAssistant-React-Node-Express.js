@@ -1,0 +1,66 @@
+import { useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+import useDebounce from "../common/useDebounce";
+import useItemFetcher from "../data/useItemFetcher";
+
+import { getQuizzes } from "../../api/quiz/quiz.api";
+import { startQuiz } from "../../api/quiz/quizSession.api";
+
+import infinitScroller from "../../helper/infinitScroller";
+
+const useQuizzes = () => {
+  const { subjectId } = useParams();
+  const navigate = useNavigate();
+
+  const [quizzes, setQuizzes] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+
+  const searchVal = useDebounce(searchInput, 400);
+
+  const queryParams = useMemo(() => ({ subjectId }), [subjectId]);
+
+  const { isLoading, setSkipCount } = useItemFetcher(
+    setQuizzes,
+    searchVal,
+    getQuizzes,
+    queryParams,
+  );
+
+  const handleSearch = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleScroll = (event) => {
+    infinitScroller(event, quizzes, setSkipCount);
+  };
+
+  const handleStartQuiz = async (quizId, quizType, randomizeQuestions) => {
+    console.log("Starting quiz:", {
+      quizId,
+      quizType,
+      randomizeQuestions,
+    });
+
+    const response = await startQuiz(quizId, quizType, randomizeQuestions);
+
+    console.log("Start quiz response:", response);
+
+    const sessionPath = `/quiz/session/${quizType}/${response.sessionId}`;
+
+    console.log("Navigating to:", sessionPath);
+
+    navigate(sessionPath);
+  };
+
+  return {
+    quizzes,
+    isLoading,
+    searchInput,
+    handleSearch,
+    handleScroll,
+    handleStartQuiz,
+  };
+};
+
+export default useQuizzes;

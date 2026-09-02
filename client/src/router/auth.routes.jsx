@@ -1,6 +1,6 @@
-import AuthPage from "../pages/Auth/AuthPage";
-import ForgotPassPage from "../pages/ForgotPassPage/ForgotPassPage.jsx";
-import ResetPassPage from "../pages/ResetPassPage/ResetPassPage.jsx";
+import AuthPage from "../pages/auth/AuthPage";
+import ForgotPassPage from "../pages/auth/ForgotPassPage";
+import ResetPassPage from "../pages/auth/ResetPassPage";
 
 import ProtectedRoute from "./guards/ProtectedRoute";
 import AuthLayout from "../layouts/AuthLayout";

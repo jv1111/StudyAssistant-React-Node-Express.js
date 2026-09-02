@@ -7,7 +7,7 @@ import SignUpForm from "../../components/auth/SignUpForm";
 import Modal from "../../components/common/Modal";
 import Eyebrow from "../../components/common/Eyebrow";
 
-import { loginAPI, signUpAPI } from "../../api/auth.api";
+import { loginAPI, signUpAPI } from "../../api/auth/auth.api";
 import { login } from "../../redux/slice/authSlice";
 
 const AuthPage = () => {

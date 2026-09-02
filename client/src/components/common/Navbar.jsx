@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { List, X, Person, BoxArrowRight } from "react-bootstrap-icons";
 
-import { logoutAPI } from "../../api/auth.api";
+import { logoutAPI } from "../../api/auth/auth.api";
 import { logout } from "../../redux/slice/authSlice";
 
 function Navigation() {
