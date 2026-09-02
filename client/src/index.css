@@ -126,18 +126,26 @@
     color: var(--color-foreground);
     background-color: var(--color-background);
 
+    /* Softened grid pattern + balanced ambient lighting */
     background-image:
+      linear-gradient(to right, rgba(212, 175, 55, 0.1) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(212, 175, 55, 0.1) 1px, transparent 1px),
       radial-gradient(
         circle at 15% 15%,
-        rgba(212, 175, 55, 0.08),
-        transparent 30rem
+        rgba(212, 175, 55, 0.15),
+        transparent 35rem
       ),
       radial-gradient(
         circle at 85% 85%,
-        rgba(197, 155, 39, 0.06),
-        transparent 28rem
+        rgba(197, 155, 39, 0.12),
+        transparent 32rem
       );
 
+    background-size:
+      32px 32px,
+      32px 32px,
+      auto,
+      auto;
     background-attachment: fixed;
 
     font-family:

@@ -1,12 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
 import EmptyState from "../../components/common/EmptyState";
-import SubjectCardContent from "../../components/quiz/SubjectCardContent";
-import Card from "../../components/common/Card";
+import SubjectCard from "../../components/quiz/SubjectCard";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
 import LoadingPage from "../common/LoadingPage";
-import GlassScrollableGrid from "../../components/common/GlassScrollableGrid";
+import GlassScrollableList from "../../components/common/GlassScrollableList";
 
 import useSubjects from "../../hooks/quiz/useSubjects";
 
@@ -26,7 +25,7 @@ const SubjectsPage = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <header className="mb-5 mt-4 flex h-fit shrink-0 flex-col items-center gap-4 sm:flex-row sm:items-end sm:justify-between">
         <AppHeaderContent
           eyebrow="Overview"
           title="Subjects"
@@ -42,21 +41,21 @@ const SubjectsPage = () => {
         </div>
       </header>
 
+      <div className="mb-5 w-full border-b border-border/90" />
+
       {subjects.length > 0 ? (
-        <GlassScrollableGrid onScroll={handleScroll}>
+        <GlassScrollableList onScroll={handleScroll}>
           {subjects.map((subject) => (
-            <li key={subject._id} className="h-full">
-              <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-                <SubjectCardContent
-                  subject={subject}
-                  onSelectSubject={() => handleSelectSubject(subject._id)}
-                />
-              </Card>
+            <li key={subject._id} className="w-full">
+              <SubjectCard
+                subject={subject}
+                onSelect={() => handleSelectSubject(subject._id)}
+              />
             </li>
           ))}
-        </GlassScrollableGrid>
+        </GlassScrollableList>
       ) : (
-        <div className="flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <EmptyState
             title="No subjects found"
             description="There are no subjects matching your search. Try adjusting your query."

@@ -17,9 +17,11 @@ const Button = ({
       ? "border-0 bg-transparent p-0 text-sm font-semibold transition-colors cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-auto"
       : variant === "card"
         ? "group flex flex-col justify-between rounded-xl border border-border bg-background-secondary/40 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:bg-primary-light/40 hover:shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-auto"
-        : `flex min-h-12 ${
-            fit ? "w-fit" : "w-full"
-          } items-center justify-center rounded-(--radius-input) px-5 text-sm font-bold transition-all duration-200 cursor-pointer active:scale-[0.99] disabled:cursor-not-allowed disabled:pointer-events-auto disabled:active:scale-100`;
+        : variant === "unstyled"
+          ? "cursor-pointer disabled:cursor-not-allowed disabled:pointer-events-auto"
+          : `flex min-h-12 ${
+              fit ? "w-fit" : "w-full"
+            } items-center justify-center rounded-(--radius-input) px-5 text-sm font-bold transition-all duration-200 cursor-pointer active:scale-[0.99] disabled:cursor-not-allowed disabled:pointer-events-auto disabled:active:scale-100`;
 
   const variants = {
     // Primary: keeps a faint gold/primary tint with a clean diagonal hatch/pattern feel, distinct from secondary
@@ -41,6 +43,8 @@ const Button = ({
     link: "text-primary hover:text-primary-hover disabled:text-muted/50 disabled:hover:text-muted/50 disabled:no-underline",
 
     card: "disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:border-border disabled:hover:bg-background-secondary/40 disabled:hover:shadow-none",
+
+    unstyled: "",
   };
 
   const buttonClassName = `${baseStyles} ${variants[variant]} ${className}`;

@@ -5,11 +5,10 @@ import { saveAs } from "file-saver";
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
 import QuizCardContent from "../../components/quiz/QuizCardContent";
-import Card from "../../components/common/Card";
 import Modal from "../../components/common/Modal";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
-import GlassScrollableGrid from "../../components/common/GlassScrollableGrid"; // <-- Import the new component
+import GlassScrollableList from "../../components/common/GlassScrollableList";
 
 import useQuizzes from "../../hooks/quiz/useQuizzes";
 import { downloadPdf } from "../../api/quiz/quiz.api";
@@ -59,7 +58,6 @@ const QuizzesPage = () => {
   }
 
   return (
-    // Changed root wrapper to flex column so the glass grid can expand to fill the remaining height
     <div className="flex h-full flex-col">
       <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <AppHeaderContent
@@ -78,20 +76,18 @@ const QuizzesPage = () => {
       </header>
 
       {quizzes.length > 0 ? (
-        <GlassScrollableGrid onScroll={handleScroll}>
+        <GlassScrollableList onScroll={handleScroll}>
           {quizzes.map((quiz) => (
-            <li key={quiz._id} className="h-full">
-              <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-                <QuizCardContent
-                  quiz={quiz}
-                  onSelect={handleQuizSelect}
-                  onEdit={handleEditQuiz}
-                  onDownload={handleDownloadPdf}
-                />
-              </Card>
+            <li key={quiz._id} className="w-full">
+              <QuizCardContent
+                quiz={quiz}
+                onSelect={handleQuizSelect}
+                onEdit={handleEditQuiz}
+                onDownload={handleDownloadPdf}
+              />
             </li>
           ))}
-        </GlassScrollableGrid>
+        </GlassScrollableList>
       ) : (
         <div className="flex-1">
           <EmptyState

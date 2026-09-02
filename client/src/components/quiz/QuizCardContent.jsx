@@ -1,84 +1,90 @@
 import {
   PatchCheckFill,
   QuestionCircle,
-  PlayFill,
-  PencilSquare,
   Download,
+  ChevronRight,
 } from "react-bootstrap-icons";
+
 import Button from "../common/Button";
+import Card from "../common/Card";
 
-const QuizCardContent = ({ quiz, onSelect, onEdit, onDownload }) => {
+const QuizCardContent = ({ quiz, onSelect, onDownload }) => {
   return (
-    <article className="flex h-full min-h-48 flex-col justify-between">
-      <div>
-        {/* Header: Icon & Question Count Badge */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-xs transition-transform duration-300 group-hover:scale-105">
-            <PatchCheckFill size={22} />
+    <div className="flex w-full gap-3">
+      {/* Left: Main Quiz Card */}
+      <Button
+        variant="unstyled"
+        onClick={() => onSelect(quiz._id)}
+        className="group flex flex-1 rounded-card text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        <Card className="relative h-full w-full cursor-pointer overflow-hidden bg-surface transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:bg-surface-hover hover:shadow-gold-glow">
+          {/* Decorative background glow that activates on hover */}
+          <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100" />
+
+          <div className="relative z-10 flex h-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            {/* Icon & Info Container */}
+            <div className="flex w-full flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
+              {/* Compact Quiz Icon */}
+              <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/25 bg-gradient-to-br from-primary/10 to-primary/5 text-primary shadow-xs transition-all duration-300 group-hover:-rotate-2 group-hover:scale-105 group-hover:border-primary/40">
+                <div className="absolute inset-0 rounded-xl bg-primary/10 opacity-0 blur-xs transition-opacity duration-300 group-hover:opacity-100" />
+                <PatchCheckFill
+                  size={22}
+                  className="relative z-10 transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+
+              {/* Text Details */}
+              <div className="flex flex-1 flex-col items-start gap-0.5">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <h2 className="line-clamp-1 text-base font-bold tracking-tight text-foreground transition-colors duration-300 group-hover:text-primary sm:text-lg">
+                    {quiz.quizName}
+                  </h2>
+
+                  {/* Compact Items Count Badge */}
+                  <div className="flex items-center gap-1 rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[11px] font-semibold text-primary transition-colors duration-300 group-hover:border-primary/30 group-hover:bg-primary/10">
+                    <QuestionCircle size={11} className="text-primary" />
+                    <span>
+                      {quiz.numberOfItems || 0}{" "}
+                      {quiz.numberOfItems === 1 ? "Item" : "Items"}
+                    </span>
+                  </div>
+                </div>
+
+                <p className="line-clamp-2 max-w-3xl text-left text-xs font-normal leading-relaxed text-muted transition-colors duration-300 group-hover:text-muted/90 sm:text-sm">
+                  {quiz.subjectName
+                    ? `Subject: ${quiz.subjectName}`
+                    : "Test your understanding with this practice quiz."}
+                </p>
+              </div>
+            </div>
+
+            {/* Animated Chevron */}
+            <div className="hidden shrink-0 transform text-muted/30 transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-primary group-hover:opacity-100 sm:block">
+              <ChevronRight size={20} strokeWidth={2} />
+            </div>
           </div>
+        </Card>
+      </Button>
 
-          <div className="flex items-center gap-1.5 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-semibold text-muted">
-            <QuestionCircle size={13} className="text-primary" />
-            <span>
-              {quiz.numberOfItems || 0}{" "}
-              {quiz.numberOfItems === 1 ? "Item" : "Items"}
-            </span>
-          </div>
-        </div>
-
-        {/* Quiz Title */}
-        <h2 className="mt-4 text-xl font-bold tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary line-clamp-1">
-          {quiz.quizName}
-        </h2>
-
-        {/* Optional Subject context or description fallback */}
-        <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-2">
-          {quiz.subjectName
-            ? `Subject: ${quiz.subjectName}`
-            : "Test your understanding with this practice quiz."}
-        </p>
-      </div>
-
-      {/* Action Bar */}
-      <div className="mt-6 border-t border-border/60 pt-4 flex items-center gap-2">
-        {/* Primary Action */}
-        <Button
-          type="button"
-          onClick={() => onSelect(quiz._id)}
-          className="flex-1 justify-center gap-2 shadow-xs group-hover:shadow-md transition-all"
-        >
-          <PlayFill size={16} />
-          <span>Take Quiz</span>
-        </Button>
-
-        {/* Secondary Actions */}
-        <div className="flex items-center gap-1.5">
-          <Button
-            type="button"
-            variant="secondary"
-            fit
-            onClick={() => onEdit(quiz._id)}
-            title="Update Quiz"
-            aria-label="Update Quiz"
-            className="p-2.5! text-muted hover:text-foreground"
-          >
-            <PencilSquare size={16} />
-          </Button>
-
-          <Button
-            type="button"
-            variant="secondary"
-            fit
-            onClick={(event) => onDownload(event, quiz._id)}
-            title="Download PDF"
-            aria-label="Download PDF"
-            className="p-2.5! text-muted hover:text-foreground"
-          >
-            <Download size={16} />
-          </Button>
-        </div>
-      </div>
-    </article>
+      {/* Right: Download Card (Perfect Square automatically matching quiz card height) */}
+      <Button
+        variant="unstyled"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDownload(e, quiz._id);
+        }}
+        title="Download PDF"
+        aria-label="Download PDF"
+        className="group flex h-full aspect-square shrink-0 rounded-card outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        <Card className="flex h-full w-full items-center justify-center bg-surface p-0 transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:bg-surface-hover hover:shadow-gold-glow">
+          <Download
+            size={22}
+            className="text-muted transition-all duration-300 group-hover:scale-110 group-hover:text-primary"
+          />
+        </Card>
+      </Button>
+    </div>
   );
 };
 

@@ -6,7 +6,7 @@ import Card from "../../components/common/Card";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
 import LoadingPage from "../common/LoadingPage";
-import GlassScrollableGrid from "../../components/common/GlassScrollableGrid";
+import GlassScrollableList from "../../components/common/GlassScrollableList";
 
 import useRecords from "../../hooks/records/useRecords";
 
@@ -39,7 +39,7 @@ const RecordsPage = () => {
       </header>
 
       {records.length > 0 ? (
-        <GlassScrollableGrid onScroll={handleScroll}>
+        <GlassScrollableList onScroll={handleScroll}>
           {records.map((record) => (
             <li key={record._id} className="h-fit">
               <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
@@ -50,7 +50,7 @@ const RecordsPage = () => {
               </Card>
             </li>
           ))}
-        </GlassScrollableGrid>
+        </GlassScrollableList>
       ) : (
         <div className="flex-1">
           <EmptyState
