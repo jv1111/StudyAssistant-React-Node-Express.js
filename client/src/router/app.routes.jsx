@@ -1,9 +1,7 @@
-import SubjectsPage from "../pages/quiz/SubjectsPage";
 import ProfilePage from "../pages/profile/ProfilePage";
 import CreateQuizPage from "../pages/quiz/CreateQuizPage";
 import QuizPreviewPage from "../pages/quiz/QuizPreviewPage";
 import UpdateQuizPage from "../pages/quiz/UpdateQuizPage";
-import ManageSubjectsPage from "../pages/quiz/ManageSubjectsPage";
 import ManageQuizzesPage from "../pages/quiz/ManageQuizzesPage";
 import RecordsPage from "../pages/records/RecordsPage";
 import RecordPage from "../pages/records/RecordPage";
@@ -23,7 +21,7 @@ export const appRoutes = {
       children: [
         {
           path: "/",
-          element: <SubjectsPage />,
+          element: <QuizzesPage />,
         },
         {
           path: "/profile",
@@ -42,7 +40,7 @@ export const appRoutes = {
             },
             {
               path: "manage",
-              element: <ManageSubjectsPage />,
+              element: <ManageQuizzesPage />,
             },
             {
               path: "update/:quizId",
@@ -55,14 +53,6 @@ export const appRoutes = {
             {
               path: "records/:recordId",
               element: <RecordPage />,
-            },
-            {
-              path: "subjects/:subjectId",
-              element: <ManageQuizzesPage />,
-            },
-            {
-              path: ":subjectId",
-              element: <QuizzesPage />,
             },
             {
               path: "session/multiple_choice/:sessionId",

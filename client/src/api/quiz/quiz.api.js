@@ -83,7 +83,9 @@ const deleteSavedData = async (key, quizId) => {
 
 const getItemsApi = async (quizId) => {
   const response = await api.get("/quiz/items", {
-    params: { quizId },
+    params: {
+      quizId,
+    },
   });
 
   return response.data;
@@ -96,6 +98,18 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
     quizName,
     items,
   });
+
+  return response.data;
+};
+
+const deleteQuiz = async (quizId) => {
+  const response = await api.delete(`/quiz/${quizId}`);
+
+  return response.data;
+};
+
+const deleteAllQuizzes = async (subjectId) => {
+  const response = await api.delete(`/quiz/subjects/${subjectId}/quizzes`);
 
   return response.data;
 };
@@ -131,6 +145,8 @@ export {
   deleteSavedData,
   getItemsApi,
   updateQuiz,
+  deleteQuiz,
+  deleteAllQuizzes,
   deleteSubject,
   deleteAllSubjects,
   downloadPdf,

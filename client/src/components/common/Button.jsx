@@ -28,9 +28,9 @@ const Button = ({
     primary:
       "bg-primary text-white shadow-(--shadow-button) hover:bg-primary-hover border border-primary/20 disabled:bg-[linear-gradient(45deg,var(--color-primary-light)_25%,transparent_25%,transparent_50%,var(--color-primary-light)_50%,var(--color-primary-light)_75%,transparent_75%,transparent)] disabled:bg-[length:16px_16px] disabled:bg-background-secondary disabled:text-primary/50 disabled:border-primary/20 disabled:shadow-none disabled:hover:bg-background-secondary",
 
-    // Secondary: standard warm recessed neutral look
+    // Secondary: standard warm recessed neutral look, now with a prominent tint on hover similar to danger
     secondary:
-      "border border-border bg-background-secondary text-foreground hover:bg-border/40 hover:border-border disabled:bg-background-secondary/60 disabled:text-muted/70 disabled:border-border/60 disabled:hover:bg-background-secondary/90 disabled:hover:border-border",
+      "border border-border bg-background-secondary text-foreground hover:bg-foreground/10 hover:border-foreground/20 disabled:bg-background-secondary/60 disabled:text-muted/70 disabled:border-border/60 disabled:hover:bg-background-secondary/90 disabled:hover:border-border",
 
     // Danger: keeps a subtle red-tinted stripe/hatch pattern so it distinctively looks like a disabled danger action
     danger:

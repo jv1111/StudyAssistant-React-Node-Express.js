@@ -1,16 +1,19 @@
 import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
 
-import { getQuizzes } from "../../api/quiz/quiz.api";
+import {
+  getQuizzes,
+  deleteQuiz,
+  deleteAllQuizzes,
+} from "../../api/quiz/quiz.api";
 import { startQuiz } from "../../api/quiz/quizSession.api";
 
 import infinitScroller from "../../helper/infinitScroller";
 
-const useQuizzes = () => {
-  const { subjectId } = useParams();
+const useQuizzes = (subjectId) => {
   const navigate = useNavigate();
 
   const [quizzes, setQuizzes] = useState([]);
@@ -36,21 +39,29 @@ const useQuizzes = () => {
   };
 
   const handleStartQuiz = async (quizId, quizType, randomizeQuestions) => {
-    console.log("Starting quiz:", {
-      quizId,
-      quizType,
-      randomizeQuestions,
-    });
-
     const response = await startQuiz(quizId, quizType, randomizeQuestions);
-
-    console.log("Start quiz response:", response);
 
     const sessionPath = `/quiz/session/${quizType}/${response.sessionId}`;
 
-    console.log("Navigating to:", sessionPath);
-
     navigate(sessionPath);
+  };
+
+  const handleDeleteQuiz = async (quizId) => {
+    await deleteQuiz(quizId);
+
+    setQuizzes((currentQuizzes) =>
+      currentQuizzes.filter((quiz) => quiz._id !== quizId),
+    );
+  };
+
+  const handleDeleteAllQuizzes = async () => {
+    if (!subjectId) {
+      return;
+    }
+
+    await deleteAllQuizzes(subjectId);
+
+    setQuizzes([]);
   };
 
   return {
@@ -60,6 +71,8 @@ const useQuizzes = () => {
     handleSearch,
     handleScroll,
     handleStartQuiz,
+    handleDeleteQuiz,
+    handleDeleteAllQuizzes,
   };
 };
 

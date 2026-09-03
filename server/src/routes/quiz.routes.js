@@ -20,6 +20,8 @@ router.delete("/subjects", quizController.deleteAllSubjects);
 
 router.delete("/subjects/:subjectId", quizController.deleteSubject);
 
+router.delete("/subjects/:subjectId/quizzes", quizController.deleteAllQuizzes);
+
 router.get("/quizList", quizController.getQuizzes);
 
 router.put("/saveData", quizController.saveData);
@@ -30,10 +32,12 @@ router.delete("/savedData", quizController.deleteSavedData);
 
 router.get("/items", quizController.getItems);
 
-router.get("/:quizId", quizController.getQuizById);
-
 router.put("/update", quizController.updateQuiz);
 
+router.delete("/:quizId", quizController.deleteQuiz);
+
 router.get("/:quizId/pdf", quizController.downloadPdf);
+
+router.get("/:quizId", quizController.getQuizById);
 
 module.exports = router;

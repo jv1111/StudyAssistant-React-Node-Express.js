@@ -4,30 +4,61 @@ import { saveAs } from "file-saver";
 
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
+import SubjectCard from "../../components/quiz/SubjectCard";
 import QuizCardContent from "../../components/quiz/QuizCardContent";
-import Modal from "../../components/common/Modal";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
-
-import useQuizzes from "../../hooks/quiz/useQuizzes";
-import { downloadPdf } from "../../api/quiz/quiz.api";
-
 import LoadingPage from "../common/LoadingPage";
+
+import useSubjects from "../../hooks/quiz/useSubjects";
+import useQuizzes from "../../hooks/quiz/useQuizzes";
+
+import { downloadPdf } from "../../api/quiz/quiz.api";
 
 const QuizzesPage = () => {
   const navigate = useNavigate();
 
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+
+  const isQuizMode = Boolean(selectedSubject);
+
+  const {
+    subjects,
+    isLoading: isSubjectsLoading,
+    searchInput: subjectSearchInput,
+    handleSearch: handleSubjectSearch,
+    handleScroll: handleSubjectScroll,
+  } = useSubjects();
+
   const {
     quizzes,
-    isLoading,
-    searchInput,
-    handleSearch,
-    handleScroll,
+    isLoading: isQuizzesLoading,
+    searchInput: quizSearchInput,
+    handleSearch: handleQuizSearch,
+    handleScroll: handleQuizScroll,
     handleStartQuiz,
-  } = useQuizzes();
+  } = useQuizzes(selectedSubject?._id);
 
-  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
+
+  const items = isQuizMode ? quizzes : subjects;
+
+  const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
+
+  const handleSearch = isQuizMode ? handleQuizSearch : handleSubjectSearch;
+
+  const handleScroll = isQuizMode ? handleQuizScroll : handleSubjectScroll;
+
+  const handleSelectSubject = (subject) => {
+    setSelectedSubject(subject);
+  };
+
+  const handleBackToSubjects = () => {
+    setSelectedSubject(null);
+    setSelectedQuiz(null);
+  };
 
   const handleQuizSelect = (quizId) => {
     setSelectedQuiz(quizId);
@@ -37,20 +68,21 @@ const QuizzesPage = () => {
     setSelectedQuiz(null);
   };
 
-  const handleEditQuiz = (quizId) => {
-    navigate(`/quiz/update/${quizId}`);
-  };
-
   const handleDownloadPdf = async (event, quizId) => {
     event.stopPropagation();
 
-    const response = await downloadPdf(quizId);
+    try {
+      const response = await downloadPdf(quizId);
 
-    const contentDisposition = response.headers["content-disposition"];
-    const fileName =
-      contentDisposition?.match(/filename="?([^"]+)"?/)?.[1] || "quiz.pdf";
+      const contentDisposition = response.headers["content-disposition"];
 
-    saveAs(response.data, fileName);
+      const fileName =
+        contentDisposition?.match(/filename="?([^"]+)"?/)?.[1] || "quiz.pdf";
+
+      saveAs(response.data, fileName);
+    } catch (error) {
+      console.error("Failed to download quiz PDF:", error);
+    }
   };
 
   if (isLoading) {
@@ -60,39 +92,69 @@ const QuizzesPage = () => {
   return (
     <div className="flex h-full flex-col">
       <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <AppHeaderContent
-          eyebrow="Overview"
-          title="Quizzes"
-          description="Choose a quiz to get started"
-        />
+        <div className="flex items-end gap-3">
+          {isQuizMode && (
+            <button
+              type="button"
+              onClick={handleBackToSubjects}
+              className="mb-1 text-sm font-medium text-muted transition-colors hover:text-primary"
+            >
+              Subjects
+            </button>
+          )}
+
+          <AppHeaderContent
+            eyebrow="Overview"
+            title={isQuizMode ? selectedSubject.name : "Subjects"}
+            description={
+              isQuizMode
+                ? "Choose a quiz to get started"
+                : "Browse your quiz subjects and test your knowledge"
+            }
+          />
+        </div>
 
         <div className="w-full shrink-0 sm:w-72 md:w-80">
           <SearchInput
             value={searchInput}
             onChange={handleSearch}
-            placeholder="Search quizzes..."
+            placeholder={
+              isQuizMode ? "Search quizzes..." : "Search subjects..."
+            }
           />
         </div>
       </header>
 
-      {quizzes.length > 0 ? (
+      {isQuizMode && <div className="mb-5 w-full border-b border-border/90" />}
+
+      {items.length > 0 ? (
         <GlassScrollableList onScroll={handleScroll}>
-          {quizzes.map((quiz) => (
-            <li key={quiz._id} className="w-full">
-              <QuizCardContent
-                quiz={quiz}
-                onSelect={handleQuizSelect}
-                onEdit={handleEditQuiz}
-                onDownload={handleDownloadPdf}
-              />
+          {items.map((item) => (
+            <li key={item._id} className="w-full">
+              {isQuizMode ? (
+                <QuizCardContent
+                  quiz={item}
+                  onSelect={handleQuizSelect}
+                  onDownload={handleDownloadPdf}
+                />
+              ) : (
+                <SubjectCard
+                  subject={item}
+                  onSelect={() => handleSelectSubject(item)}
+                />
+              )}
             </li>
           ))}
         </GlassScrollableList>
       ) : (
-        <div className="flex-1">
+        <div className="flex flex-1 items-center justify-center">
           <EmptyState
-            title="No quizzes found"
-            description="There are no quizzes matching your search."
+            title={isQuizMode ? "No quizzes found" : "No subjects found"}
+            description={
+              isQuizMode
+                ? "There are no quizzes matching your search."
+                : "There are no subjects matching your search. Try adjusting your query."
+            }
           />
         </div>
       )}
@@ -115,6 +177,7 @@ const QuizzesPage = () => {
         ]}
         onSelect={(quizType) => {
           handleStartQuiz(selectedQuiz, quizType, false);
+          handleQuizOptionClose();
         }}
       />
     </div>

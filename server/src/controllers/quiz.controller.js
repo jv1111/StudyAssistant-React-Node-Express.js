@@ -2,9 +2,8 @@ const quizService = require("../services/quiz.service");
 
 const asyncHandler = require("../utils/asyncHandler");
 const { fileDelete } = require("../utils/pdfHandler");
-const { successResponse, errorResponse } = require("../utils/response");
+const { successResponse } = require("../utils/response");
 const {
-  createRecordResponse,
   createQuizResponse,
 } = require("../utils/responseFormatters/quizResponse");
 
@@ -119,6 +118,22 @@ const updateQuiz = asyncHandler(async (req, res) => {
   successResponse(res, 200, createQuizResponse(result));
 });
 
+const deleteQuiz = asyncHandler(async (req, res) => {
+  const { quizId } = req.params;
+
+  const result = await quizService.deleteQuiz(req.user._id, quizId);
+
+  successResponse(res, 200, result);
+});
+
+const deleteAllQuizzes = asyncHandler(async (req, res) => {
+  const { subjectId } = req.params;
+
+  const result = await quizService.deleteAllQuizzes(req.user._id, subjectId);
+
+  successResponse(res, 200, result);
+});
+
 const deleteSubject = asyncHandler(async (req, res) => {
   const { subjectId } = req.params;
 
@@ -158,6 +173,8 @@ module.exports = {
   getQuizById,
   getItems,
   updateQuiz,
+  deleteQuiz,
+  deleteAllQuizzes,
   deleteSubject,
   deleteAllSubjects,
   previewQuiz,

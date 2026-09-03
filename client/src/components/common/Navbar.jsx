@@ -29,35 +29,18 @@ function Navigation() {
     accountMenuRef.current?.removeAttribute("open");
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   const navLinkStyles = ({ isActive }) =>
-    `select-none outline-none focus:outline-none rounded-lg px-3.5 py-2 text-sm font-semibold transition-all duration-200 border ${
+    `select-none rounded-lg border px-3.5 py-2 text-sm font-semibold outline-none transition-all duration-200 focus:outline-none ${
       isActive
-        ? "bg-primary-light text-primary border-primary/20 shadow-2xs"
+        ? "border-primary/20 bg-primary-light text-primary shadow-2xs"
         : "border-transparent text-muted hover:bg-background-secondary hover:text-foreground active:bg-primary-light/50"
     }`;
 
-  const isQuizSection =
-    location.pathname.startsWith("/quiz/") &&
-    !location.pathname.startsWith("/quiz/create") &&
-    !location.pathname.startsWith("/quiz/manage") &&
-    !location.pathname.startsWith("/quiz/records");
-
-  const quizzesActive = location.pathname === "/" || isQuizSection;
-
-  const quizzesClassName = `
-    select-none outline-none focus:outline-none rounded-lg px-3.5 py-2 text-sm font-semibold transition-all duration-200 border
-    ${
-      quizzesActive
-        ? "bg-primary-light text-primary border-primary/20 shadow-2xs"
-        : "border-transparent text-muted hover:bg-background-secondary hover:text-foreground active:bg-primary-light/50"
-    }
-  `;
-
-  const handleQuizzesClick = () => {
-    setIsMenuOpen(false);
-
-    if (isQuizSection) return;
-  };
+  const isProfileActive = location.pathname === "/profile";
 
   return (
     <nav className="sticky top-0 z-40 w-full select-none border-b border-border bg-surface/85 backdrop-blur-md">
@@ -65,8 +48,8 @@ function Navigation() {
         <div className="flex h-16 items-center justify-between md:justify-start">
           <Link
             to="/"
+            onClick={closeMenu}
             className="flex shrink-0 items-center gap-2 text-xl font-extrabold tracking-tight text-foreground outline-none transition-opacity hover:opacity-90 focus:outline-none"
-            onClick={() => setIsMenuOpen(false)}
           >
             <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/20 bg-primary-light text-base font-black text-primary">
               Q
@@ -78,26 +61,16 @@ function Navigation() {
           </Link>
 
           <div className="ml-8 hidden items-center gap-1.5 md:flex">
-            {quizzesActive && isQuizSection ? (
-              <button
-                type="button"
-                className={quizzesClassName}
-                onClick={handleQuizzesClick}
-              >
-                Quizzes
-              </button>
-            ) : (
-              <NavLink to="/" className={quizzesClassName}>
-                Quizzes
-              </NavLink>
-            )}
+            <NavLink to="/" className={navLinkStyles}>
+              Quizzes
+            </NavLink>
 
             <NavLink to="/quiz/records" className={navLinkStyles}>
               Records
             </NavLink>
 
             <NavLink to="/quiz/manage" className={navLinkStyles}>
-              Manage quiz
+              Manage Quiz
             </NavLink>
           </div>
 
@@ -156,28 +129,14 @@ function Navigation() {
         {isMenuOpen && (
           <div className="border-t border-border py-4 md:hidden">
             <div className="flex flex-col gap-1.5">
-              {isQuizSection ? (
-                <button
-                  type="button"
-                  className={`${quizzesClassName} w-full text-left`}
-                  onClick={handleQuizzesClick}
-                >
-                  Quizzes
-                </button>
-              ) : (
-                <NavLink
-                  to="/"
-                  className={quizzesClassName}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Quizzes
-                </NavLink>
-              )}
+              <NavLink to="/" className={navLinkStyles} onClick={closeMenu}>
+                Quizzes
+              </NavLink>
 
               <NavLink
                 to="/quiz/records"
                 className={navLinkStyles}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={closeMenu}
               >
                 Records
               </NavLink>
@@ -185,9 +144,9 @@ function Navigation() {
               <NavLink
                 to="/quiz/manage"
                 className={navLinkStyles}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={closeMenu}
               >
-                Manage quiz
+                Manage Quiz
               </NavLink>
 
               <div className="my-2 h-px bg-border" />
@@ -195,9 +154,9 @@ function Navigation() {
               <NavLink
                 to="/profile"
                 className={`${navLinkStyles({
-                  isActive: location.pathname === "/profile",
+                  isActive: isProfileActive,
                 })} flex items-center gap-2`}
-                onClick={() => setIsMenuOpen(false)}
+                onClick={closeMenu}
               >
                 <Person size={16} />
                 <span>Profile</span>
@@ -206,7 +165,7 @@ function Navigation() {
               <button
                 type="button"
                 onClick={() => {
-                  setIsMenuOpen(false);
+                  closeMenu();
                   logoutHandler();
                 }}
                 className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3.5 py-2 text-left text-sm font-semibold text-muted outline-none transition-colors hover:bg-danger/10 hover:text-danger focus:outline-none"

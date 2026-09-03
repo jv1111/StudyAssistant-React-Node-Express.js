@@ -3,11 +3,24 @@ import { Trash, Book, ChevronRight } from "react-bootstrap-icons";
 import Button from "../common/Button";
 import Card from "../common/Card";
 
-const ManageSubjectCard = ({ subject, onSelect, onDeleteClick }) => {
+const ManageItemCard = ({
+  item,
+  onSelect,
+  onDeleteClick,
+  nameKey = "name",
+  countKey = "quizCount",
+  countLabel = "Quiz",
+  secondaryContent,
+}) => {
+  const name = item[nameKey];
+  const count = item[countKey];
+
+  const hasCount = count !== undefined && count !== null;
+
   return (
     <Button
       variant="unstyled"
-      onClick={onSelect}
+      onClick={() => onSelect(item)}
       className="block w-full rounded-card text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <Card className="group relative cursor-pointer overflow-hidden bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-surface-hover hover:shadow-gold-glow">
@@ -19,19 +32,23 @@ const ManageSubjectCard = ({ subject, onSelect, onDeleteClick }) => {
 
             <div className="flex flex-col">
               <h3 className="text-base font-bold text-foreground transition-colors duration-200 group-hover:text-primary">
-                {subject.name}
+                {name}
               </h3>
 
               <div className="mt-1 flex items-center gap-2 text-xs font-medium text-muted">
-                <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[11px] text-primary">
-                  {subject.quizCount}{" "}
-                  {subject.quizCount === 1 ? "Quiz" : "Quizzes"}
-                </span>
+                {hasCount && (
+                  <>
+                    <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[11px] text-primary">
+                      {count} {count === 1 ? countLabel : `${countLabel}s`}
+                    </span>
 
-                <span className="opacity-50">•</span>
+                    <span className="opacity-50">•</span>
+                  </>
+                )}
 
                 <span>
-                  Created {new Date(subject.createdAt).toLocaleDateString()}
+                  {secondaryContent ??
+                    `Created ${new Date(item.createdAt).toLocaleDateString()}`}
                 </span>
               </div>
             </div>
@@ -44,9 +61,9 @@ const ManageSubjectCard = ({ subject, onSelect, onDeleteClick }) => {
               iconOnly
               onClick={(event) => {
                 event.stopPropagation();
-                onDeleteClick(subject);
+                onDeleteClick(item);
               }}
-              title={`Delete ${subject.name}`}
+              title={`Delete ${name}`}
               className="h-10 w-10 sm:h-11 sm:w-11"
             />
 
@@ -60,4 +77,4 @@ const ManageSubjectCard = ({ subject, onSelect, onDeleteClick }) => {
   );
 };
 
-export default ManageSubjectCard;
+export default ManageItemCard;
