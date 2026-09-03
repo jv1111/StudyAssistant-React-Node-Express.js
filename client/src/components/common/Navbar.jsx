@@ -39,6 +39,7 @@ function Navigation() {
   const isQuizSection =
     location.pathname.startsWith("/quiz/") &&
     !location.pathname.startsWith("/quiz/create") &&
+    !location.pathname.startsWith("/quiz/manage") &&
     !location.pathname.startsWith("/quiz/records");
 
   const quizzesActive = location.pathname === "/" || isQuizSection;
@@ -59,15 +60,15 @@ function Navigation() {
   };
 
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-border bg-surface/85 backdrop-blur-md select-none">
+    <nav className="sticky top-0 z-40 w-full select-none border-b border-border bg-surface/85 backdrop-blur-md">
       <div className="layout-container">
         <div className="flex h-16 items-center justify-between md:justify-start">
           <Link
             to="/"
-            className="flex items-center gap-2 text-xl font-extrabold tracking-tight text-foreground transition-opacity hover:opacity-90 outline-none focus:outline-none shrink-0"
+            className="flex shrink-0 items-center gap-2 text-xl font-extrabold tracking-tight text-foreground outline-none transition-opacity hover:opacity-90 focus:outline-none"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-light text-primary font-black text-base border border-primary/20">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/20 bg-primary-light text-base font-black text-primary">
               Q
             </span>
 
@@ -91,18 +92,18 @@ function Navigation() {
               </NavLink>
             )}
 
-            <NavLink to="/quiz/create" className={navLinkStyles}>
-              Create quiz
-            </NavLink>
-
             <NavLink to="/quiz/records" className={navLinkStyles}>
               Records
+            </NavLink>
+
+            <NavLink to="/quiz/manage" className={navLinkStyles}>
+              Manage quiz
             </NavLink>
           </div>
 
           <div className="ml-auto hidden md:block">
             <details ref={accountMenuRef} className="group relative">
-              <summary className="flex cursor-pointer list-none items-center gap-2 rounded-xl border border-border bg-background-secondary px-3.5 py-1.5 text-sm font-semibold text-foreground transition-all hover:border-border-hover hover:bg-surface outline-none focus:outline-none select-none">
+              <summary className="flex cursor-pointer list-none select-none items-center gap-2 rounded-xl border border-border bg-background-secondary px-3.5 py-1.5 text-sm font-semibold text-foreground outline-none transition-all hover:border-border-hover hover:bg-surface focus:outline-none">
                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                   A
                 </div>
@@ -114,11 +115,11 @@ function Navigation() {
                 </span>
               </summary>
 
-              <div className="absolute right-0 top-full z-50 mt-2 w-48 rounded-xl border border-border bg-surface p-1.5 shadow-(--shadow-card) animate-in fade-in zoom-in-95 duration-100">
+              <div className="absolute right-0 top-full z-50 mt-2 w-48 animate-in rounded-xl border border-border bg-surface p-1.5 shadow-(--shadow-card) fade-in zoom-in-95 duration-100">
                 <Link
                   to="/profile"
                   onClick={closeAccountMenu}
-                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-primary-light hover:text-primary outline-none focus:outline-none"
+                  className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-foreground outline-none transition-colors hover:bg-primary-light hover:text-primary focus:outline-none"
                 >
                   <Person size={16} />
                   <span>Profile</span>
@@ -132,7 +133,7 @@ function Navigation() {
                     closeAccountMenu();
                     logoutHandler();
                   }}
-                  className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-muted transition-colors hover:bg-danger/10 hover:text-danger outline-none focus:outline-none"
+                  className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium text-muted outline-none transition-colors hover:bg-danger/10 hover:text-danger focus:outline-none"
                 >
                   <BoxArrowRight size={16} />
                   <span>Logout</span>
@@ -146,7 +147,7 @@ function Navigation() {
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-border bg-background-secondary text-foreground transition-all hover:bg-surface active:scale-95 outline-none focus:outline-none md:hidden"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-border bg-background-secondary text-foreground outline-none transition-all hover:bg-surface focus:outline-none active:scale-95 md:hidden"
           >
             {isMenuOpen ? <X size={22} /> : <List size={22} />}
           </button>
@@ -158,7 +159,7 @@ function Navigation() {
               {isQuizSection ? (
                 <button
                   type="button"
-                  className={`${quizzesClassName} text-left w-full`}
+                  className={`${quizzesClassName} w-full text-left`}
                   onClick={handleQuizzesClick}
                 >
                   Quizzes
@@ -174,19 +175,19 @@ function Navigation() {
               )}
 
               <NavLink
-                to="/quiz/create"
-                className={navLinkStyles}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Create quiz
-              </NavLink>
-
-              <NavLink
                 to="/quiz/records"
                 className={navLinkStyles}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Records
+              </NavLink>
+
+              <NavLink
+                to="/quiz/manage"
+                className={navLinkStyles}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Manage quiz
               </NavLink>
 
               <div className="my-2 h-px bg-border" />
@@ -208,7 +209,7 @@ function Navigation() {
                   setIsMenuOpen(false);
                   logoutHandler();
                 }}
-                className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3.5 py-2 text-left text-sm font-semibold text-muted transition-colors hover:bg-danger/10 hover:text-danger outline-none focus:outline-none"
+                className="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3.5 py-2 text-left text-sm font-semibold text-muted outline-none transition-colors hover:bg-danger/10 hover:text-danger focus:outline-none"
               >
                 <BoxArrowRight size={18} />
                 <span>Logout</span>

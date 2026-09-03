@@ -7,15 +7,15 @@ const Card = ({
   return (
     <div
       className={`
-        ${width} 
-        rounded-card 
-        border border-border/80 
+        ${width}
+        rounded-card
+        border border-border/80
         bg-surface
-        p-6 
-        shadow-(--shadow-card) 
-        transition-all 
+        p-5
+        shadow-(--shadow-card)
+        transition-all
         duration-200
-        ${hoverable ? "hover:border-border hover:shadow-md hover:-translate-y-0.5" : ""} 
+        ${hoverable ? "hover:-translate-y-0.5 hover:border-border hover:shadow-md" : ""}
         ${className}
       `}
     >

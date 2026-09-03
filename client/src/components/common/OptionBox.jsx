@@ -12,6 +12,7 @@ const OptionBox = ({
   onSelect,
   onClose,
   closeLabel = "Cancel",
+  closeVariant = "danger",
   showCancel = true,
   cardClassName = "max-w-md",
 }) => {
@@ -38,7 +39,7 @@ const OptionBox = ({
           ))}
 
           {showCancel && (
-            <Button type="button" variant="danger" onClick={onClose}>
+            <Button type="button" variant={closeVariant} onClick={onClose}>
               {closeLabel}
             </Button>
           )}

@@ -119,6 +119,20 @@ const updateQuiz = asyncHandler(async (req, res) => {
   successResponse(res, 200, createQuizResponse(result));
 });
 
+const deleteSubject = asyncHandler(async (req, res) => {
+  const { subjectId } = req.params;
+
+  const result = await quizService.deleteSubject(req.user._id, subjectId);
+
+  successResponse(res, 200, result);
+});
+
+const deleteAllSubjects = asyncHandler(async (req, res) => {
+  const result = await quizService.deleteAllSubjects(req.user._id);
+
+  successResponse(res, 200, result);
+});
+
 const downloadPdf = asyncHandler(async (req, res) => {
   const { quizId } = req.params;
 
@@ -144,6 +158,8 @@ module.exports = {
   getQuizById,
   getItems,
   updateQuiz,
+  deleteSubject,
+  deleteAllSubjects,
   previewQuiz,
   downloadPdf,
 };

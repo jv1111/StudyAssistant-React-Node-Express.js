@@ -84,7 +84,7 @@ const QuizPage = () => {
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <Card className="card-base flex flex-col gap-6">
+          <Card className="flex flex-col gap-6">
             <div className="flex items-start gap-3">
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-light text-sm font-bold text-primary">
                 {currentIndex + 1}
@@ -105,7 +105,6 @@ const QuizPage = () => {
               <div className="flex flex-col gap-3">
                 {choices.map((choice, optionIndex) => {
                   const letterLabel = String.fromCharCode(65 + optionIndex);
-
                   const isSelected = selectedChoice === choice;
 
                   return (
@@ -124,16 +123,14 @@ const QuizPage = () => {
             )}
 
             {quiz.quizType === "enumeration" && (
-              <div>
-                <input
-                  type="text"
-                  value={selectedChoice || ""}
-                  onChange={(event) => handleSelectOption(event.target.value)}
-                  placeholder="Enter your answer..."
-                  className="w-full rounded-lg border border-border bg-background-secondary px-4 py-3 text-foreground outline-none focus:border-primary"
-                  disabled={isSubmitting}
-                />
-              </div>
+              <input
+                type="text"
+                value={selectedChoice || ""}
+                onChange={(event) => handleSelectOption(event.target.value)}
+                placeholder="Enter your answer..."
+                className="w-full rounded-lg border border-border bg-background-secondary px-4 py-3 text-foreground outline-none focus:border-primary"
+                disabled={isSubmitting}
+              />
             )}
 
             <div className="flex items-center justify-between gap-4 border-t border-border/80 pt-5">
@@ -151,7 +148,7 @@ const QuizPage = () => {
                 icon={ArrowRightShort}
                 fit
                 disabled={!selectedChoice || isSubmitting}
-                onClick={() => handleSubmitAnswer()}
+                onClick={handleSubmitAnswer}
                 className="px-8"
               >
                 {isSubmitting ? "Submitting..." : "Submit Answer"}
@@ -160,8 +157,8 @@ const QuizPage = () => {
           </Card>
         </div>
 
-        <aside className="flex flex-col gap-4 lg:col-span-1">
-          <Card className="card-base flex flex-col gap-2 border-l-4 border-l-primary p-5">
+        <aside className="flex flex-col gap-4">
+          <Card className="flex flex-col gap-2 border-l-4 border-l-primary">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-muted">
                 Time Remaining
@@ -179,7 +176,7 @@ const QuizPage = () => {
             </p>
           </Card>
 
-          <Card className="card-base flex flex-col gap-3 p-5">
+          <Card className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-muted">
                 Current Score
@@ -209,7 +206,7 @@ const QuizPage = () => {
             </div>
           </Card>
 
-          <Card className="card-base flex flex-col gap-3 p-5">
+          <Card className="flex flex-col gap-3">
             <span className="text-xs font-bold uppercase tracking-wider text-muted">
               Quiz Controls
             </span>

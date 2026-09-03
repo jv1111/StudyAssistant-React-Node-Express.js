@@ -374,6 +374,45 @@ const updateQuiz = async (quizId, userId, subject, quizName, items) => {
   return updatedQuiz;
 };
 
+const deleteSubject = async (userId, subjectId) => {
+  const subject = await Subject.findOne({
+    _id: subjectId,
+    userId,
+  });
+
+  if (!subject) {
+    throw new AppError("Subject not found", 404);
+  }
+
+  await Quiz.deleteMany({
+    userId,
+    subjectId,
+  });
+
+  await Subject.deleteOne({
+    _id: subjectId,
+    userId,
+  });
+
+  return {
+    message: "Subject deleted successfully",
+  };
+};
+
+const deleteAllSubjects = async (userId) => {
+  await Quiz.deleteMany({
+    userId,
+  });
+
+  await Subject.deleteMany({
+    userId,
+  });
+
+  return {
+    message: "All subjects deleted successfully",
+  };
+};
+
 const validateQuizInput = (subject, quizName, items) => {
   if (!subject || !subject.trim()) {
     throw new AppError("Subject is required", 400);
@@ -437,5 +476,7 @@ module.exports = {
   getQuizById,
   getItems,
   updateQuiz,
+  deleteSubject,
+  deleteAllSubjects,
   downloadPdf,
 };

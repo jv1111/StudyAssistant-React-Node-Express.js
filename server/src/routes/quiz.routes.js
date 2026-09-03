@@ -16,6 +16,10 @@ router.post("/createMany", quizController.createManyQuizzes);
 
 router.get("/subjectsList", quizController.getSubjects);
 
+router.delete("/subjects", quizController.deleteAllSubjects);
+
+router.delete("/subjects/:subjectId", quizController.deleteSubject);
+
 router.get("/quizList", quizController.getQuizzes);
 
 router.put("/saveData", quizController.saveData);

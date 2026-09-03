@@ -3,6 +3,8 @@ import ProfilePage from "../pages/profile/ProfilePage";
 import CreateQuizPage from "../pages/quiz/CreateQuizPage";
 import QuizPreviewPage from "../pages/quiz/QuizPreviewPage";
 import UpdateQuizPage from "../pages/quiz/UpdateQuizPage";
+import ManageSubjectsPage from "../pages/quiz/ManageSubjectsPage";
+import ManageQuizzesPage from "../pages/quiz/ManageQuizzesPage";
 import RecordsPage from "../pages/records/RecordsPage";
 import RecordPage from "../pages/records/RecordPage";
 import QuizzesPage from "../pages/quiz/QuizzesPage";
@@ -39,6 +41,10 @@ export const appRoutes = {
               element: <QuizPreviewPage />,
             },
             {
+              path: "manage",
+              element: <ManageSubjectsPage />,
+            },
+            {
               path: "update/:quizId",
               element: <UpdateQuizPage />,
             },
@@ -49,6 +55,10 @@ export const appRoutes = {
             {
               path: "records/:recordId",
               element: <RecordPage />,
+            },
+            {
+              path: "subjects/:subjectId",
+              element: <ManageQuizzesPage />,
             },
             {
               path: ":subjectId",

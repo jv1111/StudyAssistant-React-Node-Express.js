@@ -100,6 +100,18 @@ const updateQuiz = async (quizId, subject, quizName, items) => {
   return response.data;
 };
 
+const deleteSubject = async (subjectId) => {
+  const response = await api.delete(`/quiz/subjects/${subjectId}`);
+
+  return response.data;
+};
+
+const deleteAllSubjects = async () => {
+  const response = await api.delete("/quiz/subjects");
+
+  return response.data;
+};
+
 const downloadPdf = async (quizId) => {
   const response = await api.get(`/quiz/${quizId}/pdf`, {
     responseType: "blob",
@@ -119,5 +131,7 @@ export {
   deleteSavedData,
   getItemsApi,
   updateQuiz,
+  deleteSubject,
+  deleteAllSubjects,
   downloadPdf,
 };
