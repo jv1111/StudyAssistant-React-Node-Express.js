@@ -98,7 +98,8 @@ const QuizzesPage = () => {
         countLabel: "Question",
         badge: null,
         getDescription: () => "Choose a quiz and test your knowledge.",
-        getSecondaryContent: () => null,
+        getSecondaryContent: (item) =>
+          item.subjectId?.name || "Unknown Subject",
       }
     : {
         getName: (item) => item.name,
@@ -127,7 +128,7 @@ const QuizzesPage = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <header className="app-header">
         <div className="flex items-end gap-3">
           {isQuizMode && (
             <button

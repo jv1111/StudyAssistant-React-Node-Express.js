@@ -107,6 +107,10 @@
   --radius-input: 0.75rem;
 }
 
+@utility app-header {
+  @apply mb-6 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between;
+}
+
 @layer base {
   *,
   *::before,

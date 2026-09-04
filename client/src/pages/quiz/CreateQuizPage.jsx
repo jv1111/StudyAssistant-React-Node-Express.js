@@ -174,7 +174,7 @@ const CreateQuizPage = () => {
     <div className="flex h-full flex-col">
       {!shouldHideEditor && (
         <>
-          <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <header className="app-header">
             <AppHeaderContent
               eyebrow="Quiz Builder"
               title="Create New Quiz"

@@ -201,7 +201,7 @@ const ManageQuizzesPage = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="mb-6 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <header className="app-header">
         <AppHeaderContent
           eyebrow="Administration"
           title="Manage Quizzes"
