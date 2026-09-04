@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash, Collection, ArrowLeft } from "react-bootstrap-icons";
+import {
+  Trash,
+  Collection,
+  ArrowLeft,
+  Book,
+  JournalBookmark,
+} from "react-bootstrap-icons";
 
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
@@ -8,7 +14,8 @@ import GlassScrollableList from "../../components/common/GlassScrollableList";
 import Button from "../../components/common/Button";
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
-import ManageItemCard from "../../components/quiz/ManageItemCard.jsx";
+import Badge from "../../components/common/Badge.jsx";
+import QuizItemCard from "../../components/quiz/QuizItemCard.jsx";
 
 import useSubjects from "../../hooks/quiz/useSubjects";
 import useQuizzes from "../../hooks/quiz/useQuizzes";
@@ -18,9 +25,7 @@ const ManageQuizzesPage = () => {
 
   const [selectedSubject, setSelectedSubject] = useState(null);
 
-  const [deleteSubjectTarget, setDeleteSubjectTarget] = useState(null);
-  const [deleteQuizTarget, setDeleteQuizTarget] = useState(null);
-
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
 
   const isQuizMode = Boolean(selectedSubject);
@@ -46,13 +51,9 @@ const ManageQuizzesPage = () => {
   } = useQuizzes(selectedSubject?._id);
 
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
-
   const items = isQuizMode ? quizzes : subjects;
-
   const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
-
   const handleSearch = isQuizMode ? handleQuizSearch : handleSubjectSearch;
-
   const handleScroll = isQuizMode ? handleQuizScroll : handleSubjectScroll;
 
   const handleCreateQuiz = () => {
@@ -71,20 +72,12 @@ const ManageQuizzesPage = () => {
     setSelectedSubject(null);
   };
 
-  const handleOpenDeleteSubject = (subject) => {
-    setDeleteSubjectTarget(subject);
+  const handleOpenDelete = (item) => {
+    setDeleteTarget(item);
   };
 
-  const handleCloseDeleteSubject = () => {
-    setDeleteSubjectTarget(null);
-  };
-
-  const handleOpenDeleteQuiz = (quiz) => {
-    setDeleteQuizTarget(quiz);
-  };
-
-  const handleCloseDeleteQuiz = () => {
-    setDeleteQuizTarget(null);
+  const handleCloseDelete = () => {
+    setDeleteTarget(null);
   };
 
   const handleOpenDeleteAll = () => {
@@ -95,29 +88,24 @@ const ManageQuizzesPage = () => {
     setShowDeleteAllModal(false);
   };
 
-  const handleConfirmDeleteSubject = async () => {
-    if (!deleteSubjectTarget) {
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) {
       return;
     }
 
     try {
-      await handleDeleteSubject(deleteSubjectTarget._id);
-      handleCloseDeleteSubject();
-    } catch (error) {
-      console.error("Failed to delete subject:", error);
-    }
-  };
+      if (isQuizMode) {
+        await handleDeleteQuiz(deleteTarget._id);
+      } else {
+        await handleDeleteSubject(deleteTarget._id);
+      }
 
-  const handleConfirmDeleteQuiz = async () => {
-    if (!deleteQuizTarget) {
-      return;
-    }
-
-    try {
-      await handleDeleteQuiz(deleteQuizTarget._id);
-      handleCloseDeleteQuiz();
+      handleCloseDelete();
     } catch (error) {
-      console.error("Failed to delete quiz:", error);
+      console.error(
+        `Failed to delete ${isQuizMode ? "quiz" : "subject"}:`,
+        error,
+      );
     }
   };
 
@@ -137,6 +125,67 @@ const ManageQuizzesPage = () => {
       );
     }
   };
+
+  const itemConfig = isQuizMode
+    ? {
+        onSelect: handleSelectQuiz,
+        onOptionClick: handleOpenDelete,
+        getName: (item) => item.quizName,
+        getCount: (item) => item.numberOfItems,
+        countLabel: "Question",
+        badge: null,
+        getDescription: () =>
+          "Review and update this quiz to keep its questions and content up to date.",
+        getSecondaryContent: (item) =>
+          item.subjectId?.name || "Unknown Subject",
+      }
+    : {
+        onSelect: handleSelectSubject,
+        onOptionClick: handleOpenDelete,
+        getName: (item) => item.name,
+        getCount: (item) => item.quizCount,
+        countLabel: "Quiz",
+        badge: (
+          <Badge icon={JournalBookmark} variant="primary" shape="pill">
+            Subject
+          </Badge>
+        ),
+        getDescription: (item) =>
+          item.description ||
+          "Explore quizzes, challenge your skills, and master this subject.",
+        getSecondaryContent: (item) =>
+          `Created ${new Date(item.createdAt).toLocaleDateString()}`,
+      };
+
+  const deleteConfig = isQuizMode
+    ? {
+        eyebrow: "DELETE QUIZ",
+        title: "Delete quiz?",
+        getDescription: (item) =>
+          `Are you sure you want to delete "${item.quizName}"? This action cannot be undone.`,
+      }
+    : {
+        eyebrow: "DELETE SUBJECT",
+        title: "Delete subject?",
+        getDescription: (item) =>
+          `Are you sure you want to delete "${item.name}"? This will also delete all quizzes under this subject.`,
+      };
+
+  const deleteAllConfig = isQuizMode
+    ? {
+        eyebrow: "DELETE ALL QUIZZES",
+        title: "Delete all quizzes?",
+        description:
+          "Are you sure you want to delete all quizzes in this subject? This action is permanent and cannot be undone.",
+        label: "Delete All Quizzes",
+      }
+    : {
+        eyebrow: "DELETE ALL SUBJECTS",
+        title: "Delete all subjects?",
+        description:
+          "Are you sure you want to delete all subjects? This will also delete all of your quizzes.",
+        label: "Delete All Subjects",
+      };
 
   if (isLoading) {
     return (
@@ -208,7 +257,7 @@ const ManageQuizzesPage = () => {
               onClick={handleOpenDeleteAll}
               className="w-full sm:w-auto"
             >
-              Delete All {isQuizMode ? "Quizzes" : "Subjects"}
+              {deleteAllConfig.label}
             </Button>
           )}
         </div>
@@ -218,20 +267,19 @@ const ManageQuizzesPage = () => {
         <GlassScrollableList onScroll={handleScroll}>
           {items.map((item) => (
             <li key={item._id} className="mb-3 w-full last:mb-0">
-              <ManageItemCard
-                item={item}
-                onSelect={isQuizMode ? handleSelectQuiz : handleSelectSubject}
-                onDeleteClick={
-                  isQuizMode ? handleOpenDeleteQuiz : handleOpenDeleteSubject
-                }
-                nameKey={isQuizMode ? "quizName" : "name"}
-                countKey={isQuizMode ? "numberOfItems" : "quizCount"}
-                countLabel={isQuizMode ? "Question" : "Quiz"}
-                secondaryContent={
-                  isQuizMode
-                    ? item.subjectId?.name || "Unknown Subject"
-                    : `Created ${new Date(item.createdAt).toLocaleDateString()}`
-                }
+              <QuizItemCard
+                name={itemConfig.getName(item)}
+                itemIcon={Book}
+                onSelect={() => itemConfig.onSelect(item)}
+                onOptionClick={() => itemConfig.onOptionClick(item)}
+                hasOption={true}
+                optionVariant="danger"
+                optionIcon={Trash}
+                count={itemConfig.getCount(item)}
+                countLabel={itemConfig.countLabel}
+                badge={itemConfig.badge}
+                description={itemConfig.getDescription(item)}
+                secondaryContent={itemConfig.getSecondaryContent(item)}
               />
             </li>
           ))}
@@ -254,16 +302,14 @@ const ManageQuizzesPage = () => {
         </div>
       )}
 
-      {/* Delete Subject */}
+      {/* Delete Item */}
       <OptionBox
-        isOpen={Boolean(deleteSubjectTarget)}
-        onClose={handleCloseDeleteSubject}
-        eyebrow="DELETE SUBJECT"
-        title="Delete subject?"
+        isOpen={Boolean(deleteTarget)}
+        onClose={handleCloseDelete}
+        eyebrow={deleteConfig.eyebrow}
+        title={deleteConfig.title}
         description={
-          deleteSubjectTarget
-            ? `Are you sure you want to delete "${deleteSubjectTarget.name}"? This will also delete all quizzes under this subject.`
-            : ""
+          deleteTarget ? deleteConfig.getDescription(deleteTarget) : ""
         }
         options={[
           {
@@ -272,30 +318,7 @@ const ManageQuizzesPage = () => {
             variant: "danger",
           },
         ]}
-        onSelect={handleConfirmDeleteSubject}
-        closeLabel="Cancel"
-        closeVariant="secondary"
-      />
-
-      {/* Delete Quiz */}
-      <OptionBox
-        isOpen={Boolean(deleteQuizTarget)}
-        onClose={handleCloseDeleteQuiz}
-        eyebrow="DELETE QUIZ"
-        title="Delete quiz?"
-        description={
-          deleteQuizTarget
-            ? `Are you sure you want to delete "${deleteQuizTarget.quizName}"? This action cannot be undone.`
-            : ""
-        }
-        options={[
-          {
-            label: "Yes",
-            value: "yes",
-            variant: "danger",
-          },
-        ]}
-        onSelect={handleConfirmDeleteQuiz}
+        onSelect={handleConfirmDelete}
         closeLabel="Cancel"
         closeVariant="secondary"
       />
@@ -304,13 +327,9 @@ const ManageQuizzesPage = () => {
       <OptionBox
         isOpen={showDeleteAllModal}
         onClose={handleCloseDeleteAll}
-        eyebrow={isQuizMode ? "DELETE ALL QUIZZES" : "DELETE ALL SUBJECTS"}
-        title={isQuizMode ? "Delete all quizzes?" : "Delete all subjects?"}
-        description={
-          isQuizMode
-            ? "Are you sure you want to delete all quizzes in this subject? This action is permanent and cannot be undone."
-            : "Are you sure you want to delete all subjects? This will also delete all of your quizzes."
-        }
+        eyebrow={deleteAllConfig.eyebrow}
+        title={deleteAllConfig.title}
+        description={deleteAllConfig.description}
         options={[
           {
             label: "Yes",

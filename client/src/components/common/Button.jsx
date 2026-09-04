@@ -24,19 +24,23 @@ const Button = ({
             } items-center justify-center rounded-(--radius-input) px-5 text-sm font-bold transition-all duration-200 cursor-pointer active:scale-[0.99] disabled:cursor-not-allowed disabled:pointer-events-auto disabled:active:scale-100`;
 
   const variants = {
-    // Primary: keeps a faint gold/primary tint with a clean diagonal hatch/pattern feel, distinct from secondary
+    // Primary
     primary:
       "bg-primary text-white shadow-(--shadow-button) hover:bg-primary-hover border border-primary/20 disabled:bg-[linear-gradient(45deg,var(--color-primary-light)_25%,transparent_25%,transparent_50%,var(--color-primary-light)_50%,var(--color-primary-light)_75%,transparent_75%,transparent)] disabled:bg-[length:16px_16px] disabled:bg-background-secondary disabled:text-primary/50 disabled:border-primary/20 disabled:shadow-none disabled:hover:bg-background-secondary",
 
-    // Secondary: standard warm recessed neutral look, now with a prominent tint on hover similar to danger
+    // Secondary
     secondary:
       "border border-border bg-background-secondary text-foreground hover:bg-foreground/10 hover:border-foreground/20 disabled:bg-background-secondary/60 disabled:text-muted/70 disabled:border-border/60 disabled:hover:bg-background-secondary/90 disabled:hover:border-border",
 
-    // Danger: keeps a subtle red-tinted stripe/hatch pattern so it distinctively looks like a disabled danger action
+    // Danger
     danger:
       "border border-danger/20 bg-danger/10 text-danger hover:bg-danger/20 disabled:bg-[linear-gradient(45deg,rgba(220,38,38,0.04)_25%,transparent_25%,transparent_50%,rgba(220,38,38,0.04)_50%,rgba(220,38,38,0.04)_75%,transparent_75%,transparent)] disabled:bg-[length:16px_16px] disabled:bg-background-secondary disabled:text-danger/40 disabled:border-danger/15 disabled:shadow-none disabled:hover:bg-background-secondary",
 
-    // Ghost: clean and minimal
+    // Success
+    success:
+      "border border-success/20 bg-success/10 text-success hover:bg-success/20 disabled:bg-[linear-gradient(45deg,rgba(22,163,74,0.04)_25%,transparent_25%,transparent_50%,rgba(22,163,74,0.04)_50%,rgba(22,163,74,0.04)_75%,transparent_75%,transparent)] disabled:bg-[length:16px_16px] disabled:bg-background-secondary disabled:text-success/40 disabled:border-success/15 disabled:shadow-none disabled:hover:bg-background-secondary",
+
+    // Ghost
     ghost:
       "border-transparent bg-transparent text-muted hover:bg-primary-light hover:text-primary disabled:bg-transparent disabled:text-muted/40 disabled:hover:bg-background-secondary/40 disabled:hover:text-muted/60",
 
@@ -57,7 +61,7 @@ const Button = ({
         title={title}
         aria-disabled={disabled}
       >
-        {Icon && <Icon size={iconOnly ? 16 : 16} />}
+        {Icon && <Icon size={16} />}
         {children}
       </a>
     );
@@ -71,7 +75,7 @@ const Button = ({
       title={title}
       className={buttonClassName}
     >
-      {Icon && <Icon size={iconOnly ? 16 : 16} />}
+      {Icon && <Icon size={16} />}
       {!iconOnly && children}
     </button>
   );

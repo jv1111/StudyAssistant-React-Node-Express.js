@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { saveAs } from "file-saver";
+import { Book, Download, JournalBookmark } from "react-bootstrap-icons";
 
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
-import SubjectCard from "../../components/quiz/SubjectCard";
-import QuizCardContent from "../../components/quiz/QuizCardContent";
+import QuizItemCard from "../../components/quiz/QuizItemCard";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import SearchInput from "../../components/common/SearchInput";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
 import LoadingPage from "../common/LoadingPage";
+import Badge from "../../components/common/Badge";
 
 import useSubjects from "../../hooks/quiz/useSubjects";
 import useQuizzes from "../../hooks/quiz/useQuizzes";
@@ -60,17 +61,15 @@ const QuizzesPage = () => {
     setSelectedQuiz(null);
   };
 
-  const handleQuizSelect = (quizId) => {
-    setSelectedQuiz(quizId);
+  const handleSelectQuiz = (quiz) => {
+    setSelectedQuiz(quiz._id);
   };
 
   const handleQuizOptionClose = () => {
     setSelectedQuiz(null);
   };
 
-  const handleDownloadPdf = async (event, quizId) => {
-    event.stopPropagation();
-
+  const handleDownloadPdf = async (quizId) => {
     try {
       const response = await downloadPdf(quizId);
 
@@ -84,6 +83,40 @@ const QuizzesPage = () => {
       console.error("Failed to download quiz PDF:", error);
     }
   };
+
+  const itemConfig = isQuizMode
+    ? {
+        getName: (item) => item.quizName,
+        itemIcon: Book,
+        onSelect: (item) => handleSelectQuiz(item),
+        hasOption: true,
+        onOptionClick: (item) => handleDownloadPdf(item._id),
+        optionVariant: "success",
+        optionIcon: Download,
+        optionTitle: "Download quiz PDF",
+        getCount: (item) => item.numberOfItems,
+        countLabel: "Question",
+        badge: null,
+        getDescription: () => "Choose a quiz and test your knowledge.",
+        getSecondaryContent: () => null,
+      }
+    : {
+        getName: (item) => item.name,
+        itemIcon: JournalBookmark,
+        onSelect: (item) => handleSelectSubject(item),
+        hasOption: false,
+        getCount: (item) => item.quizCount,
+        countLabel: "Quiz",
+        badge: (
+          <Badge icon={JournalBookmark} variant="primary" shape="pill">
+            Subject
+          </Badge>
+        ),
+        getDescription: (item) =>
+          item.description ||
+          "Browse quizzes, challenge your skills, and test your knowledge.",
+        getSecondaryContent: () => null,
+      };
 
   if (isLoading) {
     return <LoadingPage />;
@@ -130,19 +163,22 @@ const QuizzesPage = () => {
       {items.length > 0 ? (
         <GlassScrollableList onScroll={handleScroll}>
           {items.map((item) => (
-            <li key={item._id} className="w-full">
-              {isQuizMode ? (
-                <QuizCardContent
-                  quiz={item}
-                  onSelect={handleQuizSelect}
-                  onDownload={handleDownloadPdf}
-                />
-              ) : (
-                <SubjectCard
-                  subject={item}
-                  onSelect={() => handleSelectSubject(item)}
-                />
-              )}
+            <li key={item._id} className="mb-3 w-full last:mb-0">
+              <QuizItemCard
+                name={itemConfig.getName(item)}
+                itemIcon={itemConfig.itemIcon}
+                onSelect={() => itemConfig.onSelect(item)}
+                onOptionClick={() => itemConfig.onOptionClick?.(item)}
+                hasOption={itemConfig.hasOption}
+                optionVariant={itemConfig.optionVariant}
+                optionIcon={itemConfig.optionIcon}
+                optionTitle={itemConfig.optionTitle}
+                count={itemConfig.getCount(item)}
+                countLabel={itemConfig.countLabel}
+                badge={itemConfig.badge}
+                description={itemConfig.getDescription(item)}
+                secondaryContent={itemConfig.getSecondaryContent(item)}
+              />
             </li>
           ))}
         </GlassScrollableList>
