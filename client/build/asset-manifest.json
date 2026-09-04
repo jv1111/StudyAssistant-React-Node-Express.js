@@ -6,8 +6,5 @@
     "static/media/profile.png": "/static/media/profile.216c8446369c93d1905d.png",
     "index.html": "/index.html"
   },
-  "entrypoints": [
-    "static/css/main.2ef2b965.css",
-    "static/js/main.f8b8a1ef.js"
-  ]
+  "entrypoints": ["static/css/main.2ef2b965.css", "static/js/main.f8b8a1ef.js"]
 }
