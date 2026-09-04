@@ -1,37 +1,28 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
 import useDeferredLoading from "../common/useDeferredLoading";
 
-import { getRecordsBySubject } from "../../api/quiz/quizRecord.api";
+import { getRecordedSubjects } from "../../api/quiz/quizRecord.api";
 
 import infinitScroller from "../../helper/infinitScroller";
 
-const useRecords = (subjectId) => {
-  const [records, setRecords] = useState([]);
+const useRecordedSubjects = () => {
+  const [subjects, setSubjects] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
   const searchVal = useDebounce(searchInput, 400);
 
-  const queryParams = useMemo(
-    () => ({
-      subjectId,
-    }),
-    [subjectId],
-  );
-
-  const getRecordsData = useCallback(
-    ({ subjectId, searchVal, skipCount }) =>
-      getRecordsBySubject(subjectId, searchVal, skipCount),
+  const getRecordedSubjectsData = useCallback(
+    ({ searchVal, skipCount }) => getRecordedSubjects(searchVal, skipCount),
     [],
   );
 
   const { isLoading, setSkipCount } = useItemFetcher(
-    setRecords,
+    setSubjects,
     searchVal,
-    getRecordsData,
-    queryParams,
+    getRecordedSubjectsData,
   );
 
   const showLoading = useDeferredLoading(isLoading, 200);
@@ -41,11 +32,11 @@ const useRecords = (subjectId) => {
   };
 
   const handleScroll = (event) => {
-    infinitScroller(event, records, setSkipCount);
+    infinitScroller(event, subjects, setSkipCount);
   };
 
   return {
-    records,
+    subjects,
     isLoading: showLoading,
     searchInput,
     handleSearch,
@@ -53,4 +44,4 @@ const useRecords = (subjectId) => {
   };
 };
 
-export default useRecords;
+export default useRecordedSubjects;

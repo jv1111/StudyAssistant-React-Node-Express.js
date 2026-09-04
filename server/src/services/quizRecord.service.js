@@ -30,7 +30,7 @@ const saveRecord = async (session, quiz) => {
   });
 };
 
-const getRecordedSubjects = async (userId, searchQuery) => {
+const getRecordedSubjects = async (userId, searchQuery, skipCount = 0) => {
   const match = {
     userId,
   };
@@ -40,6 +40,8 @@ const getRecordedSubjects = async (userId, searchQuery) => {
       $regex: new RegExp(searchQuery, "i"),
     };
   }
+
+  const { skip, limit } = getPagination(skipCount);
 
   return QuizRecord.aggregate([
     { $match: match },
@@ -51,6 +53,8 @@ const getRecordedSubjects = async (userId, searchQuery) => {
       },
     },
     { $sort: { name: 1 } },
+    { $skip: skip },
+    { $limit: limit },
   ]);
 };
 

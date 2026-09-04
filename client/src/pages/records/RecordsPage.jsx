@@ -9,25 +9,25 @@ import LoadingPage from "../common/LoadingPage";
 import Badge from "../../components/common/Badge";
 import AppHeader from "../../components/common/AppHeader";
 
+import useRecordedSubjects from "../../hooks/records/useRecordedSubjects";
 import useRecords from "../../hooks/records/useRecords";
 
 const RecordsPage = () => {
   const navigate = useNavigate();
-
   const [selectedSubject, setSelectedSubject] = useState(null);
 
   const isRecordMode = Boolean(selectedSubject);
 
   const {
-    records: subjects,
+    subjects = [],
     isLoading: isSubjectsLoading,
     searchInput: subjectSearchInput,
     handleSearch: handleSubjectSearch,
     handleScroll: handleSubjectScroll,
-  } = useRecords();
+  } = useRecordedSubjects();
 
   const {
-    records,
+    records = [],
     isLoading: isRecordsLoading,
     searchInput: recordSearchInput,
     handleSearch: handleRecordSearch,
@@ -36,7 +36,7 @@ const RecordsPage = () => {
 
   const isLoading = isRecordMode ? isRecordsLoading : isSubjectsLoading;
 
-  const items = isRecordMode ? records : subjects;
+  const items = isRecordMode ? (records ?? []) : (subjects ?? []);
 
   const searchInput = isRecordMode ? recordSearchInput : subjectSearchInput;
 
@@ -53,6 +53,11 @@ const RecordsPage = () => {
   };
 
   const handleSelectRecord = (record) => {
+    if (!record._id) {
+      console.error("Record is missing _id:", record);
+      return;
+    }
+
     navigate(`/quiz/records/${record._id}`);
   };
 
@@ -61,7 +66,6 @@ const RecordsPage = () => {
         getName: (item) => item.quizName,
         itemIcon: FileEarmarkText,
         onSelect: handleSelectRecord,
-        hasOption: false,
         getCount: (item) => item.numberOfItems,
         countLabel: "Question",
         getBadge: (item) => (
@@ -82,7 +86,6 @@ const RecordsPage = () => {
         getName: (item) => item.name,
         itemIcon: JournalBookmark,
         onSelect: handleSelectSubject,
-        hasOption: false,
         getCount: (item) => item.recordCount,
         countLabel: "Record",
         getBadge: () => (
@@ -143,11 +146,7 @@ const RecordsPage = () => {
                   name={itemConfig.getName(item)}
                   itemIcon={itemConfig.itemIcon}
                   onSelect={() => itemConfig.onSelect(item)}
-                  hasOption={itemConfig.hasOption}
-                  onOptionClick={() => itemConfig.onOptionClick?.(item)}
-                  optionVariant={itemConfig.optionVariant}
-                  optionIcon={itemConfig.optionIcon}
-                  optionTitle={itemConfig.optionTitle}
+                  hasOption={false}
                   count={itemConfig.getCount(item)}
                   countLabel={itemConfig.countLabel}
                   badge={itemConfig.getBadge(item)}

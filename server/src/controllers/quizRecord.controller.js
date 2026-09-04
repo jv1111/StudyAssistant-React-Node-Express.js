@@ -12,11 +12,12 @@ const saveRecord = asyncHandler(async (req, res) => {
 });
 
 const getRecordedSubjects = asyncHandler(async (req, res) => {
-  const { searchQuery } = req.query;
+  const { searchQuery, skipCount } = req.query;
 
   const subjects = await quizRecordService.getRecordedSubjects(
     req.user._id,
     searchQuery,
+    skipCount,
   );
 
   successResponse(res, 200, subjects);
