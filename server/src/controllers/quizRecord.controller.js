@@ -1,7 +1,6 @@
 const quizRecordService = require("../services/quizRecord.service");
 
 const asyncHandler = require("../utils/asyncHandler");
-
 const { successResponse } = require("../utils/response");
 
 const saveRecord = asyncHandler(async (req, res) => {
@@ -12,11 +11,24 @@ const saveRecord = asyncHandler(async (req, res) => {
   successResponse(res, 201, record);
 });
 
-const getRecords = asyncHandler(async (req, res) => {
+const getRecordedSubjects = asyncHandler(async (req, res) => {
+  const { searchQuery } = req.query;
+
+  const subjects = await quizRecordService.getRecordedSubjects(
+    req.user._id,
+    searchQuery,
+  );
+
+  successResponse(res, 200, subjects);
+});
+
+const getRecordsBySubject = asyncHandler(async (req, res) => {
+  const { subjectId } = req.params;
   const { searchQuery, skipCount } = req.query;
 
-  const records = await quizRecordService.getRecords(
+  const records = await quizRecordService.getRecordsBySubject(
     req.user._id,
+    subjectId,
     searchQuery,
     skipCount,
   );
@@ -25,7 +37,7 @@ const getRecords = asyncHandler(async (req, res) => {
 });
 
 const getRecordByRecordId = asyncHandler(async (req, res) => {
-  const { recordId } = req.query;
+  const { recordId } = req.params;
 
   const record = await quizRecordService.getRecordByRecordId(
     req.user._id,
@@ -37,6 +49,7 @@ const getRecordByRecordId = asyncHandler(async (req, res) => {
 
 module.exports = {
   saveRecord,
-  getRecords,
+  getRecordedSubjects,
+  getRecordsBySubject,
   getRecordByRecordId,
 };

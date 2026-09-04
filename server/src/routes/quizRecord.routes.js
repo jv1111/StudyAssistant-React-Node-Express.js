@@ -10,8 +10,10 @@ router.use(verifyAuth);
 
 router.post("/save", quizRecordController.saveRecord);
 
-router.get("/list", quizRecordController.getRecords);
+router.get("/subjects", quizRecordController.getRecordedSubjects);
 
-router.get("/record", quizRecordController.getRecordByRecordId);
+router.get("/subjects/:subjectId", quizRecordController.getRecordsBySubject);
+
+router.get("/records/:recordId", quizRecordController.getRecordByRecordId);
 
 module.exports = router;

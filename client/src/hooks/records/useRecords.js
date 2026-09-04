@@ -4,19 +4,26 @@ import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
 import useDeferredLoading from "../common/useDeferredLoading";
 
-import { getRecords } from "../../api/quiz/quizRecord.api";
+import {
+  getRecordedSubjects,
+  getRecordsBySubject,
+} from "../../api/quiz/quizRecord.api";
+
 import infinitScroller from "../../helper/infinitScroller";
 
-const useRecords = () => {
+const useRecords = (subjectId = null) => {
   const [records, setRecords] = useState([]);
   const [searchInput, setSearchInput] = useState("");
 
   const searchVal = useDebounce(searchInput, 400);
 
+  const fetchRecords = subjectId ? getRecordsBySubject : getRecordedSubjects;
+
   const { isLoading, setSkipCount } = useItemFetcher(
     setRecords,
     searchVal,
-    getRecords,
+    fetchRecords,
+    subjectId,
   );
 
   const showLoading = useDeferredLoading(isLoading, 200);

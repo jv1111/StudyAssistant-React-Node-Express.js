@@ -1,64 +1,179 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { JournalBookmark, FileEarmarkText } from "react-bootstrap-icons";
 
 import EmptyState from "../../components/common/EmptyState";
-import QuizRecordCardContent from "../../components/quiz/QuizRecordCardContent";
-import Card from "../../components/common/Card";
-import AppHeaderContent from "../../components/common/AppHeaderContent";
-import SearchInput from "../../components/common/SearchInput";
-import LoadingPage from "../common/LoadingPage";
+import QuizItemCard from "../../components/quiz/QuizItemCard";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
+import LoadingPage from "../common/LoadingPage";
+import Badge from "../../components/common/Badge";
+import AppHeader from "../../components/common/AppHeader";
 
 import useRecords from "../../hooks/records/useRecords";
 
 const RecordsPage = () => {
   const navigate = useNavigate();
 
-  const { records, isLoading, searchInput, handleSearch, handleScroll } =
-    useRecords();
+  const [selectedSubject, setSelectedSubject] = useState(null);
+
+  const isRecordMode = Boolean(selectedSubject);
+
+  const {
+    records: subjects,
+    isLoading: isSubjectsLoading,
+    searchInput: subjectSearchInput,
+    handleSearch: handleSubjectSearch,
+    handleScroll: handleSubjectScroll,
+  } = useRecords();
+
+  const {
+    records,
+    isLoading: isRecordsLoading,
+    searchInput: recordSearchInput,
+    handleSearch: handleRecordSearch,
+    handleScroll: handleRecordScroll,
+  } = useRecords(selectedSubject?._id);
+
+  const isLoading = isRecordMode ? isRecordsLoading : isSubjectsLoading;
+
+  const items = isRecordMode ? records : subjects;
+
+  const searchInput = isRecordMode ? recordSearchInput : subjectSearchInput;
+
+  const handleSearch = isRecordMode ? handleRecordSearch : handleSubjectSearch;
+
+  const handleScroll = isRecordMode ? handleRecordScroll : handleSubjectScroll;
+
+  const handleSelectSubject = (subject) => {
+    setSelectedSubject(subject);
+  };
+
+  const handleBackToSubjects = () => {
+    setSelectedSubject(null);
+  };
+
+  const handleSelectRecord = (record) => {
+    navigate(`/quiz/records/${record._id}`);
+  };
+
+  const itemConfig = isRecordMode
+    ? {
+        getName: (item) => item.quizName,
+        itemIcon: FileEarmarkText,
+        onSelect: handleSelectRecord,
+        hasOption: false,
+        getCount: (item) => item.numberOfItems,
+        countLabel: "Question",
+        badge: (
+          <Badge variant="primary" shape="pill">
+            {itemConfig?.quizType === "enumeration"
+              ? "Enumeration"
+              : "Multiple Choice"}
+          </Badge>
+        ),
+        getDescription: () =>
+          "Review your answers, score, and performance from this quiz attempt.",
+        getSecondaryContent: (item) =>
+          item.completedAt
+            ? `Completed ${new Date(item.completedAt).toLocaleDateString()}`
+            : null,
+      }
+    : {
+        getName: (item) => item.name,
+        itemIcon: JournalBookmark,
+        onSelect: handleSelectSubject,
+        hasOption: false,
+        getCount: (item) => item.recordCount,
+        countLabel: "Record",
+        badge: (
+          <Badge icon={JournalBookmark} variant="primary" shape="pill">
+            Subject
+          </Badge>
+        ),
+        getDescription: () =>
+          "View your quiz records and track your performance in this subject.",
+        getSecondaryContent: () => null,
+      };
 
   if (isLoading) {
     return <LoadingPage />;
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="app-header">
-        <AppHeaderContent
-          eyebrow="History"
-          title="Quiz Records"
-          description="Review your past quiz performances and track your progress"
-        />
+    <div className="flex w-full flex-col">
+      <AppHeader
+        eyebrow="Overview"
+        title={isRecordMode ? selectedSubject.name : "Records"}
+        description={
+          isRecordMode
+            ? "Choose a quiz record to review your performance."
+            : "Browse your quiz records by subject."
+        }
+        leading={
+          isRecordMode && (
+            <button
+              type="button"
+              onClick={handleBackToSubjects}
+              className="mb-1 text-sm font-medium text-muted transition-colors hover:text-primary"
+            >
+              Subjects
+            </button>
+          )
+        }
+        searchValue={searchInput}
+        onSearch={handleSearch}
+        searchPlaceholder={
+          isRecordMode ? "Search records..." : "Search subjects..."
+        }
+      />
 
-        <div className="w-full shrink-0 sm:w-72 md:w-80">
-          <SearchInput
-            value={searchInput}
-            onChange={handleSearch}
-            placeholder="Search by quiz name..."
-          />
-        </div>
-      </header>
-
-      {records.length > 0 ? (
-        <GlassScrollableList onScroll={handleScroll}>
-          {records.map((record) => (
-            <li key={record._id} className="h-fit">
-              <Card className="group h-full transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
-                <QuizRecordCardContent
-                  record={record}
-                  onViewDetails={() => navigate(`/quiz/records/${record._id}`)}
-                />
-              </Card>
-            </li>
-          ))}
-        </GlassScrollableList>
-      ) : (
-        <div className="flex-1">
-          <EmptyState
-            title="No records found"
-            description="There are no quiz records matching your search. Try adjusting your query."
-          />
-        </div>
+      {isRecordMode && (
+        <div className="mb-5 w-full border-b border-border/90" />
       )}
+
+      <div className="mb-5 flex min-h-0 flex-1">
+        {items.length > 0 ? (
+          <GlassScrollableList onScroll={handleScroll}>
+            {items.map((item) => (
+              <li
+                key={item._id}
+                className="mb-3 flex w-full items-center justify-center last:mb-0"
+              >
+                <QuizItemCard
+                  name={itemConfig.getName(item)}
+                  itemIcon={itemConfig.itemIcon}
+                  onSelect={() => itemConfig.onSelect(item)}
+                  hasOption={itemConfig.hasOption}
+                  onOptionClick={() => itemConfig.onOptionClick?.(item)}
+                  optionVariant={itemConfig.optionVariant}
+                  optionIcon={itemConfig.optionIcon}
+                  optionTitle={itemConfig.optionTitle}
+                  count={itemConfig.getCount(item)}
+                  countLabel={itemConfig.countLabel}
+                  badge={itemConfig.badge}
+                  description={itemConfig.getDescription(item)}
+                  secondaryContent={itemConfig.getSecondaryContent(item)}
+                />
+              </li>
+            ))}
+          </GlassScrollableList>
+        ) : (
+          <div className="flex flex-1 items-center justify-center">
+            <EmptyState
+              title={
+                isRecordMode
+                  ? "No quiz records found"
+                  : "No recorded subjects found"
+              }
+              description={
+                isRecordMode
+                  ? "There are no quiz records matching your search."
+                  : "You do not have any quiz records yet."
+              }
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

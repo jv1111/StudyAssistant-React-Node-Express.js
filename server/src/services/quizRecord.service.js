@@ -20,6 +20,7 @@ const saveRecord = async (session, quiz) => {
     userId: session.userId,
     quizId: session.quizId,
     quizName: quiz.quizName,
+    subjectId: quiz.subjectId._id,
     subject: quiz.subjectId.name,
     quizType: session.quizType,
     score: session.score,
@@ -29,9 +30,39 @@ const saveRecord = async (session, quiz) => {
   });
 };
 
-const getRecords = async (userId, searchQuery, skipCount = 0) => {
+const getRecordedSubjects = async (userId, searchQuery) => {
+  const match = {
+    userId,
+  };
+
+  if (searchQuery) {
+    match.subject = {
+      $regex: new RegExp(searchQuery, "i"),
+    };
+  }
+
+  return QuizRecord.aggregate([
+    { $match: match },
+    {
+      $group: {
+        _id: "$subjectId",
+        name: { $first: "$subject" },
+        recordCount: { $sum: 1 },
+      },
+    },
+    { $sort: { name: 1 } },
+  ]);
+};
+
+const getRecordsBySubject = async (
+  userId,
+  subjectId,
+  searchQuery,
+  skipCount = 0,
+) => {
   const filter = {
     userId,
+    subjectId,
   };
 
   if (searchQuery) {
@@ -42,12 +73,10 @@ const getRecords = async (userId, searchQuery, skipCount = 0) => {
 
   const { skip, limit } = getPagination(skipCount);
 
-  const records = await QuizRecord.find(filter)
+  return QuizRecord.find(filter)
     .sort({ completedAt: -1 })
     .skip(skip)
     .limit(limit);
-
-  return records;
 };
 
 const getRecordByRecordId = async (userId, recordId) => {
@@ -65,6 +94,7 @@ const getRecordByRecordId = async (userId, recordId) => {
 
 module.exports = {
   saveRecord,
-  getRecords,
+  getRecordedSubjects,
+  getRecordsBySubject,
   getRecordByRecordId,
 };

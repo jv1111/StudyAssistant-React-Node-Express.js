@@ -1,7 +1,20 @@
 import api from "../axios";
 
-const getRecords = async ({ searchVal, skipCount = 0 }) => {
-  const response = await api.get("/quiz-record/list", {
+const getRecordedSubjects = async ({ searchVal }) => {
+  const response = await api.get("/quiz-record/subjects", {
+    params: {
+      searchQuery: searchVal,
+    },
+  });
+
+  return response.data;
+};
+
+const getRecordsBySubject = async (
+  subjectId,
+  { searchVal, skipCount = 0 } = {},
+) => {
+  const response = await api.get(`/quiz-record/subjects/${subjectId}`, {
     params: {
       searchQuery: searchVal,
       skipCount,
@@ -12,13 +25,9 @@ const getRecords = async ({ searchVal, skipCount = 0 }) => {
 };
 
 const getRecordByRecordId = async (recordId) => {
-  const response = await api.get("/quiz-record/record", {
-    params: {
-      recordId,
-    },
-  });
+  const response = await api.get(`/quiz-record/records/${recordId}`);
 
   return response.data;
 };
 
-export { getRecords, getRecordByRecordId };
+export { getRecordedSubjects, getRecordsBySubject, getRecordByRecordId };
