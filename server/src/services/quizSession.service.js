@@ -181,10 +181,16 @@ const formatQuizItemResponse = (quiz, session, currentQuizItem) => ({
   currentItem: session.currentItem,
   numberOfItems: quiz.numberOfItems,
   question: currentQuizItem.question,
+
   choices:
     session.quizType === "multiple_choice"
-      ? currentQuizItem.choices
+      ? currentQuizItem.choices.map((choice) =>
+          typeof choice === "object" && choice !== null
+            ? (choice.value ?? choice.answer ?? choice.text ?? choice.label)
+            : choice,
+        )
       : undefined,
+
   score: session.score,
   answeredItems: session.answeredItems,
   status: session.status,

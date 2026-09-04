@@ -5,8 +5,6 @@ const searchDelay = (setData, searchVal) => {
   clearTimeout(timeoutId);
 
   const newTimeout = setTimeout(() => {
-    // save function here
-    console.log("searching");
     setData(searchVal);
   }, 500);
   timeoutId = newTimeout;

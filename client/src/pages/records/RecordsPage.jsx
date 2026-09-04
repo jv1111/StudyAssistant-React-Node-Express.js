@@ -64,9 +64,9 @@ const RecordsPage = () => {
         hasOption: false,
         getCount: (item) => item.numberOfItems,
         countLabel: "Question",
-        badge: (
+        getBadge: (item) => (
           <Badge variant="primary" shape="pill">
-            {itemConfig?.quizType === "enumeration"
+            {item.quizType === "enumeration"
               ? "Enumeration"
               : "Multiple Choice"}
           </Badge>
@@ -85,7 +85,7 @@ const RecordsPage = () => {
         hasOption: false,
         getCount: (item) => item.recordCount,
         countLabel: "Record",
-        badge: (
+        getBadge: () => (
           <Badge icon={JournalBookmark} variant="primary" shape="pill">
             Subject
           </Badge>
@@ -150,7 +150,7 @@ const RecordsPage = () => {
                   optionTitle={itemConfig.optionTitle}
                   count={itemConfig.getCount(item)}
                   countLabel={itemConfig.countLabel}
-                  badge={itemConfig.badge}
+                  badge={itemConfig.getBadge(item)}
                   description={itemConfig.getDescription(item)}
                   secondaryContent={itemConfig.getSecondaryContent(item)}
                 />

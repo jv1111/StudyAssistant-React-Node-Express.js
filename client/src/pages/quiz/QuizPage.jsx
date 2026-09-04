@@ -105,16 +105,25 @@ const QuizPage = () => {
               <div className="flex flex-col gap-3">
                 {choices.map((choice, optionIndex) => {
                   const letterLabel = String.fromCharCode(65 + optionIndex);
-                  const isSelected = selectedChoice === choice;
+
+                  const choiceValue =
+                    typeof choice === "object" && choice !== null
+                      ? (choice.value ??
+                        choice.answer ??
+                        choice.text ??
+                        choice.label)
+                      : choice;
+
+                  const isSelected = selectedChoice === choiceValue;
 
                   return (
                     <SelectableOption
                       key={optionIndex}
                       selected={isSelected}
                       optionLabel={letterLabel}
-                      label={choice}
+                      label={choiceValue}
                       showSelectedIndicator
-                      onClick={() => handleSelectOption(choice)}
+                      onClick={() => handleSelectOption(choiceValue)}
                       className="min-h-16"
                     />
                   );
@@ -148,7 +157,7 @@ const QuizPage = () => {
                 icon={ArrowRightShort}
                 fit
                 disabled={!selectedChoice || isSubmitting}
-                onClick={handleSubmitAnswer}
+                onClick={() => handleSubmitAnswer()}
                 className="px-8"
               >
                 {isSubmitting ? "Submitting..." : "Submit Answer"}

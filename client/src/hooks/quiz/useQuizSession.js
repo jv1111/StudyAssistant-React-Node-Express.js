@@ -12,12 +12,6 @@ const useQuizSession = () => {
     ? "enumeration"
     : "multiple_choice";
 
-  console.log("Quiz Session Params:", {
-    sessionId,
-    quizType,
-    pathname: location.pathname,
-  });
-
   const [quiz, setQuiz] = useState(null);
   const [selectedChoice, setSelectedChoice] = useState(null);
 
@@ -57,33 +51,33 @@ const useQuizSession = () => {
   }, [sessionId, quizType, navigate]);
 
   const handleSelectOption = (choice) => {
-    if (isSubmitting) return;
+    if (isSubmitting) {
+      return;
+    }
+
+    setSelectedChoice(choice);
 
     console.log("Selected choice:", choice);
     console.log("Selected choice type:", typeof choice);
-
-    setSelectedChoice(choice);
   };
 
   const handleSubmitAnswer = async (answer = selectedChoice) => {
-    if (!answer || !String(answer).trim() || isSubmitting) return;
+    console.log("Submit answer:", answer);
+    console.log("Submit answer type:", typeof answer);
+
+    if (!answer || !String(answer).trim() || isSubmitting) {
+      return;
+    }
 
     try {
       setIsSubmitting(true);
 
-      console.log("Submitting answer:", {
-        sessionId,
-        quizType,
-        answer,
-        answerType: typeof answer,
-        trimmedAnswer: String(answer).trim(),
-      });
+      const trimmedAnswer = String(answer).trim();
 
-      const response = await submitAnswer(
-        sessionId,
-        quizType,
-        String(answer).trim(),
-      );
+      console.log("Sending to API:", trimmedAnswer);
+      console.log("Sending to API type:", typeof trimmedAnswer);
+
+      const response = await submitAnswer(sessionId, quizType, trimmedAnswer);
 
       if (response.status === "completed") {
         setFeedback({
