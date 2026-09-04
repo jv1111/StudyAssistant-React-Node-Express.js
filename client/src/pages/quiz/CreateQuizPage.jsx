@@ -8,6 +8,7 @@ import AppHeaderContent from "../../components/common/AppHeaderContent";
 import OptionBox from "../../components/common/OptionBox";
 import FeedbackModal from "../../components/common/FeedbackModal";
 import LoadingPage from "../common/LoadingPage";
+import AppHeader from "../../components/common/AppHeader";
 
 const CreateQuizPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -171,16 +172,14 @@ const CreateQuizPage = () => {
   const shouldHideEditor = isPreview && !showDraftModal;
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col w-full">
       {!shouldHideEditor && (
         <>
-          <header className="app-header">
-            <AppHeaderContent
-              eyebrow="Quiz Builder"
-              title="Create New Quiz"
-              description="Design your quiz by specifying a subject, providing a title, and adding your question set with flexible distractor generation."
-            />
-          </header>
+          <AppHeader
+            eyebrow="Quiz Builder"
+            title="Create New Quiz"
+            description="Design your quiz by specifying a subject, providing a title, and adding your question set with flexible distractor generation."
+          />
 
           <QuizEditor
             subject={subject}

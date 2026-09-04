@@ -17,6 +17,7 @@ import { changeProfileAPI, getProfileImageAPI } from "../../api/user/user.api";
 import { addPasswordAPI, changePassAPI } from "../../api/auth/auth.api";
 
 import { sendEmailVerificationAPI } from "../../api/auth/emailVerification.api";
+import AppHeaderContent from "../../components/common/AppHeaderContent";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -172,22 +173,13 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="mb-8 mt-4 flex h-fit shrink-0 flex-col gap-4">
-        <div>
-          <Badge variant="primary" shape="rounded">
-            Account Settings
-          </Badge>
-
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Profile Settings
-          </h1>
-
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-            Manage your personal details, profile picture, and account
-            credentials.
-          </p>
-        </div>
+    <div className="flex flex-col w-full">
+      <header className="app-header">
+        <AppHeaderContent
+          eyebrow="Account Settings"
+          title="Profile Settings"
+          description="Manage your personal details, profile picture, and account credentials."
+        />
       </header>
 
       <div className="flex flex-col gap-6 pb-12">

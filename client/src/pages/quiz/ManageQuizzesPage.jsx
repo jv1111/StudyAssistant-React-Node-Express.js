@@ -14,17 +14,17 @@ import GlassScrollableList from "../../components/common/GlassScrollableList";
 import Button from "../../components/common/Button";
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
-import Badge from "../../components/common/Badge.jsx";
-import QuizItemCard from "../../components/quiz/QuizItemCard.jsx";
+import Badge from "../../components/common/Badge";
+import QuizItemCard from "../../components/quiz/QuizItemCard";
 
 import useSubjects from "../../hooks/quiz/useSubjects";
 import useQuizzes from "../../hooks/quiz/useQuizzes";
+import AppHeader from "../../components/common/AppHeader";
 
 const ManageQuizzesPage = () => {
   const navigate = useNavigate();
 
   const [selectedSubject, setSelectedSubject] = useState(null);
-
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
 
@@ -53,7 +53,9 @@ const ManageQuizzesPage = () => {
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
   const items = isQuizMode ? quizzes : subjects;
   const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
+
   const handleSearch = isQuizMode ? handleQuizSearch : handleSubjectSearch;
+
   const handleScroll = isQuizMode ? handleQuizScroll : handleSubjectScroll;
 
   const handleCreateQuiz = () => {
@@ -154,7 +156,9 @@ const ManageQuizzesPage = () => {
           item.description ||
           "Explore quizzes, challenge your skills, and master this subject.",
         getSecondaryContent: (item) =>
-          `Created ${new Date(item.createdAt).toLocaleDateString()}`,
+          item.createdAt
+            ? `Created ${new Date(item.createdAt).toLocaleDateString()}`
+            : null,
       };
 
   const deleteConfig = isQuizMode
@@ -200,107 +204,102 @@ const ManageQuizzesPage = () => {
   const hasItems = items.length > 0;
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="app-header">
-        <AppHeaderContent
-          eyebrow="Administration"
-          title="Manage Quizzes"
-          description={
-            isQuizMode
-              ? `Manage the quizzes in ${selectedSubject.name}.`
-              : "Manage your subjects and organize your quizzes."
-          }
-        />
-      </header>
-
-      <div className="mb-5 flex flex-col-reverse gap-4 border-b border-border/90 pb-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex w-full items-center gap-3 sm:w-auto">
-          {isQuizMode && (
+    <div className="flex flex-col w-full ">
+      <AppHeader
+        eyebrow="Administration"
+        title={isQuizMode ? selectedSubject.name : "Manage Quizzes"}
+        description={
+          isQuizMode
+            ? "Manage the quizzes in this subject."
+            : "Manage your subjects and organize your quizzes."
+        }
+        leading={
+          isQuizMode && (
             <Button
               variant="secondary"
               icon={ArrowLeft}
               iconOnly
               onClick={handleBackToSubjects}
               title="Back to subjects"
-              className="h-10 w-10 shrink-0"
+              className="mb-1 h-10 w-10 shrink-0"
             />
-          )}
+          )
+        }
+        searchValue={searchInput}
+        onSearch={handleSearch}
+        searchPlaceholder={
+          isQuizMode ? "Search quizzes..." : "Search subjects to manage..."
+        }
+      />
 
-          <div className="w-full shrink-0 sm:w-72 md:w-96">
-            <SearchInput
-              value={searchInput}
-              onChange={handleSearch}
-              placeholder={
+      {/* Items */}
+      <div className="min-h-0 flex-1 mb-5">
+        {hasItems ? (
+          <GlassScrollableList onScroll={handleScroll}>
+            {items.map((item) => (
+              <li
+                key={item._id}
+                className="flex items-center justify-center mb-3 w-full last:mb-0 "
+              >
+                <QuizItemCard
+                  name={itemConfig.getName(item)}
+                  itemIcon={Book}
+                  onSelect={() => itemConfig.onSelect(item)}
+                  onOptionClick={() => itemConfig.onOptionClick(item)}
+                  hasOption
+                  optionVariant="danger"
+                  optionIcon={Trash}
+                  optionTitle={`Delete ${itemConfig.getName(item)}`}
+                  count={itemConfig.getCount(item)}
+                  countLabel={itemConfig.countLabel}
+                  badge={itemConfig.badge}
+                  description={itemConfig.getDescription(item)}
+                  secondaryContent={itemConfig.getSecondaryContent(item)}
+                />
+              </li>
+            ))}
+          </GlassScrollableList>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <EmptyState
+              icon={Collection}
+              title={isQuizMode ? "No quizzes found" : "No subjects found"}
+              description={
                 isQuizMode
-                  ? "Search quizzes..."
-                  : "Search subjects to manage..."
+                  ? quizSearchInput
+                    ? "There are no quizzes matching your search. Try adjusting your query."
+                    : "This subject does not have any quizzes yet."
+                  : subjectSearchInput
+                    ? "There are no subjects matching your search. Try adjusting your query."
+                    : "There are no subjects to manage yet."
               }
             />
           </div>
-        </div>
-
-        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
-          <Button
-            variant="primary"
-            fit
-            onClick={handleCreateQuiz}
-            className="w-full sm:w-auto"
-          >
-            Create Quiz
-          </Button>
-
-          {hasItems && (
-            <Button
-              variant="danger"
-              icon={Trash}
-              fit
-              onClick={handleOpenDeleteAll}
-              className="w-full sm:w-auto"
-            >
-              {deleteAllConfig.label}
-            </Button>
-          )}
-        </div>
+        )}
       </div>
 
-      {hasItems ? (
-        <GlassScrollableList onScroll={handleScroll}>
-          {items.map((item) => (
-            <li key={item._id} className="mb-3 w-full last:mb-0">
-              <QuizItemCard
-                name={itemConfig.getName(item)}
-                itemIcon={Book}
-                onSelect={() => itemConfig.onSelect(item)}
-                onOptionClick={() => itemConfig.onOptionClick(item)}
-                hasOption={true}
-                optionVariant="danger"
-                optionIcon={Trash}
-                count={itemConfig.getCount(item)}
-                countLabel={itemConfig.countLabel}
-                badge={itemConfig.badge}
-                description={itemConfig.getDescription(item)}
-                secondaryContent={itemConfig.getSecondaryContent(item)}
-              />
-            </li>
-          ))}
-        </GlassScrollableList>
-      ) : (
-        <div className="flex flex-1 items-center justify-center">
-          <EmptyState
-            icon={Collection}
-            title={isQuizMode ? "No quizzes found" : "No subjects found"}
-            description={
-              isQuizMode
-                ? quizSearchInput
-                  ? "There are no quizzes matching your search. Try adjusting your query."
-                  : "This subject does not have any quizzes yet."
-                : subjectSearchInput
-                  ? "There are no subjects matching your search. Try adjusting your query."
-                  : "There are no subjects to manage yet."
-            }
-          />
-        </div>
-      )}
+      <div className="pb-5 flex flex-col-reverse gap-3 border-t border-border/90 sm:flex-row sm:justify-end">
+        {hasItems && (
+          <Button
+            variant="danger"
+            icon={Trash}
+            fit
+            onClick={handleOpenDeleteAll}
+            className="w-full sm:w-auto"
+          >
+            {deleteAllConfig.label}
+          </Button>
+        )}
+
+        <Button
+          variant="primary"
+          fit
+          onClick={handleCreateQuiz}
+          className="w-full sm:w-auto"
+        >
+          Create Quiz
+        </Button>
+      </div>
 
       {/* Delete Item */}
       <OptionBox

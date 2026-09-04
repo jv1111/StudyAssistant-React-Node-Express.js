@@ -3,9 +3,9 @@ import Navbar from "../components/common/Navbar";
 
 const AppLayout = () => {
   return (
-    <div className="grid grid-rows-[auto_1fr] h-full">
+    <div className="flex h-screen flex-col">
       <Navbar />
-      <main className="layout-container">
+      <main className="flex layout-container min-h-0 flex-1">
         <Outlet />
       </main>
     </div>

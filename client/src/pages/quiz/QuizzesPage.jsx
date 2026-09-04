@@ -16,6 +16,7 @@ import useSubjects from "../../hooks/quiz/useSubjects";
 import useQuizzes from "../../hooks/quiz/useQuizzes";
 
 import { downloadPdf } from "../../api/quiz/quiz.api";
+import AppHeader from "../../components/common/AppHeader";
 
 const QuizzesPage = () => {
   const navigate = useNavigate();
@@ -127,10 +128,17 @@ const QuizzesPage = () => {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="app-header">
-        <div className="flex items-end gap-3">
-          {isQuizMode && (
+    <div className="flex flex-col w-full">
+      <AppHeader
+        eyebrow="Overview"
+        title={isQuizMode ? selectedSubject.name : "Subjects"}
+        description={
+          isQuizMode
+            ? "Choose a quiz to get started"
+            : "Browse your quiz subjects and test your knowledge"
+        }
+        leading={
+          isQuizMode && (
             <button
               type="button"
               onClick={handleBackToSubjects}
@@ -138,66 +146,56 @@ const QuizzesPage = () => {
             >
               Subjects
             </button>
-          )}
-
-          <AppHeaderContent
-            eyebrow="Overview"
-            title={isQuizMode ? selectedSubject.name : "Subjects"}
-            description={
-              isQuizMode
-                ? "Choose a quiz to get started"
-                : "Browse your quiz subjects and test your knowledge"
-            }
-          />
-        </div>
-
-        <div className="w-full shrink-0 sm:w-72 md:w-80">
-          <SearchInput
-            value={searchInput}
-            onChange={handleSearch}
-            placeholder={
-              isQuizMode ? "Search quizzes..." : "Search subjects..."
-            }
-          />
-        </div>
-      </header>
+          )
+        }
+        searchValue={searchInput}
+        onSearch={handleSearch}
+        searchPlaceholder={
+          isQuizMode ? "Search quizzes..." : "Search subjects..."
+        }
+      />
 
       {isQuizMode && <div className="mb-5 w-full border-b border-border/90" />}
 
-      {items.length > 0 ? (
-        <GlassScrollableList onScroll={handleScroll}>
-          {items.map((item) => (
-            <li key={item._id} className="mb-3 w-full last:mb-0">
-              <QuizItemCard
-                name={itemConfig.getName(item)}
-                itemIcon={itemConfig.itemIcon}
-                onSelect={() => itemConfig.onSelect(item)}
-                hasOption={itemConfig.hasOption}
-                onOptionClick={() => itemConfig.onOptionClick?.(item)}
-                optionVariant={itemConfig.optionVariant}
-                optionIcon={itemConfig.optionIcon}
-                optionTitle={itemConfig.optionTitle}
-                count={itemConfig.getCount(item)}
-                countLabel={itemConfig.countLabel}
-                badge={itemConfig.badge}
-                description={itemConfig.getDescription(item)}
-                secondaryContent={itemConfig.getSecondaryContent(item)}
-              />
-            </li>
-          ))}
-        </GlassScrollableList>
-      ) : (
-        <div className="flex flex-1 items-center justify-center">
-          <EmptyState
-            title={isQuizMode ? "No quizzes found" : "No subjects found"}
-            description={
-              isQuizMode
-                ? "There are no quizzes matching your search."
-                : "There are no subjects matching your search. Try adjusting your query."
-            }
-          />
-        </div>
-      )}
+      <div className="flex min-h-0 flex-1 mb-5 ">
+        {items.length > 0 ? (
+          <GlassScrollableList onScroll={handleScroll}>
+            {items.map((item) => (
+              <li
+                key={item._id}
+                className="flex items-center justify-center mb-3 w-full last:mb-0 "
+              >
+                <QuizItemCard
+                  name={itemConfig.getName(item)}
+                  itemIcon={itemConfig.itemIcon}
+                  onSelect={() => itemConfig.onSelect(item)}
+                  hasOption={itemConfig.hasOption}
+                  onOptionClick={() => itemConfig.onOptionClick?.(item)}
+                  optionVariant={itemConfig.optionVariant}
+                  optionIcon={itemConfig.optionIcon}
+                  optionTitle={itemConfig.optionTitle}
+                  count={itemConfig.getCount(item)}
+                  countLabel={itemConfig.countLabel}
+                  badge={itemConfig.badge}
+                  description={itemConfig.getDescription(item)}
+                  secondaryContent={itemConfig.getSecondaryContent(item)}
+                />
+              </li>
+            ))}
+          </GlassScrollableList>
+        ) : (
+          <div className="flex flex-1 items-center justify-center">
+            <EmptyState
+              title={isQuizMode ? "No quizzes found" : "No subjects found"}
+              description={
+                isQuizMode
+                  ? "There are no quizzes matching your search."
+                  : "There are no subjects matching your search. Try adjusting your query."
+              }
+            />
+          </div>
+        )}
+      </div>
 
       <OptionBox
         isOpen={selectedQuiz !== null}

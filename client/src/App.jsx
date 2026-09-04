@@ -16,7 +16,7 @@ function App() {
   }
 
   return (
-    <div className="App h-screen">
+    <div className="App">
       <RouterProvider router={router} />
     </div>
   );

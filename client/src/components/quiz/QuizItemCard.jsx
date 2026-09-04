@@ -24,7 +24,7 @@ const QuizItemCard = ({
     <Button
       variant="unstyled"
       onClick={onSelect}
-      className="block w-full rounded-card text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="w-full rounded-card text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <Card className="group relative cursor-pointer overflow-hidden bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-surface-hover hover:shadow-gold-glow">
         <div className="relative z-10 flex h-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
