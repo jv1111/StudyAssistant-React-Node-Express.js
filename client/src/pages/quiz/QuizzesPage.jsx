@@ -88,7 +88,7 @@ const QuizzesPage = () => {
     ? {
         getName: (item) => item.quizName,
         itemIcon: Book,
-        onSelect: (item) => handleSelectQuiz(item),
+        onSelect: handleSelectQuiz,
         hasOption: true,
         onOptionClick: (item) => handleDownloadPdf(item._id),
         optionVariant: "success",
@@ -103,7 +103,7 @@ const QuizzesPage = () => {
     : {
         getName: (item) => item.name,
         itemIcon: JournalBookmark,
-        onSelect: (item) => handleSelectSubject(item),
+        onSelect: handleSelectSubject,
         hasOption: false,
         getCount: (item) => item.quizCount,
         countLabel: "Quiz",
@@ -115,7 +115,10 @@ const QuizzesPage = () => {
         getDescription: (item) =>
           item.description ||
           "Browse quizzes, challenge your skills, and test your knowledge.",
-        getSecondaryContent: () => null,
+        getSecondaryContent: (item) =>
+          item.createdAt
+            ? `Created ${new Date(item.createdAt).toLocaleDateString()}`
+            : null,
       };
 
   if (isLoading) {
@@ -168,8 +171,8 @@ const QuizzesPage = () => {
                 name={itemConfig.getName(item)}
                 itemIcon={itemConfig.itemIcon}
                 onSelect={() => itemConfig.onSelect(item)}
-                onOptionClick={() => itemConfig.onOptionClick?.(item)}
                 hasOption={itemConfig.hasOption}
+                onOptionClick={() => itemConfig.onOptionClick?.(item)}
                 optionVariant={itemConfig.optionVariant}
                 optionIcon={itemConfig.optionIcon}
                 optionTitle={itemConfig.optionTitle}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import useDebounce from "../common/useDebounce";
@@ -29,6 +29,11 @@ const useQuizzes = (subjectId) => {
     getQuizzes,
     queryParams,
   );
+
+  useEffect(() => {
+    setQuizzes([]);
+    setSkipCount(0);
+  }, [subjectId, setSkipCount]);
 
   const handleSearch = (event) => {
     setSearchInput(event.target.value);
