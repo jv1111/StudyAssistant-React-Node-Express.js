@@ -18,6 +18,33 @@
   @apply rounded-card border border-border bg-surface p-6 shadow-(--shadow-card) transition-all duration-200;
 }
 
+/* =========================================================
+   REUSABLE TITLE EFFECTS
+   ========================================================= */
+
+@utility title-3d {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9),
+    0 2px 0 rgba(197, 155, 39, 0.18),
+    0 3px 0 rgba(197, 155, 39, 0.16),
+    0 4px 0 rgba(197, 155, 39, 0.13),
+    0 5px 0 rgba(197, 155, 39, 0.1),
+    0 8px 14px rgba(28, 25, 23, 0.12);
+}
+
+/* Optional stronger version for large display titles */
+
+@utility title-3d-strong {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.95),
+    0 2px 0 rgba(197, 155, 39, 0.22),
+    0 3px 0 rgba(197, 155, 39, 0.2),
+    0 4px 0 rgba(197, 155, 39, 0.18),
+    0 5px 0 rgba(197, 155, 39, 0.15),
+    0 6px 0 rgba(197, 155, 39, 0.12),
+    0 10px 18px rgba(28, 25, 23, 0.16);
+}
+
 @theme {
   /* =========================================================
      BASE COLORS
@@ -33,12 +60,12 @@
      BRAND COLORS
      ========================================================= */
 
-  --color-primary: #c59b27;
-  --color-primary-hover: #a8811a;
-  --color-primary-light: #fbf4e2;
+  --color-primary: #d4a72c;
+  --color-primary-hover: #b88918;
+  --color-primary-light: #fff5d6;
 
-  --color-accent: #d4af37;
-  --color-accent-soft: #fff9e6;
+  --color-accent: #f0c84b;
+  --color-accent-soft: #fff8df;
 
   /* =========================================================
      TYPOGRAPHY
@@ -130,26 +157,36 @@
     color: var(--color-foreground);
     background-color: var(--color-background);
 
-    /* Softened grid pattern + balanced ambient lighting */
+    /*
+     * StudyAssistant background
+     *
+     * background.webp is located in /public, so Vite exposes it
+     * from the application root as /background.webp.
+     *
+     * The left-side gradient keeps the title and supporting text
+     * readable while allowing the artwork to remain visible.
+     */
     background-image:
-      linear-gradient(to right, rgba(212, 175, 55, 0.1) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(212, 175, 55, 0.1) 1px, transparent 1px),
-      radial-gradient(
-        circle at 15% 15%,
-        rgba(212, 175, 55, 0.15),
-        transparent 35rem
+      linear-gradient(
+        90deg,
+        rgba(250, 248, 243, 0.82) 0%,
+        rgba(250, 248, 243, 0.55) 28%,
+        rgba(250, 248, 243, 0.08) 65%,
+        rgba(250, 248, 243, 0) 100%
       ),
-      radial-gradient(
-        circle at 85% 85%,
-        rgba(197, 155, 39, 0.12),
-        transparent 32rem
-      );
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.32) 0%,
+        rgba(255, 255, 255, 0) 45%
+      ),
+      url("/background.webp");
 
-    background-size:
-      32px 32px,
-      32px 32px,
-      auto,
-      auto;
+    background-position: center, center, center;
+
+    background-repeat: no-repeat, no-repeat, no-repeat;
+
+    background-size: cover, cover, cover;
+
     background-attachment: fixed;
 
     font-family:
