@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
@@ -11,6 +11,7 @@ import infinitScroller from "../../helper/infinitScroller";
 const useRecords = (subjectId) => {
   const [records, setRecords] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
 
@@ -22,17 +23,37 @@ const useRecords = (subjectId) => {
   );
 
   const getRecordsData = useCallback(
-    ({ subjectId, searchVal, skipCount }) =>
-      getRecordsBySubject(subjectId, searchVal, skipCount),
+    async ({ subjectId, searchVal, skipCount }) => {
+      if (!subjectId) {
+        return [];
+      }
+
+      return getRecordsBySubject(subjectId, searchVal, skipCount);
+    },
     [],
   );
 
-  const { isLoading, setSkipCount } = useItemFetcher(
+  const { isLoading: isFetching, setSkipCount } = useItemFetcher(
     setRecords,
     searchVal,
     getRecordsData,
     queryParams,
   );
+
+  useEffect(() => {
+    setRecords([]);
+    setSkipCount(0);
+    setLoadedSubjectId(null);
+  }, [subjectId, setSkipCount]);
+
+  useEffect(() => {
+    if (!isFetching && subjectId) {
+      setLoadedSubjectId(subjectId);
+    }
+  }, [isFetching, subjectId]);
+
+  const isLoading =
+    Boolean(subjectId) && (isFetching || loadedSubjectId !== subjectId);
 
   const showLoading = useDeferredLoading(isLoading, 200);
 
