@@ -7,7 +7,7 @@ import useCreateQuizDraft from "../../hooks/quiz/useCreateQuizDraft";
 import AppHeaderContent from "../../components/common/AppHeaderContent";
 import OptionBox from "../../components/common/OptionBox";
 import FeedbackModal from "../../components/common/FeedbackModal";
-import LoadingPage from "../common/LoadingPage";
+import Loading from "../../components/common/Loading";
 import AppHeader from "../../components/common/AppHeader";
 
 const CreateQuizPage = () => {
@@ -166,7 +166,7 @@ const CreateQuizPage = () => {
   };
 
   if (isLoadingDraft) {
-    return <LoadingPage />;
+    return <Loading />;
   }
 
   const shouldHideEditor = isPreview && !showDraftModal;

@@ -6,7 +6,7 @@ import SearchInput from "../common/SearchInput";
 
 import useRecords from "../../hooks/records/useRecords";
 
-import LoadingPage from "../../pages/common/LoadingPage";
+import Loading from "../common/Loading";
 
 const RecordsList = () => {
   const { records, isLoading, searchInput, handleSearch, handleScroll } =
@@ -15,7 +15,7 @@ const RecordsList = () => {
   const navigate = useNavigate();
 
   if (isLoading) {
-    return <LoadingPage />;
+    return <Loading />;
   }
 
   return (

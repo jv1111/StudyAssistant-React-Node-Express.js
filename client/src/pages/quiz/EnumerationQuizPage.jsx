@@ -13,7 +13,7 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Badge from "../../components/common/Badge";
 import FeedbackModal from "../../components/common/FeedbackModal";
-import LoadingPage from "../common/LoadingPage";
+import Loading from "../../components/common/Loading";
 
 import useQuizSession from "../../hooks/quiz/useQuizSession";
 
@@ -33,7 +33,7 @@ const IdentificationQuizPage = () => {
   const [answer, setAnswer] = useState("");
 
   if (isLoading || !quiz) {
-    return <LoadingPage />;
+    return <Loading />;
   }
 
   const totalItems = quiz.numberOfItems;

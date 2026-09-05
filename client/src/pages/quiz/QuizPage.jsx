@@ -12,7 +12,7 @@ import Button from "../../components/common/Button";
 import Badge from "../../components/common/Badge";
 import FeedbackModal from "../../components/common/FeedbackModal";
 import SelectableOption from "../../components/common/SelectableOption";
-import LoadingPage from "../common/LoadingPage";
+import Loading from "../../components/common/Loading";
 
 import useQuizSession from "../../hooks/quiz/useQuizSession";
 
@@ -32,7 +32,7 @@ const QuizPage = () => {
   } = useQuizSession();
 
   if (isLoading || !quiz) {
-    return <LoadingPage />;
+    return <Loading />;
   }
 
   const currentIndex = quiz.currentItem;

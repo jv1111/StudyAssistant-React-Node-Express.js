@@ -18,12 +18,13 @@ const useQuizzes = (subjectId) => {
 
   const [quizzes, setQuizzes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
 
   const queryParams = useMemo(() => ({ subjectId }), [subjectId]);
 
-  const { isLoading, setSkipCount } = useItemFetcher(
+  const { isLoading: isFetching, setSkipCount } = useItemFetcher(
     setQuizzes,
     searchVal,
     getQuizzes,
@@ -33,7 +34,17 @@ const useQuizzes = (subjectId) => {
   useEffect(() => {
     setQuizzes([]);
     setSkipCount(0);
+    setLoadedSubjectId(null);
   }, [subjectId, setSkipCount]);
+
+  useEffect(() => {
+    if (!isFetching && subjectId) {
+      setLoadedSubjectId(subjectId);
+    }
+  }, [isFetching, subjectId]);
+
+  const isLoading =
+    Boolean(subjectId) && (isFetching || loadedSubjectId !== subjectId);
 
   const handleSearch = (event) => {
     setSearchInput(event.target.value);

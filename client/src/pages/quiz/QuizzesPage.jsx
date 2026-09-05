@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { saveAs } from "file-saver";
 import { Book, Download, JournalBookmark } from "react-bootstrap-icons";
+import { MoonLoader } from "react-spinners";
 
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
 import QuizItemCard from "../../components/quiz/QuizItemCard";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
-import LoadingPage from "../common/LoadingPage";
 import Badge from "../../components/common/Badge";
 import AppHeader from "../../components/common/AppHeader";
 
@@ -45,6 +45,7 @@ const QuizzesPage = () => {
   const handleScroll = isQuizMode ? handleQuizScroll : handleSubjectScroll;
 
   const handleSelectSubject = (subject) => {
+    setSelectedQuiz(null);
     setSelectedSubject(subject);
   };
 
@@ -114,10 +115,6 @@ const QuizzesPage = () => {
             : null,
       };
 
-  if (isLoading) {
-    return <LoadingPage />;
-  }
-
   return (
     <div className="flex w-full flex-col">
       <AppHeader
@@ -138,7 +135,18 @@ const QuizzesPage = () => {
       />
 
       <div className="mb-5 flex min-h-0 flex-1">
-        {items.length > 0 ? (
+        {isLoading ? (
+          <GlassScrollableList onScroll={handleScroll}>
+            <li className="flex min-h-full w-full items-center justify-center">
+              <MoonLoader
+                color="#c59b27"
+                size={46}
+                speedMultiplier={0.8}
+                aria-label="Loading"
+              />
+            </li>
+          </GlassScrollableList>
+        ) : items.length > 0 ? (
           <GlassScrollableList onScroll={handleScroll}>
             {items.map((item) => (
               <li

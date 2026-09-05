@@ -5,7 +5,7 @@ import { JournalBookmark, FileEarmarkText } from "react-bootstrap-icons";
 import EmptyState from "../../components/common/EmptyState";
 import QuizItemCard from "../../components/quiz/QuizItemCard";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
-import LoadingPage from "../common/LoadingPage";
+import Loading from "../../components/common/Loading";
 import Badge from "../../components/common/Badge";
 import AppHeader from "../../components/common/AppHeader";
 
@@ -99,7 +99,7 @@ const RecordsPage = () => {
       };
 
   if (isLoading) {
-    return <LoadingPage />;
+    return <Loading />;
   }
 
   return (
