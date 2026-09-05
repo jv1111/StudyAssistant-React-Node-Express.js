@@ -115,6 +115,8 @@ const QuizzesPage = () => {
             : null,
       };
 
+  const showInitialLoading = isLoading && items.length === 0;
+
   return (
     <div className="flex w-full flex-col">
       <AppHeader
@@ -135,8 +137,8 @@ const QuizzesPage = () => {
       />
 
       <div className="mb-5 flex min-h-0 flex-1">
-        {isLoading ? (
-          <GlassScrollableList onScroll={handleScroll}>
+        {showInitialLoading ? (
+          <GlassScrollableList>
             <li className="flex min-h-full w-full items-center justify-center">
               <MoonLoader
                 color="#c59b27"
@@ -151,7 +153,7 @@ const QuizzesPage = () => {
             {items.map((item) => (
               <li
                 key={item._id}
-                className="flex w-full items-center justify-center last:mb-0"
+                className="flex w-full items-center justify-center"
               >
                 <QuizItemCard
                   name={itemConfig.getName(item)}
@@ -170,6 +172,17 @@ const QuizzesPage = () => {
                 />
               </li>
             ))}
+
+            {isLoading && (
+              <li className="flex w-full items-center justify-center py-4">
+                <MoonLoader
+                  color="#c59b27"
+                  size={28}
+                  speedMultiplier={0.8}
+                  aria-label="Loading more"
+                />
+              </li>
+            )}
           </GlassScrollableList>
         ) : (
           <div className="flex flex-1 items-center justify-center">
