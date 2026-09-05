@@ -1,26 +1,21 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { saveAs } from "file-saver";
 import { Book, Download, JournalBookmark } from "react-bootstrap-icons";
 
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
 import QuizItemCard from "../../components/quiz/QuizItemCard";
-import AppHeaderContent from "../../components/common/AppHeaderContent";
-import SearchInput from "../../components/common/SearchInput";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
 import LoadingPage from "../common/LoadingPage";
 import Badge from "../../components/common/Badge";
+import AppHeader from "../../components/common/AppHeader";
 
 import useSubjects from "../../hooks/quiz/useSubjects";
 import useQuizzes from "../../hooks/quiz/useQuizzes";
 
 import { downloadPdf } from "../../api/quiz/quiz.api";
-import AppHeader from "../../components/common/AppHeader";
 
 const QuizzesPage = () => {
-  const navigate = useNavigate();
-
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
 
@@ -44,13 +39,9 @@ const QuizzesPage = () => {
   } = useQuizzes(selectedSubject?._id);
 
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
-
   const items = isQuizMode ? quizzes : subjects;
-
   const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
-
   const handleSearch = isQuizMode ? handleQuizSearch : handleSubjectSearch;
-
   const handleScroll = isQuizMode ? handleQuizScroll : handleSubjectScroll;
 
   const handleSelectSubject = (subject) => {
@@ -128,7 +119,7 @@ const QuizzesPage = () => {
   }
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex w-full flex-col">
       <AppHeader
         eyebrow="Overview"
         title={isQuizMode ? selectedSubject.name : "Subjects"}
@@ -137,17 +128,8 @@ const QuizzesPage = () => {
             ? "Choose a quiz to get started"
             : "Browse your quiz subjects and test your knowledge"
         }
-        leading={
-          isQuizMode && (
-            <button
-              type="button"
-              onClick={handleBackToSubjects}
-              className="mb-1 text-sm font-medium text-muted transition-colors hover:text-primary"
-            >
-              Subjects
-            </button>
-          )
-        }
+        showBackButton={isQuizMode}
+        onBack={handleBackToSubjects}
         searchValue={searchInput}
         onSearch={handleSearch}
         searchPlaceholder={
@@ -155,15 +137,13 @@ const QuizzesPage = () => {
         }
       />
 
-      {isQuizMode && <div className="mb-5 w-full border-b border-border/90" />}
-
-      <div className="flex min-h-0 flex-1 mb-5 ">
+      <div className="mb-5 flex min-h-0 flex-1">
         {items.length > 0 ? (
           <GlassScrollableList onScroll={handleScroll}>
             {items.map((item) => (
               <li
                 key={item._id}
-                className="flex items-center justify-center mb-3 w-full last:mb-0 "
+                className="flex w-full items-center justify-center last:mb-0"
               >
                 <QuizItemCard
                   name={itemConfig.getName(item)}

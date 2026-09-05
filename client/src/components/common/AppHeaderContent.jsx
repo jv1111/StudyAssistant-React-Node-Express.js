@@ -9,7 +9,7 @@ const AppHeaderContent = ({ eyebrow, title, description }) => {
         </Badge>
       )}
 
-      <h1 className="mt-2.5 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+      <h1 className="title-3d mt-2.5 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
         {title}
       </h1>
 
