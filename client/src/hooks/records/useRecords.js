@@ -11,10 +11,10 @@ import infinitScroller from "../../helper/infinitScroller";
 const useRecords = (subjectId) => {
   const [records, setRecords] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
 
+  // Keep the query object stable between renders.
   const queryParams = useMemo(
     () => ({
       subjectId,
@@ -22,40 +22,29 @@ const useRecords = (subjectId) => {
     [subjectId],
   );
 
-  const getRecordsData = useCallback(
-    async ({ subjectId, searchVal, skipCount }) => {
-      if (!subjectId) {
-        return [];
-      }
+  // Prevent the API request when no subject is selected.
+  const getRecordsData = useCallback(({ subjectId, searchVal, skipCount }) => {
+    if (!subjectId) {
+      return [];
+    }
 
-      return getRecordsBySubject(subjectId, searchVal, skipCount);
-    },
-    [],
-  );
+    return getRecordsBySubject(subjectId, searchVal, skipCount);
+  }, []);
 
-  const { isLoading: isFetching, setSkipCount } = useItemFetcher(
+  const { isLoading, setSkipCount } = useItemFetcher(
     setRecords,
     searchVal,
     getRecordsData,
     queryParams,
   );
 
+  // Clear previous records when switching subjects.
   useEffect(() => {
     setRecords([]);
     setSkipCount(0);
-    setLoadedSubjectId(null);
   }, [subjectId, setSkipCount]);
 
-  useEffect(() => {
-    if (!isFetching && subjectId) {
-      setLoadedSubjectId(subjectId);
-    }
-  }, [isFetching, subjectId]);
-
-  const isLoading =
-    Boolean(subjectId) && (isFetching || loadedSubjectId !== subjectId);
-
-  const showLoading = useDeferredLoading(isLoading, 200);
+  const showLoading = useDeferredLoading(Boolean(subjectId) && isLoading, 200);
 
   const handleSearch = (event) => {
     setSearchInput(event.target.value);

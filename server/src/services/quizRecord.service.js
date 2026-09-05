@@ -31,31 +31,79 @@ const saveRecord = async (session, quiz) => {
 };
 
 const getRecordedSubjects = async (userId, searchQuery, skipCount = 0) => {
-  const match = {
+  const { skip, limit } = getPagination(skipCount);
+
+  const filter = {
     userId,
   };
 
   if (searchQuery) {
-    match.subject = {
+    filter.subject = {
       $regex: new RegExp(searchQuery, "i"),
     };
   }
 
-  const { skip, limit } = getPagination(skipCount);
-
-  return QuizRecord.aggregate([
-    { $match: match },
+  const subjects = await QuizRecord.aggregate([
+    {
+      $match: filter,
+    },
     {
       $group: {
-        _id: "$subjectId",
-        name: { $first: "$subject" },
-        recordCount: { $sum: 1 },
+        _id: "$subject",
+        recordCount: {
+          $sum: 1,
+        },
       },
     },
-    { $sort: { name: 1 } },
-    { $skip: skip },
-    { $limit: limit },
+    {
+      $sort: {
+        _id: 1,
+      },
+    },
+    {
+      $skip: skip,
+    },
+    {
+      $limit: limit,
+    },
+    {
+      $lookup: {
+        from: "subjects",
+        let: {
+          subjectName: "$_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ["$name", "$$subjectName"],
+                  },
+                  {
+                    $eq: ["$userId", userId],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: "subjectDocument",
+      },
+    },
+    {
+      $unwind: "$subjectDocument",
+    },
+    {
+      $project: {
+        _id: "$subjectDocument._id",
+        subject: "$_id",
+        recordCount: 1,
+      },
+    },
   ]);
+
+  return subjects;
 };
 
 const getRecordsBySubject = async (

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { saveAs } from "file-saver";
 import { Book, Download, JournalBookmark } from "react-bootstrap-icons";
 import { MoonLoader } from "react-spinners";
@@ -16,6 +17,8 @@ import useQuizzes from "../../hooks/quiz/useQuizzes";
 import { downloadPdf } from "../../api/quiz/quiz.api";
 
 const QuizzesPage = () => {
+  const navigate = useNavigate();
+
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
 
@@ -39,9 +42,13 @@ const QuizzesPage = () => {
   } = useQuizzes(selectedSubject?._id);
 
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
+
   const items = isQuizMode ? quizzes : subjects;
+
   const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
+
   const handleSearch = isQuizMode ? handleQuizSearch : handleSubjectSearch;
+
   const handleScroll = isQuizMode ? handleQuizScroll : handleSubjectScroll;
 
   const handleSelectSubject = (subject) => {
@@ -60,6 +67,18 @@ const QuizzesPage = () => {
 
   const handleQuizOptionClose = () => {
     setSelectedQuiz(null);
+  };
+
+  const handleStartQuizMode = async (quizType) => {
+    try {
+      const response = await handleStartQuiz(selectedQuiz, quizType, false);
+
+      navigate(`/quiz/session/${quizType}/${response.sessionId}`);
+    } catch (error) {
+      console.error("Failed to start quiz:", error);
+    } finally {
+      handleQuizOptionClose();
+    }
   };
 
   const handleDownloadPdf = async (quizId) => {
@@ -139,10 +158,7 @@ const QuizzesPage = () => {
       <div className="mb-5 flex min-h-0 flex-1">
         {showInitialLoading ? (
           <GlassScrollableList>
-            <li
-              key="initial-loading"
-              className="flex min-h-full w-full items-center justify-center"
-            >
+            <li className="flex min-h-full w-full items-center justify-center">
               <MoonLoader
                 color="#c59b27"
                 size={46}
@@ -180,10 +196,7 @@ const QuizzesPage = () => {
             ))}
 
             {isLoading && (
-              <li
-                key="loading-more"
-                className="flex w-full items-center justify-center py-4"
-              >
+              <li className="flex w-full items-center justify-center py-4">
                 <MoonLoader
                   color="#c59b27"
                   size={28}
@@ -223,10 +236,7 @@ const QuizzesPage = () => {
             value: "enumeration",
           },
         ]}
-        onSelect={(quizType) => {
-          handleStartQuiz(selectedQuiz, quizType, false);
-          handleQuizOptionClose();
-        }}
+        onSelect={handleStartQuizMode}
       />
     </div>
   );

@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
@@ -14,37 +13,34 @@ import { startQuiz } from "../../api/quiz/quizSession.api";
 import infinitScroller from "../../helper/infinitScroller";
 
 const useQuizzes = (subjectId) => {
-  const navigate = useNavigate();
-
   const [quizzes, setQuizzes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
 
   const queryParams = useMemo(() => ({ subjectId }), [subjectId]);
 
-  const { isLoading: isFetching, setSkipCount } = useItemFetcher(
+  // Prevent fetching quizzes until a subject is selected.
+  const getQuizzesData = useCallback(({ subjectId, searchVal, skipCount }) => {
+    if (!subjectId) {
+      return [];
+    }
+
+    return getQuizzes(subjectId, searchVal, skipCount);
+  }, []);
+
+  const { isLoading, setSkipCount } = useItemFetcher(
     setQuizzes,
     searchVal,
-    getQuizzes,
+    getQuizzesData,
     queryParams,
   );
 
+  // Clear the previous quiz list when changing subjects.
   useEffect(() => {
     setQuizzes([]);
     setSkipCount(0);
-    setLoadedSubjectId(null);
   }, [subjectId, setSkipCount]);
-
-  useEffect(() => {
-    if (!isFetching && subjectId) {
-      setLoadedSubjectId(subjectId);
-    }
-  }, [isFetching, subjectId]);
-
-  const isLoading =
-    Boolean(subjectId) && (isFetching || loadedSubjectId !== subjectId);
 
   const handleSearch = (event) => {
     setSearchInput(event.target.value);
@@ -55,11 +51,7 @@ const useQuizzes = (subjectId) => {
   };
 
   const handleStartQuiz = async (quizId, quizType, randomizeQuestions) => {
-    const response = await startQuiz(quizId, quizType, randomizeQuestions);
-
-    const sessionPath = `/quiz/session/${quizType}/${response.sessionId}`;
-
-    navigate(sessionPath);
+    return startQuiz(quizId, quizType, randomizeQuestions);
   };
 
   const handleDeleteQuiz = async (quizId) => {
@@ -76,13 +68,12 @@ const useQuizzes = (subjectId) => {
     }
 
     await deleteAllQuizzes(subjectId);
-
     setQuizzes([]);
   };
 
   return {
     quizzes,
-    isLoading,
+    isLoading: Boolean(subjectId) && isLoading,
     searchInput,
     handleSearch,
     handleScroll,

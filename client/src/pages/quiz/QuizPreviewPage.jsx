@@ -1,8 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "react-bootstrap-icons";
 
+import AppHeader from "../../components/common/AppHeader";
 import Button from "../../components/common/Button";
-import AppHeaderContent from "../../components/common/AppHeaderContent";
 import QuizEditorForm from "../../components/quiz/QuizEditorForm";
 
 import { createQuiz } from "../../api/quiz/quiz.api";
@@ -24,6 +23,10 @@ const QuizPreviewPage = () => {
     clearDraft,
   } = useCreateQuizDraft(mode, null, true);
 
+  const handleBack = () => {
+    navigate("/quiz/create");
+  };
+
   const handleFinalSubmit = async () => {
     await createQuiz(subject, quizName, items);
     await clearDraft();
@@ -35,7 +38,7 @@ const QuizPreviewPage = () => {
 
   if (isLoadingDraft) {
     return (
-      <div className="layout-container py-16 text-center">
+      <div className="flex w-full items-center justify-center py-16">
         <p className="text-sm text-muted">Loading quiz preview...</p>
       </div>
     );
@@ -43,7 +46,7 @@ const QuizPreviewPage = () => {
 
   if (!subject || !quizName || !items.length) {
     return (
-      <div className="layout-container py-16 text-center">
+      <div className="flex w-full flex-col items-center justify-center py-16 text-center">
         <h2 className="text-xl font-bold text-foreground">
           No Preview Data Found
         </h2>
@@ -52,12 +55,7 @@ const QuizPreviewPage = () => {
           Please generate or create a quiz first.
         </p>
 
-        <Button
-          fit
-          className="mt-6 inline-flex items-center gap-2"
-          onClick={() => navigate("/quiz/create")}
-        >
-          <ArrowLeft size={16} />
+        <Button fit className="mt-6" onClick={handleBack}>
           Go to Quiz Creator
         </Button>
       </div>
@@ -65,28 +63,30 @@ const QuizPreviewPage = () => {
   }
 
   return (
-    <>
-      <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <AppHeaderContent
-          eyebrow="Preview & Review"
-          title="Quiz Preview"
-          description='Review your generated quiz. Click "Edit" on any question to modify details.'
-        />
-      </header>
-
-      <QuizEditorForm
-        subject={subject}
-        quizName={quizName}
-        items={items}
-        onUpdateItem={updateItem}
-        onDeleteItem={deleteQuestion}
-        onSubmit={handleFinalSubmit}
-        onSubmitSuccess={handleSubmitSuccess}
-        submitLabel="Save Quiz"
-        submittingLabel="Saving..."
-        description="Review complete? Save your quiz to finalize."
+    <div className="flex w-full flex-col">
+      <AppHeader
+        eyebrow="Preview & Review"
+        title="Quiz Preview"
+        description='Review your generated quiz. Click "Edit" on any question to modify details.'
+        showBackButton
+        onBack={handleBack}
       />
-    </>
+
+      <div className="mb-5">
+        <QuizEditorForm
+          subject={subject}
+          quizName={quizName}
+          items={items}
+          onUpdateItem={updateItem}
+          onDeleteItem={deleteQuestion}
+          onSubmit={handleFinalSubmit}
+          onSubmitSuccess={handleSubmitSuccess}
+          submitLabel="Save Quiz"
+          submittingLabel="Saving..."
+          description="Review complete? Save your quiz to finalize."
+        />
+      </div>
+    </div>
   );
 };
 

@@ -20,7 +20,7 @@ const previewQuiz = async (subject, quizName, items) => {
   return response.data;
 };
 
-const getSubjects = async ({ searchVal, skipCount }) => {
+const getSubjects = async (searchVal, skipCount) => {
   const response = await api.get("/quiz/subjectsList", {
     params: {
       searchQuery: searchVal,
@@ -31,7 +31,11 @@ const getSubjects = async ({ searchVal, skipCount }) => {
   return response.data;
 };
 
-const getQuizzes = async ({ subjectId, searchVal, skipCount }) => {
+const getQuizzes = async (subjectId, searchVal, skipCount = 0) => {
+  if (!subjectId) {
+    return [];
+  }
+
   const response = await api.get("/quiz/quizList", {
     params: {
       subjectId,
@@ -116,13 +120,11 @@ const deleteAllQuizzes = async (subjectId) => {
 
 const deleteSubject = async (subjectId) => {
   const response = await api.delete(`/quiz/subjects/${subjectId}`);
-
   return response.data;
 };
 
 const deleteAllSubjects = async () => {
   const response = await api.delete("/quiz/subjects");
-
   return response.data;
 };
 

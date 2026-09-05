@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { JournalBookmark, FileEarmarkText } from "react-bootstrap-icons";
+import { MoonLoader } from "react-spinners";
 
 import EmptyState from "../../components/common/EmptyState";
 import QuizItemCard from "../../components/quiz/QuizItemCard";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
-import Loading from "../../components/common/Loading";
 import Badge from "../../components/common/Badge";
 import AppHeader from "../../components/common/AppHeader";
 
@@ -35,14 +35,11 @@ const RecordsPage = () => {
   } = useRecords(selectedSubject?._id);
 
   const isLoading = isRecordMode ? isRecordsLoading : isSubjectsLoading;
-
   const items = isRecordMode ? (records ?? []) : (subjects ?? []);
-
   const searchInput = isRecordMode ? recordSearchInput : subjectSearchInput;
-
   const handleSearch = isRecordMode ? handleRecordSearch : handleSubjectSearch;
-
   const handleScroll = isRecordMode ? handleRecordScroll : handleSubjectScroll;
+  const showInitialLoading = isLoading && items.length === 0;
 
   const handleSelectSubject = (subject) => {
     setSelectedSubject(subject);
@@ -83,7 +80,7 @@ const RecordsPage = () => {
             : null,
       }
     : {
-        getName: (item) => item.name,
+        getName: (item) => item.subject,
         itemIcon: JournalBookmark,
         onSelect: handleSelectSubject,
         getCount: (item) => item.recordCount,
@@ -98,31 +95,18 @@ const RecordsPage = () => {
         getSecondaryContent: () => null,
       };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
     <div className="flex w-full flex-col">
       <AppHeader
         eyebrow="Overview"
-        title={isRecordMode ? selectedSubject.name : "Records"}
+        title={isRecordMode ? selectedSubject.subject : "Records"}
         description={
           isRecordMode
             ? "Choose a quiz record to review your performance."
             : "Browse your quiz records by subject."
         }
-        leading={
-          isRecordMode && (
-            <button
-              type="button"
-              onClick={handleBackToSubjects}
-              className="mb-1 text-sm font-medium text-muted transition-colors hover:text-primary"
-            >
-              Subjects
-            </button>
-          )
-        }
+        showBackButton={isRecordMode}
+        onBack={handleBackToSubjects}
         searchValue={searchInput}
         onSearch={handleSearch}
         searchPlaceholder={
@@ -130,17 +114,30 @@ const RecordsPage = () => {
         }
       />
 
-      {isRecordMode && (
-        <div className="mb-5 w-full border-b border-border/90" />
-      )}
-
       <div className="mb-5 flex min-h-0 flex-1">
-        {items.length > 0 ? (
+        {showInitialLoading ? (
+          <GlassScrollableList>
+            <li
+              key="initial-loading"
+              className="flex min-h-full w-full items-center justify-center"
+            >
+              <MoonLoader
+                color="#c59b27"
+                size={46}
+                speedMultiplier={0.8}
+                aria-label="Loading"
+              />
+            </li>
+          </GlassScrollableList>
+        ) : items.length > 0 ? (
           <GlassScrollableList onScroll={handleScroll}>
             {items.map((item) => (
               <li
-                key={item._id}
-                className="mb-3 flex w-full items-center justify-center last:mb-0"
+                key={
+                  item?._id ||
+                  `${itemConfig.getName(item)}-${itemConfig.getSecondaryContent(item)}`
+                }
+                className="flex w-full items-center justify-center"
               >
                 <QuizItemCard
                   name={itemConfig.getName(item)}
@@ -155,6 +152,20 @@ const RecordsPage = () => {
                 />
               </li>
             ))}
+
+            {isLoading && (
+              <li
+                key="loading-more"
+                className="flex w-full items-center justify-center py-4"
+              >
+                <MoonLoader
+                  color="#c59b27"
+                  size={28}
+                  speedMultiplier={0.8}
+                  aria-label="Loading more"
+                />
+              </li>
+            )}
           </GlassScrollableList>
         ) : (
           <div className="flex flex-1 items-center justify-center">

@@ -2,10 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import QuizEditorForm from "../../components/quiz/QuizEditorForm";
-import AppHeaderContent from "../../components/common/AppHeaderContent";
+import AppHeader from "../../components/common/AppHeader";
 import OptionBox from "../../components/common/OptionBox";
-import Card from "../../components/common/Card";
-import Modal from "../../components/common/Modal";
 
 import { updateQuiz } from "../../api/quiz/quiz.api";
 import useUpdateQuizDraft from "../../hooks/quiz/useUpdateQuizDraft";
@@ -36,17 +34,19 @@ const UpdateQuizPage = () => {
       return;
     }
 
-    // Ask the user what to do with the existing draft.
     if (hasDraft && !hasHandledDraft) {
       setShowDraftModal(true);
     }
   }, [isLoadingDraft, hasDraft, hasHandledDraft]);
 
+  const handleBack = () => {
+    navigate(`/quiz/manage`);
+  };
+
   const handleDraftOption = async (option) => {
     if (option === "continue") {
       setHasHandledDraft(true);
       setShowDraftModal(false);
-
       return;
     }
 
@@ -84,35 +84,37 @@ const UpdateQuizPage = () => {
 
   if (isLoadingDraft) {
     return (
-      <div className="flex min-h-64 items-center justify-center text-sm text-muted">
-        Loading quiz...
+      <div className="flex w-full items-center justify-center py-16">
+        <p className="text-sm text-muted">Loading quiz...</p>
       </div>
     );
   }
 
   return (
-    <>
-      <header className="mb-8 flex h-fit flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <AppHeaderContent
-          eyebrow="Quiz Builder"
-          title="Update Quiz"
-          description="Update the quiz details and modify its questions."
-        />
-      </header>
-
-      <QuizEditorForm
-        subject={subject}
-        quizName={quizName}
-        items={items}
-        onUpdateItem={updateItem}
-        onDeleteItem={deleteQuestion}
-        onSubmit={handleSubmit}
-        onSubmitSuccess={handleSubmitSuccess}
-        isSubmitting={isSubmitting}
-        submitLabel="Update Quiz"
-        submittingLabel="Updating..."
-        description="Review your changes and save the quiz when you're finished."
+    <div className="flex w-full flex-col">
+      <AppHeader
+        eyebrow="Quiz Builder"
+        title="Update Quiz"
+        description="Update the quiz details and modify its questions."
+        showBackButton
+        onBack={handleBack}
       />
+
+      <div className="mb-5">
+        <QuizEditorForm
+          subject={subject}
+          quizName={quizName}
+          items={items}
+          onUpdateItem={updateItem}
+          onDeleteItem={deleteQuestion}
+          onSubmit={handleSubmit}
+          onSubmitSuccess={handleSubmitSuccess}
+          isSubmitting={isSubmitting}
+          submitLabel="Update Quiz"
+          submittingLabel="Updating..."
+          description="Review your changes and save the quiz when you're finished."
+        />
+      </div>
 
       <OptionBox
         isOpen={showDraftModal}
@@ -133,7 +135,7 @@ const UpdateQuizPage = () => {
         onSelect={handleDraftOption}
         showCancel={false}
       />
-    </>
+    </div>
   );
 };
 
