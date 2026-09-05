@@ -21,9 +21,19 @@ const useItemFetcher = (
         skipCount,
       });
 
-      setItems((currentItems) =>
-        skipCount === 0 ? apiResponse : [...currentItems, ...apiResponse],
-      );
+      setItems((currentItems) => {
+        const nextItems =
+          skipCount === 0 ? apiResponse : [...currentItems, ...apiResponse];
+
+        const seen = new Map();
+
+        for (const item of nextItems) {
+          if (!item?._id) continue;
+          seen.set(item._id, item);
+        }
+
+        return [...seen.values()];
+      });
 
       setLoading(false);
     };

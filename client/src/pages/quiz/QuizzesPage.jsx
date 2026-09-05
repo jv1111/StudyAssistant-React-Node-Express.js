@@ -139,7 +139,10 @@ const QuizzesPage = () => {
       <div className="mb-5 flex min-h-0 flex-1">
         {showInitialLoading ? (
           <GlassScrollableList>
-            <li className="flex min-h-full w-full items-center justify-center">
+            <li
+              key="initial-loading"
+              className="flex min-h-full w-full items-center justify-center"
+            >
               <MoonLoader
                 color="#c59b27"
                 size={46}
@@ -152,7 +155,10 @@ const QuizzesPage = () => {
           <GlassScrollableList onScroll={handleScroll}>
             {items.map((item) => (
               <li
-                key={item._id}
+                key={
+                  item?._id ||
+                  `${itemConfig.getName(item)}-${itemConfig.getSecondaryContent(item)}`
+                }
                 className="flex w-full items-center justify-center"
               >
                 <QuizItemCard
@@ -174,7 +180,10 @@ const QuizzesPage = () => {
             ))}
 
             {isLoading && (
-              <li className="flex w-full items-center justify-center py-4">
+              <li
+                key="loading-more"
+                className="flex w-full items-center justify-center py-4"
+              >
                 <MoonLoader
                   color="#c59b27"
                   size={28}
