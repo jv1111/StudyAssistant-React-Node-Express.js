@@ -216,6 +216,7 @@ const createManyQuizzes = async (userId, subjects) => {
 
     for (const quiz of quizzes) {
       validateQuizInput(subjectName, quiz.quizName, quiz.items);
+
       validateQuizChoices(quiz.items);
     }
 
@@ -274,7 +275,7 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
 
   const { skip, limit } = getPagination(skipCount);
 
-  return Subject.aggregate([
+  const subjects = await Subject.aggregate([
     {
       $match: filter,
     },
@@ -291,8 +292,12 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
             $match: {
               $expr: {
                 $and: [
-                  { $eq: ["$subjectId", "$$subjectId"] },
-                  { $eq: ["$userId", "$$userId"] },
+                  {
+                    $eq: ["$subjectId", "$$subjectId"],
+                  },
+                  {
+                    $eq: ["$userId", "$$userId"],
+                  },
                 ],
               },
             },
@@ -308,7 +313,12 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
     {
       $addFields: {
         quizCount: {
-          $ifNull: [{ $arrayElemAt: ["$quizCount.count", 0] }, 0],
+          $ifNull: [
+            {
+              $arrayElemAt: ["$quizCount.count", 0],
+            },
+            0,
+          ],
         },
       },
     },
@@ -316,6 +326,7 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
     {
       $sort: {
         name: 1,
+        _id: 1,
       },
     },
 
@@ -324,9 +335,22 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
     },
 
     {
-      $limit: limit,
+      // Fetch one extra record so we can determine
+      // whether another page exists.
+      $limit: limit + 1,
     },
   ]);
+
+  const hasMore = subjects.length > limit;
+
+  if (hasMore) {
+    subjects.pop();
+  }
+
+  return {
+    items: subjects,
+    hasMore,
+  };
 };
 
 const getQuiz = async (userId, quizId) => {
@@ -356,12 +380,26 @@ const getQuizzes = async (userId, subjectId, searchQuery, skipCount = 0) => {
 
   const { skip, limit } = getPagination(skipCount);
 
-  return Quiz.find(filter)
+  const quizzes = await Quiz.find(filter)
     .select("subjectId quizName numberOfItems")
     .populate("subjectId", "name")
-    .sort({ createdAt: -1 })
+    .sort({
+      createdAt: -1,
+      _id: -1,
+    })
     .skip(skip)
-    .limit(limit);
+    .limit(limit + 1);
+
+  const hasMore = quizzes.length > limit;
+
+  if (hasMore) {
+    quizzes.pop();
+  }
+
+  return {
+    items: quizzes,
+    hasMore,
+  };
 };
 
 const getQuizById = async (userId, quizId) => {

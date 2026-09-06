@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+
 import { customDelay } from "../../utils/delay";
 
 const EMPTY_QUERY_PARAMS = {};
@@ -25,6 +26,7 @@ const useItemFetcher = (
 ) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [skipCount, setSkipCount] = useState(0);
 
   const requestIdRef = useRef(0);
@@ -42,20 +44,27 @@ const useItemFetcher = (
       }
 
       try {
+        // Development only: simulate a slow connection.
         await customDelay(1000);
-        const apiResponse = await getDataApi({
+
+        const response = await getDataApi({
           ...queryParams,
           searchVal,
           skipCount: currentSkipCount,
         });
 
+        // Ignore responses from outdated requests.
         if (requestId !== requestIdRef.current) {
           return;
         }
 
+        const { items = [], hasMore: nextHasMore = false } = response;
+
         setItems((currentItems) =>
-          mergeItems(currentItems, apiResponse, currentSkipCount),
+          mergeItems(currentItems, items, currentSkipCount),
         );
+
+        setHasMore(nextHasMore);
       } catch (error) {
         if (requestId !== requestIdRef.current) {
           return;
@@ -88,26 +97,57 @@ const useItemFetcher = (
     if (queryChanged) {
       previousQueryRef.current = queryKey;
 
-      // Invalidate any request belonging to the previous query.
+      // Invalidate any request belonging to the
+      // previous query.
       requestIdRef.current += 1;
 
       setItems([]);
-      setSkipCount(0);
+      setHasMore(true);
       setIsLoading(true);
       setIsFetchingMore(false);
 
+      /*
+       * When the current page is not the first page,
+       * reset pagination first. The resulting render
+       * will trigger the first-page request.
+       */
+      if (skipCount !== 0) {
+        setSkipCount(0);
+        return;
+      }
+
+      /*
+       * When already on the first page, fetch immediately.
+       */
       fetchItems(0);
 
       return;
     }
 
-    fetchItems(skipCount);
-  }, [fetchItems, queryParams, searchVal, setItems, skipCount]);
+    /*
+     * Fetch subsequent pages when skipCount changes.
+     */
+    if (skipCount > 0 && hasMore) {
+      fetchItems(skipCount);
+    }
+  }, [fetchItems, hasMore, queryParams, searchVal, setItems, skipCount]);
+
+  const handleSetSkipCount = useCallback(
+    (nextSkipCount) => {
+      if (isLoading || isFetchingMore || !hasMore) {
+        return;
+      }
+
+      setSkipCount(nextSkipCount);
+    },
+    [hasMore, isFetchingMore, isLoading],
+  );
 
   return {
     isLoading,
     isFetchingMore,
-    setSkipCount,
+    hasMore,
+    setSkipCount: handleSetSkipCount,
   };
 };
 
