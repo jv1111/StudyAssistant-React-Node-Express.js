@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
@@ -14,58 +14,52 @@ import infinitScroller from "../../helper/infinitScroller";
 const useSubjects = () => {
   const [subjects, setSubjects] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [isFetchingFromScrollingDown, setIsFetchingFromScrollingDown] =
-    useState(false);
 
   const searchVal = useDebounce(searchInput, 400);
 
-  const getSubjectsData = useCallback(
-    ({ searchVal, skipCount }) => getSubjects(searchVal, skipCount),
-    [],
-  );
+  const getSubjectsData = useCallback(({ searchVal, skipCount }) => {
+    return getSubjects(searchVal, skipCount);
+  }, []);
 
-  const { isLoading, setSkipCount } = useItemFetcher(
+  const { isLoading, isFetchingMore, setSkipCount } = useItemFetcher(
     setSubjects,
     searchVal,
     getSubjectsData,
   );
 
-  useEffect(() => {
-    setSubjects([]);
-    setSkipCount(0);
-    setIsFetchingFromScrollingDown(false);
-  }, [searchVal, setSkipCount]);
-
-  const handleSearch = (event) => {
+  const handleSearch = useCallback((event) => {
     setSearchInput(event.target.value);
-  };
+  }, []);
 
-  const handleScroll = (event) => {
-    const isScrollingDown = infinitScroller(event, subjects, setSkipCount);
+  const handleScroll = useCallback(
+    (event) => {
+      if (isFetchingMore) {
+        return;
+      }
 
-    if (isScrollingDown) {
-      setIsFetchingFromScrollingDown(true);
-    }
-  };
+      infinitScroller(event, subjects, setSkipCount);
+    },
+    [isFetchingMore, subjects, setSkipCount],
+  );
 
-  const handleDeleteSubject = async (subjectId) => {
+  const handleDeleteSubject = useCallback(async (subjectId) => {
     await deleteSubject(subjectId);
 
     setSubjects((currentSubjects) =>
       currentSubjects.filter((subject) => subject._id !== subjectId),
     );
-  };
+  }, []);
 
-  const handleDeleteAllSubjects = async () => {
+  const handleDeleteAllSubjects = useCallback(async () => {
     await deleteAllSubjects();
 
     setSubjects([]);
-  };
+  }, []);
 
   return {
     subjects,
     isLoading,
-    isFetchingFromScrollingDown,
+    isFetchingFromScrollingDown: isFetchingMore,
     searchInput,
     handleSearch,
     handleScroll,

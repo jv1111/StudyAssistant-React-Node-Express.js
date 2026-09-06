@@ -32,7 +32,7 @@ const ManageQuizzesPage = () => {
   const {
     subjects,
     isLoading: isSubjectsLoading,
-    isFetchingFromScrollingDown: isFetchingSubjectsFromScrollingDown,
+    isFetchingFromScrollingDown: isFetchingSubjects,
     searchInput: subjectSearchInput,
     handleSearch: handleSubjectSearch,
     handleScroll: handleSubjectScroll,
@@ -43,7 +43,7 @@ const ManageQuizzesPage = () => {
   const {
     quizzes,
     isLoading: isQuizzesLoading,
-    isFetchingFromScrollingDown: isFetchingQuizzesFromScrollingDown,
+    isFetchingFromScrollingDown: isFetchingQuizzes,
     searchInput: quizSearchInput,
     handleSearch: handleQuizSearch,
     handleScroll: handleQuizScroll,
@@ -51,13 +51,12 @@ const ManageQuizzesPage = () => {
     handleDeleteAllQuizzes,
   } = useQuizzes(selectedSubject?._id);
 
+  const items = isQuizMode ? quizzes : subjects;
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
 
   const isFetchingFromScrollingDown = isQuizMode
-    ? isFetchingQuizzesFromScrollingDown
-    : isFetchingSubjectsFromScrollingDown;
-
-  const items = isQuizMode ? quizzes : subjects;
+    ? isFetchingQuizzes
+    : isFetchingSubjects;
 
   const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
 
@@ -142,7 +141,6 @@ const ManageQuizzesPage = () => {
   const itemConfig = isQuizMode
     ? {
         onSelect: handleSelectQuiz,
-        onOptionClick: handleOpenDelete,
         getName: (item) => item.quizName,
         itemIcon: Book,
         getCount: (item) => item.numberOfItems,
@@ -155,7 +153,6 @@ const ManageQuizzesPage = () => {
       }
     : {
         onSelect: handleSelectSubject,
-        onOptionClick: handleOpenDelete,
         getName: (item) => item.name,
         itemIcon: JournalBookmark,
         getCount: (item) => item.quizCount,
@@ -204,6 +201,14 @@ const ManageQuizzesPage = () => {
         label: "Delete All Subjects",
       };
 
+  const emptyStateDescription = isQuizMode
+    ? quizSearchInput
+      ? "There are no quizzes matching your search. Try adjusting your query."
+      : "This subject does not have any quizzes yet."
+    : subjectSearchInput
+      ? "There are no subjects matching your search. Try adjusting your query."
+      : "There are no subjects to manage yet.";
+
   return (
     <div className="flex h-screen w-full flex-col">
       <AppHeader
@@ -231,17 +236,14 @@ const ManageQuizzesPage = () => {
           {hasItems ? (
             items.map((item) => (
               <li
-                key={
-                  item?._id ||
-                  `${itemConfig.getName(item)}-${itemConfig.getSecondaryContent(item)}`
-                }
+                key={item._id}
                 className="flex w-full items-center justify-center"
               >
                 <QuizItemCard
                   name={itemConfig.getName(item)}
                   itemIcon={itemConfig.itemIcon}
                   onSelect={() => itemConfig.onSelect(item)}
-                  onOptionClick={() => itemConfig.onOptionClick(item)}
+                  onOptionClick={() => handleOpenDelete(item)}
                   hasOption
                   optionVariant="danger"
                   optionIcon={Trash}
@@ -263,15 +265,7 @@ const ManageQuizzesPage = () => {
               <EmptyState
                 icon={Collection}
                 title={isQuizMode ? "No quizzes found" : "No subjects found"}
-                description={
-                  isQuizMode
-                    ? quizSearchInput
-                      ? "There are no quizzes matching your search. Try adjusting your query."
-                      : "This subject does not have any quizzes yet."
-                    : subjectSearchInput
-                      ? "There are no subjects matching your search. Try adjusting your query."
-                      : "There are no subjects to manage yet."
-                }
+                description={emptyStateDescription}
               />
             </li>
           )}

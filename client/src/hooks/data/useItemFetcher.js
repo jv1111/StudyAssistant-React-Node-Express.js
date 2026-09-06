@@ -1,16 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-// Temporary: simulate a slow server/network.
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// Shared empty object for hooks that do not need extra query parameters.
 const EMPTY_QUERY_PARAMS = {};
 
 const mergeItems = (currentItems, newItems, skipCount) => {
-  // Replace items on the first fetch; append on later pages.
   const nextItems = skipCount === 0 ? newItems : [...currentItems, ...newItems];
 
-  // Remove duplicate items using _id.
   const seen = new Map();
 
   for (const item of nextItems) {
@@ -28,38 +22,89 @@ const useItemFetcher = (
   getDataApi,
   queryParams = EMPTY_QUERY_PARAMS,
 ) => {
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [skipCount, setSkipCount] = useState(0);
 
-  const fetchItems = async () => {
-    setLoading(true);
+  const requestIdRef = useRef(0);
+  const previousSearchRef = useRef(searchVal);
 
-    try {
-      // Temporary: simulate slow internet/server response.
-      await delay(2000);
+  const fetchItems = useCallback(
+    async (currentSkipCount) => {
+      const requestId = ++requestIdRef.current;
+      const isFirstPage = currentSkipCount === 0;
 
-      const apiResponse = await getDataApi({
-        ...queryParams,
-        searchVal,
-        skipCount,
-      });
+      if (isFirstPage) {
+        setIsLoading(true);
+      } else {
+        setIsFetchingMore(true);
+      }
 
-      setItems((currentItems) =>
-        mergeItems(currentItems, apiResponse, skipCount),
-      );
-    } catch (error) {
-      console.error("Failed to fetch items:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        const apiResponse = await getDataApi({
+          ...queryParams,
+          searchVal,
+          skipCount: currentSkipCount,
+        });
+
+        // Ignore an outdated response.
+        if (requestId !== requestIdRef.current) {
+          return;
+        }
+
+        setItems((currentItems) =>
+          mergeItems(currentItems, apiResponse, currentSkipCount),
+        );
+      } catch (error) {
+        // Ignore errors from outdated requests.
+        if (requestId !== requestIdRef.current) {
+          return;
+        }
+
+        console.error("Failed to fetch items:", error);
+      } finally {
+        if (requestId !== requestIdRef.current) {
+          return;
+        }
+
+        if (isFirstPage) {
+          setIsLoading(false);
+        } else {
+          setIsFetchingMore(false);
+        }
+      }
+    },
+    [getDataApi, queryParams, searchVal, setItems],
+  );
 
   useEffect(() => {
-    fetchItems();
-  }, [getDataApi, searchVal, skipCount, queryParams]);
+    const searchChanged = previousSearchRef.current !== searchVal;
+
+    if (searchChanged) {
+      previousSearchRef.current = searchVal;
+
+      requestIdRef.current += 1;
+
+      setItems([]);
+      setSkipCount(0);
+      setIsFetchingMore(false);
+
+      // Fetch the new search immediately when the current
+      // pagination position is already zero.
+      if (skipCount === 0) {
+        fetchItems(0);
+      }
+
+      return;
+    }
+
+    fetchItems(skipCount);
+  }, [fetchItems, searchVal, setItems, skipCount]);
 
   return {
     isLoading,
+    isFetchingMore,
     setSkipCount,
   };
 };

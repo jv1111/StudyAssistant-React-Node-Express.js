@@ -15,8 +15,6 @@ import infinitScroller from "../../helper/infinitScroller";
 const useQuizzes = (subjectId) => {
   const [quizzes, setQuizzes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [isFetchingFromScrollingDown, setIsFetchingFromScrollingDown] =
-    useState(false);
   const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
@@ -31,7 +29,7 @@ const useQuizzes = (subjectId) => {
     return getQuizzes(subjectId, searchVal, skipCount);
   }, []);
 
-  const { isLoading, setSkipCount } = useItemFetcher(
+  const { isLoading, isFetchingMore, setSkipCount } = useItemFetcher(
     setQuizzes,
     searchVal,
     getQuizzesData,
@@ -39,11 +37,8 @@ const useQuizzes = (subjectId) => {
   );
 
   useEffect(() => {
-    setQuizzes([]);
-    setSkipCount(0);
-    setIsFetchingFromScrollingDown(false);
     setLoadedSubjectId(null);
-  }, [subjectId, searchVal, setSkipCount]);
+  }, [subjectId]);
 
   useEffect(() => {
     if (!isLoading && subjectId) {
@@ -51,31 +46,37 @@ const useQuizzes = (subjectId) => {
     }
   }, [isLoading, subjectId]);
 
-  const handleSearch = (event) => {
+  const handleSearch = useCallback((event) => {
     setSearchInput(event.target.value);
-  };
+  }, []);
 
-  const handleScroll = (event) => {
-    const isScrollingDown = infinitScroller(event, quizzes, setSkipCount);
+  const handleScroll = useCallback(
+    (event) => {
+      if (isFetchingMore) {
+        return;
+      }
 
-    if (isScrollingDown) {
-      setIsFetchingFromScrollingDown(true);
-    }
-  };
+      infinitScroller(event, quizzes, setSkipCount);
+    },
+    [isFetchingMore, quizzes, setSkipCount],
+  );
 
-  const handleStartQuiz = async (quizId, quizType, randomizeQuestions) => {
-    return startQuiz(quizId, quizType, randomizeQuestions);
-  };
+  const handleStartQuiz = useCallback(
+    async (quizId, quizType, randomizeQuestions) => {
+      return startQuiz(quizId, quizType, randomizeQuestions);
+    },
+    [],
+  );
 
-  const handleDeleteQuiz = async (quizId) => {
+  const handleDeleteQuiz = useCallback(async (quizId) => {
     await deleteQuiz(quizId);
 
     setQuizzes((currentQuizzes) =>
       currentQuizzes.filter((quiz) => quiz._id !== quizId),
     );
-  };
+  }, []);
 
-  const handleDeleteAllQuizzes = async () => {
+  const handleDeleteAllQuizzes = useCallback(async () => {
     if (!subjectId) {
       return;
     }
@@ -83,14 +84,14 @@ const useQuizzes = (subjectId) => {
     await deleteAllQuizzes(subjectId);
 
     setQuizzes([]);
-  };
+  }, [subjectId]);
 
-  const isSubjectLoading = subjectId && loadedSubjectId !== subjectId;
+  const isSubjectLoading = Boolean(subjectId) && loadedSubjectId !== subjectId;
 
   return {
     quizzes,
     isLoading: isLoading || isSubjectLoading,
-    isFetchingFromScrollingDown,
+    isFetchingFromScrollingDown: isFetchingMore,
     searchInput,
     handleSearch,
     handleScroll,
