@@ -3,7 +3,7 @@ import Navigation from "../components/common/Navigation";
 
 const AppLayout = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen ">
       <Navigation />
 
       <div className="min-h-screen md:pl-64">

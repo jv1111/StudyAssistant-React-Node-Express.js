@@ -9,7 +9,7 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="App">
+      <div className="App h-screen">
         <Loading />
       </div>
     );

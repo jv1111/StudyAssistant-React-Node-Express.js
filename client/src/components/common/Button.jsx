@@ -30,8 +30,7 @@ const Button = ({
 
     // Secondary
     secondary:
-      "border border-border bg-background-secondary text-foreground hover:bg-foreground/10 hover:border-foreground/20 disabled:bg-background-secondary/60 disabled:text-muted/70 disabled:border-border/60 disabled:hover:bg-background-secondary/90 disabled:hover:border-border",
-
+      "border border-border bg-background-secondary text-foreground shadow-sm hover:bg-primary-light hover:border-primary/50 hover:text-primary hover:shadow-(--shadow-button) disabled:bg-background-secondary/60 disabled:text-muted/70 disabled:border-border/60 disabled:shadow-none disabled:hover:bg-background-secondary/60 disabled:hover:border-border disabled:hover:text-muted/70",
     // Danger
     danger:
       "border border-danger/20 bg-danger/10 text-danger hover:bg-danger/20 disabled:bg-[linear-gradient(45deg,rgba(220,38,38,0.04)_25%,transparent_25%,transparent_50%,rgba(220,38,38,0.04)_50%,rgba(220,38,38,0.04)_75%,transparent_75%,transparent)] disabled:bg-[length:16px_16px] disabled:bg-background-secondary disabled:text-danger/40 disabled:border-danger/15 disabled:shadow-none disabled:hover:bg-background-secondary",

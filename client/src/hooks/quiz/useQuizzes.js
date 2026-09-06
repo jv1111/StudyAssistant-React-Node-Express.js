@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
+import useDeferredLoading from "../common/useDeferredLoading";
 import useItemFetcher from "../data/useItemFetcher";
 
 import {
@@ -36,7 +37,9 @@ const useQuizzes = (subjectId) => {
     queryParams,
   );
 
-  // Clear the previous quiz list when changing subjects.
+  const showLoading = useDeferredLoading(isLoading);
+
+  // Reset the quiz list when changing subjects.
   useEffect(() => {
     setQuizzes([]);
     setSkipCount(0);
@@ -68,12 +71,13 @@ const useQuizzes = (subjectId) => {
     }
 
     await deleteAllQuizzes(subjectId);
+
     setQuizzes([]);
   };
 
   return {
     quizzes,
-    isLoading: Boolean(subjectId) && isLoading,
+    isLoading: showLoading,
     searchInput,
     handleSearch,
     handleScroll,

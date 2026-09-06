@@ -19,7 +19,9 @@ const useSessionChecker = () => {
       } catch (error) {
         dispatch(logout());
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       }
     };
 

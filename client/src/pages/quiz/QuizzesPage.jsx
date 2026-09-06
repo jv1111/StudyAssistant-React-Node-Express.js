@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { saveAs } from "file-saver";
 import { Book, Download, JournalBookmark } from "react-bootstrap-icons";
-import { MoonLoader } from "react-spinners";
 
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
@@ -10,6 +9,7 @@ import QuizItemCard from "../../components/quiz/QuizItemCard";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
 import Badge from "../../components/common/Badge";
 import AppHeader from "../../components/common/AppHeader";
+import Loading from "../../components/common/Loading";
 
 import useSubjects from "../../hooks/quiz/useSubjects";
 import useQuizzes from "../../hooks/quiz/useQuizzes";
@@ -134,10 +134,8 @@ const QuizzesPage = () => {
             : null,
       };
 
-  const showInitialLoading = isLoading && items.length === 0;
-
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex h-screen w-full flex-col">
       <AppHeader
         eyebrow="Overview"
         title={isQuizMode ? selectedSubject.name : "Subjects"}
@@ -155,16 +153,11 @@ const QuizzesPage = () => {
         }
       />
 
-      <div className="mb-5 flex min-h-0 flex-1">
-        {showInitialLoading ? (
+      <div className="mb-5 flex min-h-0 flex-1 flex-col">
+        {isLoading ? (
           <GlassScrollableList>
             <li className="flex min-h-full w-full items-center justify-center">
-              <MoonLoader
-                color="#c59b27"
-                size={46}
-                speedMultiplier={0.8}
-                aria-label="Loading"
-              />
+              <Loading />
             </li>
           </GlassScrollableList>
         ) : items.length > 0 ? (
@@ -194,17 +187,6 @@ const QuizzesPage = () => {
                 />
               </li>
             ))}
-
-            {isLoading && (
-              <li className="flex w-full items-center justify-center py-4">
-                <MoonLoader
-                  color="#c59b27"
-                  size={28}
-                  speedMultiplier={0.8}
-                  aria-label="Loading more"
-                />
-              </li>
-            )}
           </GlassScrollableList>
         ) : (
           <div className="flex flex-1 items-center justify-center">

@@ -3,11 +3,9 @@ import { useNavigate } from "react-router-dom";
 import {
   Trash,
   Collection,
-  ArrowLeft,
   Book,
   JournalBookmark,
 } from "react-bootstrap-icons";
-import { MoonLoader } from "react-spinners";
 
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
@@ -16,10 +14,11 @@ import QuizItemCard from "../../components/quiz/QuizItemCard";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
 import Button from "../../components/common/Button";
 import AppHeader from "../../components/common/AppHeader";
+import Loading from "../../components/common/Loading";
+import Panel from "../../components/common/Panel";
 
 import useSubjects from "../../hooks/quiz/useSubjects";
 import useQuizzes from "../../hooks/quiz/useQuizzes";
-import Panel from "../../components/common/Panel";
 
 const ManageQuizzesPage = () => {
   const navigate = useNavigate();
@@ -51,10 +50,16 @@ const ManageQuizzesPage = () => {
   } = useQuizzes(selectedSubject?._id);
 
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
+
   const items = isQuizMode ? quizzes : subjects;
+
   const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
+
   const handleSearch = isQuizMode ? handleQuizSearch : handleSubjectSearch;
+
   const handleScroll = isQuizMode ? handleQuizScroll : handleSubjectScroll;
+
+  const hasItems = items.length > 0;
 
   const handleCreateQuiz = () => {
     navigate("/quiz/create");
@@ -193,11 +198,8 @@ const ManageQuizzesPage = () => {
         label: "Delete All Subjects",
       };
 
-  const showInitialLoading = isLoading && items.length === 0;
-  const hasItems = items.length > 0;
-
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex h-screen w-full flex-col">
       <AppHeader
         eyebrow="Administration"
         title={isQuizMode ? selectedSubject.name : "Manage Quizzes"}
@@ -214,19 +216,12 @@ const ManageQuizzesPage = () => {
           isQuizMode ? "Search quizzes..." : "Search subjects to manage..."
         }
       />
+
       <div className="mb-5 flex min-h-0 flex-1">
-        {showInitialLoading ? (
+        {isLoading ? (
           <GlassScrollableList>
-            <li
-              key="initial-loading"
-              className="flex min-h-full w-full items-center justify-center"
-            >
-              <MoonLoader
-                color="#c59b27"
-                size={46}
-                speedMultiplier={0.8}
-                aria-label="Loading"
-              />
+            <li className="flex min-h-full w-full items-center justify-center">
+              <Loading />
             </li>
           </GlassScrollableList>
         ) : hasItems ? (
@@ -256,20 +251,6 @@ const ManageQuizzesPage = () => {
                 />
               </li>
             ))}
-
-            {isLoading && (
-              <li
-                key="loading-more"
-                className="flex w-full items-center justify-center py-4"
-              >
-                <MoonLoader
-                  color="#c59b27"
-                  size={28}
-                  speedMultiplier={0.8}
-                  aria-label="Loading more"
-                />
-              </li>
-            )}
           </GlassScrollableList>
         ) : (
           <div className="flex flex-1 items-center justify-center">
@@ -289,7 +270,8 @@ const ManageQuizzesPage = () => {
           </div>
         )}
       </div>
-      <Panel className="flex gap-3 p-3 justify-end mb-5">
+
+      <Panel className="mb-5 flex justify-end gap-3 p-3">
         {hasItems && (
           <Button
             variant="danger"
@@ -331,6 +313,7 @@ const ManageQuizzesPage = () => {
         closeLabel="Cancel"
         closeVariant="secondary"
       />
+
       <OptionBox
         isOpen={showDeleteAllModal}
         onClose={handleCloseDeleteAll}

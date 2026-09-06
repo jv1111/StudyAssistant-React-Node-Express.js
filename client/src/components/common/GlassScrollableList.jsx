@@ -1,14 +1,14 @@
-import Panel from "../common/Panel";
+import Panel from "./Panel";
 
 const GlassScrollableList = ({ children, onScroll }) => {
   return (
-    <Panel className="mb-5 flex h-full w-full overflow-hidden px-4 py-2">
-      <ul
+    <Panel className="h-full w-full min-h-0 flex-1 flex-col py-2 px-4 ">
+      <div
         onScroll={onScroll}
-        className="flex w-full flex-col gap-2 overflow-y-auto pt-2 pr-2 sm:pr-4"
+        className="flex h-full w-full overflow-y-auto overflow-x-hidden pr-4 py-2"
       >
-        {children}
-      </ul>
+        <ul className="flex w-full flex-col gap-4">{children}</ul>
+      </div>
     </Panel>
   );
 };

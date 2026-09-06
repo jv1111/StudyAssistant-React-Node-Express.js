@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { JournalBookmark, FileEarmarkText } from "react-bootstrap-icons";
-import { MoonLoader } from "react-spinners";
 
 import EmptyState from "../../components/common/EmptyState";
 import QuizItemCard from "../../components/quiz/QuizItemCard";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
 import Badge from "../../components/common/Badge";
 import AppHeader from "../../components/common/AppHeader";
+import Loading from "../../components/common/Loading";
 
 import useRecordedSubjects from "../../hooks/records/useRecordedSubjects";
 import useRecords from "../../hooks/records/useRecords";
 
 const RecordsPage = () => {
   const navigate = useNavigate();
+
   const [selectedSubject, setSelectedSubject] = useState(null);
 
   const isRecordMode = Boolean(selectedSubject);
@@ -35,11 +36,14 @@ const RecordsPage = () => {
   } = useRecords(selectedSubject?._id);
 
   const isLoading = isRecordMode ? isRecordsLoading : isSubjectsLoading;
-  const items = isRecordMode ? (records ?? []) : (subjects ?? []);
+
+  const items = isRecordMode ? records : subjects;
+
   const searchInput = isRecordMode ? recordSearchInput : subjectSearchInput;
+
   const handleSearch = isRecordMode ? handleRecordSearch : handleSubjectSearch;
+
   const handleScroll = isRecordMode ? handleRecordScroll : handleSubjectScroll;
-  const showInitialLoading = isLoading && items.length === 0;
 
   const handleSelectSubject = (subject) => {
     setSelectedSubject(subject);
@@ -115,18 +119,10 @@ const RecordsPage = () => {
       />
 
       <div className="mb-5 flex min-h-0 flex-1">
-        {showInitialLoading ? (
+        {isLoading ? (
           <GlassScrollableList>
-            <li
-              key="initial-loading"
-              className="flex min-h-full w-full items-center justify-center"
-            >
-              <MoonLoader
-                color="#c59b27"
-                size={46}
-                speedMultiplier={0.8}
-                aria-label="Loading"
-              />
+            <li className="flex min-h-full w-full items-center justify-center">
+              <Loading />
             </li>
           </GlassScrollableList>
         ) : items.length > 0 ? (
@@ -152,20 +148,6 @@ const RecordsPage = () => {
                 />
               </li>
             ))}
-
-            {isLoading && (
-              <li
-                key="loading-more"
-                className="flex w-full items-center justify-center py-4"
-              >
-                <MoonLoader
-                  color="#c59b27"
-                  size={28}
-                  speedMultiplier={0.8}
-                  aria-label="Loading more"
-                />
-              </li>
-            )}
           </GlassScrollableList>
         ) : (
           <div className="flex flex-1 items-center justify-center">

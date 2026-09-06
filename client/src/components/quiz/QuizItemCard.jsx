@@ -1,100 +1,132 @@
+import { useState } from "react";
 import { ChevronRight } from "react-bootstrap-icons";
-
 import Button from "../common/Button";
-import Card from "../common/Card";
 
 const QuizItemCard = ({
   name,
   itemIcon: ItemIcon,
   onSelect,
+  hasOption,
   onOptionClick,
-  hasOption = false,
-  optionVariant = "ghost",
-  optionIcon,
+  optionVariant = "primary",
+  optionIcon: OptionIcon,
   optionTitle,
   count,
-  countLabel = "Quiz",
-  secondaryContent,
+  countLabel,
   badge,
   description,
+  secondaryContent,
 }) => {
-  const hasCount = count !== undefined && count !== null;
+  const [isOptionHovered, setIsOptionHovered] = useState(false);
+
+  const showCardHover = !isOptionHovered;
+
+  const cardHoverStyles = showCardHover
+    ? "hover:-translate-y-0.5 hover:border-border-hover hover:bg-surface-hover hover:shadow-[0_12px_35px_-8px_rgba(197,155,39,0.12)]"
+    : "";
 
   return (
-    <Card className="group relative w-full overflow-hidden bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-surface-hover hover:shadow-gold-glow">
-      <div className="relative z-10 flex h-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <Button
-          variant="unstyled"
-          onClick={onSelect}
-          className="min-w-0 flex-1 rounded-none p-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary shadow-xs transition-colors duration-300 group-hover:bg-primary/20">
-              <ItemIcon size={20} />
-            </div>
-
-            <div className="flex min-w-0 flex-col">
-              <div className="flex flex-wrap items-center gap-2">
-                <h3 className="text-base font-bold text-foreground transition-colors duration-200 group-hover:text-primary">
-                  {name}
-                </h3>
-
-                {badge}
-              </div>
-
-              {description && (
-                <p className="mt-0.5 line-clamp-2 max-w-3xl text-xs font-normal leading-relaxed text-muted transition-colors duration-300 group-hover:text-muted/90 sm:text-sm">
-                  {description}
-                </p>
-              )}
-
-              {hasCount && (
-                <div className="mt-1 flex items-center gap-2 text-xs font-medium text-muted">
-                  <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-0.5 text-[11px] text-primary">
-                    {count} {count === 1 ? countLabel : `${countLabel}s`}
-                  </span>
-
-                  {secondaryContent && (
-                    <>
-                      <span className="opacity-50">•</span>
-                      <span>{secondaryContent}</span>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {!hasCount && secondaryContent && (
-                <div className="mt-1 text-xs font-medium text-muted">
-                  {secondaryContent}
-                </div>
-              )}
-            </div>
-          </div>
-        </Button>
-
-        <div className="flex items-center justify-end gap-2">
-          {hasOption && (
-            <Button
-              variant={optionVariant}
-              icon={optionIcon}
-              iconOnly
-              onClick={onOptionClick}
-              title={optionTitle}
-              className="h-10 w-10 sm:h-11 sm:w-11"
-            />
-          )}
-
-          <button
-            type="button"
-            onClick={onSelect}
-            aria-label={`Select ${name}`}
-            className="hidden shrink-0 text-muted/30 outline-none transition-all duration-300 hover:text-primary focus-visible:text-primary sm:block"
+    <div
+      onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      className={`group relative flex w-full cursor-pointer flex-col justify-between gap-3 rounded-card border border-border bg-surface p-4 shadow-sm transition-all duration-300 sm:flex-row sm:items-center ${cardHoverStyles}`}
+    >
+      {/* Left Section: Icon & Content */}
+      <div className="flex min-w-0 flex-1 items-center gap-3.5">
+        {/* Icon Container */}
+        {ItemIcon && (
+          <div
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-light/80 text-primary shadow-xs transition-all duration-300 ${
+              showCardHover
+                ? "group-hover:scale-105 group-hover:bg-primary group-hover:text-surface group-hover:shadow-sm"
+                : ""
+            }`}
           >
-            <ChevronRight size={20} />
-          </button>
+            <ItemIcon className="h-5 w-5" />
+          </div>
+        )}
+
+        {/* Text Details */}
+        <div className="flex min-w-0 flex-col">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3
+              className={`truncate text-base font-bold text-foreground transition-colors ${
+                showCardHover ? "group-hover:text-primary" : ""
+              }`}
+            >
+              {name}
+            </h3>
+
+            {badge && <div className="shrink-0">{badge}</div>}
+          </div>
+
+          <p className="line-clamp-1 text-xs text-muted">{description}</p>
         </div>
       </div>
-    </Card>
+
+      {/* Right Section: Stats, Metadata & Actions */}
+      <div className="flex w-full items-center justify-between border-t border-border/60 pt-3 sm:w-auto sm:justify-end sm:gap-4 sm:border-0 sm:pt-0">
+        <div className="flex items-center gap-3">
+          {/* Compact Count Pill */}
+          {count !== undefined && count !== null && (
+            <div className="inline-flex items-center gap-1.5 rounded-lg bg-background-secondary/80 px-2.5 py-1 border border-border/40 text-xs font-semibold text-foreground">
+              <span className="font-bold text-primary">{count}</span>
+              <span className="text-muted text-[11px]">
+                {countLabel}
+                {count !== 1 ? "s" : ""}
+              </span>
+            </div>
+          )}
+
+          {/* Secondary Content */}
+          {secondaryContent && (
+            <span className="hidden text-xs font-medium text-muted/70 lg:inline-block">
+              {secondaryContent}
+            </span>
+          )}
+        </div>
+
+        {/* Interaction Elements */}
+        <div className="flex items-center gap-2">
+          {hasOption && OptionIcon && (
+            <div
+              onMouseEnter={() => setIsOptionHovered(true)}
+              onMouseLeave={() => setIsOptionHovered(false)}
+            >
+              <Button
+                variant={optionVariant}
+                icon={OptionIcon}
+                iconOnly={true}
+                title={optionTitle}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOptionClick?.(e);
+                }}
+                className="h-9 w-9 rounded-full shadow-xs transition-transform hover:scale-105"
+              />
+            </div>
+          )}
+
+          {/* Chevron Indicator */}
+          <div
+            className={`flex h-9 w-9 items-center justify-center rounded-full bg-background-secondary text-muted transition-all duration-300 ${
+              showCardHover
+                ? "group-hover:translate-x-0.5 group-hover:bg-primary group-hover:text-surface group-hover:shadow-xs"
+                : ""
+            }`}
+          >
+            <ChevronRight className="h-4 w-4 transition-transform group-hover:scale-110" />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

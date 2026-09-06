@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
-import useItemFetcher from "../data/useItemFetcher";
 import useDeferredLoading from "../common/useDeferredLoading";
+import useItemFetcher from "../data/useItemFetcher";
 
 import {
   getSubjects,
@@ -18,7 +18,6 @@ const useSubjects = () => {
 
   const searchVal = useDebounce(searchInput, 400);
 
-  // Adapt the fetcher parameters to the API parameters.
   const getSubjectsData = useCallback(
     ({ searchVal, skipCount }) => getSubjects(searchVal, skipCount),
     [],
@@ -30,7 +29,7 @@ const useSubjects = () => {
     getSubjectsData,
   );
 
-  const showLoading = useDeferredLoading(isLoading, 200);
+  const showLoading = useDeferredLoading(isLoading);
 
   const handleSearch = (event) => {
     setSearchInput(event.target.value);

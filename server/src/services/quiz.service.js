@@ -274,7 +274,59 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
 
   const { skip, limit } = getPagination(skipCount);
 
-  return Subject.find(filter).sort({ name: 1 }).skip(skip).limit(limit);
+  return Subject.aggregate([
+    {
+      $match: filter,
+    },
+
+    {
+      $lookup: {
+        from: "quizzes",
+        let: {
+          subjectId: "$_id",
+          userId: "$userId",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$subjectId", "$$subjectId"] },
+                  { $eq: ["$userId", "$$userId"] },
+                ],
+              },
+            },
+          },
+          {
+            $count: "count",
+          },
+        ],
+        as: "quizCount",
+      },
+    },
+
+    {
+      $addFields: {
+        quizCount: {
+          $ifNull: [{ $arrayElemAt: ["$quizCount.count", 0] }, 0],
+        },
+      },
+    },
+
+    {
+      $sort: {
+        name: 1,
+      },
+    },
+
+    {
+      $skip: skip,
+    },
+
+    {
+      $limit: limit,
+    },
+  ]);
 };
 
 const getQuiz = async (userId, quizId) => {

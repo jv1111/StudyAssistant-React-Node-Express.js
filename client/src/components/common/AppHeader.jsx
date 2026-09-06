@@ -29,27 +29,26 @@ const AppHeader = ({
       </div>
 
       {(hasSearch || showBackButton) && (
-        <div className="flex w-full shrink-0 flex-col items-end gap-2 sm:w-72 md:w-80">
-          {showBackButton && (
-            <Button
-              variant="secondary"
-              fit
-              onClick={onBack}
-              icon={ArrowLeft}
-              className="gap-2" /* Applies spacing without editing Button.jsx */
-            >
-              Go Back
-            </Button>
-          )}
-
+        <div className="flex w-full shrink-0 items-center justify-end gap-2 sm:w-auto">
           {hasSearch && (
-            <div className="w-full">
+            <div className="w-full sm:w-72 md:w-80">
               <SearchInput
                 value={searchValue}
                 onChange={onSearch}
                 placeholder={searchPlaceholder}
               />
             </div>
+          )}
+
+          {showBackButton && (
+            <Button
+              variant="secondary"
+              iconOnly
+              onClick={onBack}
+              icon={ArrowLeft}
+              title="Go back"
+              className="h-10 w-10 shrink-0 rounded-input border border-border bg-surface text-foreground shadow-xs transition-transform hover:scale-105"
+            />
           )}
         </div>
       )}
