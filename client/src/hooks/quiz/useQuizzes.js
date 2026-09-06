@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
@@ -15,6 +15,7 @@ import infinitScroller from "../../helper/infinitScroller";
 const useQuizzes = (subjectId) => {
   const [quizzes, setQuizzes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
 
@@ -34,6 +35,23 @@ const useQuizzes = (subjectId) => {
     getQuizzesData,
     queryParams,
   );
+
+  /*
+   * Mark the current subject as unloaded immediately after
+   * the selected subject changes.
+   */
+  useEffect(() => {
+    setLoadedSubjectId(null);
+  }, [subjectId]);
+
+  /*
+   * Mark the subject as loaded once its initial request finishes.
+   */
+  useEffect(() => {
+    if (!isLoading && subjectId) {
+      setLoadedSubjectId(subjectId);
+    }
+  }, [isLoading, subjectId]);
 
   const handleSearch = useCallback((event) => {
     setSearchInput(event.target.value);
@@ -75,9 +93,21 @@ const useQuizzes = (subjectId) => {
     setQuizzes([]);
   }, [subjectId]);
 
+  /*
+   * This is the important part.
+   *
+   * During the render immediately after selecting a new
+   * subject, loadedSubjectId still contains the previous
+   * subject ID, so this evaluates to true immediately.
+   *
+   * This prevents EmptyState from being rendered during
+   * the render/effect gap.
+   */
+  const isSubjectLoading = Boolean(subjectId) && loadedSubjectId !== subjectId;
+
   return {
     quizzes,
-    isLoading,
+    isLoading: isLoading || isSubjectLoading,
     isFetchingFromScrollingDown: isFetchingMore,
     searchInput,
     handleSearch,
