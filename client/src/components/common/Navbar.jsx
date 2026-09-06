@@ -56,7 +56,7 @@ function Navigation() {
             </span>
 
             <span>
-              Quiz<span className="text-primary">Builder</span>
+              Study<span className="text-primary title-3d">Assistant</span>
             </span>
           </Link>
 

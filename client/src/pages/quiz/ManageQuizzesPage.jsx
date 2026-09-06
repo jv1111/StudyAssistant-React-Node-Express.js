@@ -19,6 +19,7 @@ import AppHeader from "../../components/common/AppHeader";
 
 import useSubjects from "../../hooks/quiz/useSubjects";
 import useQuizzes from "../../hooks/quiz/useQuizzes";
+import Panel from "../../components/common/Panel";
 
 const ManageQuizzesPage = () => {
   const navigate = useNavigate();
@@ -213,7 +214,6 @@ const ManageQuizzesPage = () => {
           isQuizMode ? "Search quizzes..." : "Search subjects to manage..."
         }
       />
-
       <div className="mb-5 flex min-h-0 flex-1">
         {showInitialLoading ? (
           <GlassScrollableList>
@@ -289,8 +289,7 @@ const ManageQuizzesPage = () => {
           </div>
         )}
       </div>
-
-      <div className="flex flex-col-reverse gap-3 border-t border-border/90 pb-5 sm:flex-row sm:justify-end">
+      <Panel className="flex gap-3 p-3 justify-end mb-5">
         {hasItems && (
           <Button
             variant="danger"
@@ -311,7 +310,7 @@ const ManageQuizzesPage = () => {
         >
           Create Quiz
         </Button>
-      </div>
+      </Panel>
 
       <OptionBox
         isOpen={Boolean(deleteTarget)}
@@ -332,7 +331,6 @@ const ManageQuizzesPage = () => {
         closeLabel="Cancel"
         closeVariant="secondary"
       />
-
       <OptionBox
         isOpen={showDeleteAllModal}
         onClose={handleCloseDeleteAll}

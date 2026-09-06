@@ -231,7 +231,7 @@ const QuizPage = () => {
               </Button>
 
               <Button
-                variant="ghost"
+                variant="danger"
                 icon={XCircle}
                 onClick={handleCancelQuiz}
                 className="w-full justify-center gap-2 text-error hover:bg-error/10 hover:text-error"
