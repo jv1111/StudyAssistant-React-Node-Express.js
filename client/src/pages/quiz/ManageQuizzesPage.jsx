@@ -231,7 +231,7 @@ const ManageQuizzesPage = () => {
       <div className="mb-5 flex min-h-0 flex-1">
         <GlassScrollableList
           onScroll={handleScroll}
-          isLoading={isFetchingFromScrollingDown}
+          isFetchingMore={isFetchingFromScrollingDown}
         >
           {hasItems ? (
             items.map((item) => (

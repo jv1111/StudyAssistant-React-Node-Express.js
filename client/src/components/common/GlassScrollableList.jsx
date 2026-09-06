@@ -1,7 +1,7 @@
 import Loading from "./Loading";
 import Panel from "./Panel";
 
-const GlassScrollableList = ({ children, onScroll, isLoading }) => {
+const GlassScrollableList = ({ children, onScroll, isFetchingMore }) => {
   return (
     <Panel className="flex h-full min-h-0 w-full flex-1 flex-col px-4 py-2">
       <div
@@ -10,13 +10,13 @@ const GlassScrollableList = ({ children, onScroll, isLoading }) => {
       >
         <ul
           className={`flex w-full flex-col gap-4 ${
-            !isLoading ? "min-h-full" : ""
+            !isFetchingMore ? "min-h-full" : ""
           }`}
         >
           {children}
         </ul>
 
-        {isLoading && (
+        {isFetchingMore && (
           <Loading variant="fetching" text="Please wait" className="mt-5" />
         )}
       </div>

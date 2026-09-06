@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
@@ -15,7 +15,6 @@ import infinitScroller from "../../helper/infinitScroller";
 const useQuizzes = (subjectId) => {
   const [quizzes, setQuizzes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
 
@@ -36,16 +35,6 @@ const useQuizzes = (subjectId) => {
     queryParams,
   );
 
-  useEffect(() => {
-    setLoadedSubjectId(null);
-  }, [subjectId]);
-
-  useEffect(() => {
-    if (!isLoading && subjectId) {
-      setLoadedSubjectId(subjectId);
-    }
-  }, [isLoading, subjectId]);
-
   const handleSearch = useCallback((event) => {
     setSearchInput(event.target.value);
   }, []);
@@ -62,7 +51,7 @@ const useQuizzes = (subjectId) => {
   );
 
   const handleStartQuiz = useCallback(
-    async (quizId, quizType, randomizeQuestions) => {
+    (quizId, quizType, randomizeQuestions) => {
       return startQuiz(quizId, quizType, randomizeQuestions);
     },
     [],
@@ -86,11 +75,9 @@ const useQuizzes = (subjectId) => {
     setQuizzes([]);
   }, [subjectId]);
 
-  const isSubjectLoading = Boolean(subjectId) && loadedSubjectId !== subjectId;
-
   return {
     quizzes,
-    isLoading: isLoading || isSubjectLoading,
+    isLoading,
     isFetchingFromScrollingDown: isFetchingMore,
     searchInput,
     handleSearch,

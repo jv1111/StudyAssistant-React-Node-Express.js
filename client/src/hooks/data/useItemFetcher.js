@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { customDelay } from "../../utils/delay";
 
 const EMPTY_QUERY_PARAMS = {};
 
@@ -27,7 +28,7 @@ const useItemFetcher = (
   const [skipCount, setSkipCount] = useState(0);
 
   const requestIdRef = useRef(0);
-  const previousSearchRef = useRef(searchVal);
+  const previousQueryRef = useRef(null);
 
   const fetchItems = useCallback(
     async (currentSkipCount) => {
@@ -41,14 +42,13 @@ const useItemFetcher = (
       }
 
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await customDelay(1000);
         const apiResponse = await getDataApi({
           ...queryParams,
           searchVal,
           skipCount: currentSkipCount,
         });
 
-        // Ignore an outdated response.
         if (requestId !== requestIdRef.current) {
           return;
         }
@@ -57,7 +57,6 @@ const useItemFetcher = (
           mergeItems(currentItems, apiResponse, currentSkipCount),
         );
       } catch (error) {
-        // Ignore errors from outdated requests.
         if (requestId !== requestIdRef.current) {
           return;
         }
@@ -79,28 +78,31 @@ const useItemFetcher = (
   );
 
   useEffect(() => {
-    const searchChanged = previousSearchRef.current !== searchVal;
+    const queryKey = JSON.stringify({
+      ...queryParams,
+      searchVal,
+    });
 
-    if (searchChanged) {
-      previousSearchRef.current = searchVal;
+    const queryChanged = previousQueryRef.current !== queryKey;
 
+    if (queryChanged) {
+      previousQueryRef.current = queryKey;
+
+      // Invalidate any request belonging to the previous query.
       requestIdRef.current += 1;
 
       setItems([]);
       setSkipCount(0);
+      setIsLoading(true);
       setIsFetchingMore(false);
 
-      // Fetch the new search immediately when the current
-      // pagination position is already zero.
-      if (skipCount === 0) {
-        fetchItems(0);
-      }
+      fetchItems(0);
 
       return;
     }
 
     fetchItems(skipCount);
-  }, [fetchItems, searchVal, setItems, skipCount]);
+  }, [fetchItems, queryParams, searchVal, setItems, skipCount]);
 
   return {
     isLoading,
