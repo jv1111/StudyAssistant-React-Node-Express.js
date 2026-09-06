@@ -1,9 +1,8 @@
 @import "tailwindcss";
 
 @utility layout-container {
-  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-15;
+  @apply w-full px-4 sm:px-6 lg:px-8;
 }
-
 /* --- Reusable Form & UI Utilities --- */
 
 @utility input-base {
@@ -135,7 +134,7 @@
 }
 
 @utility app-header {
-  @apply mb-6 mt-4 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between;
+  @apply mb-6 flex h-fit shrink-0 flex-col gap-4 sm:flex-row sm:items-end sm:justify-between pt-4;
 }
 
 @layer base {
@@ -157,35 +156,19 @@
     color: var(--color-foreground);
     background-color: var(--color-background);
 
-    /*
-     * StudyAssistant background
-     *
-     * background.webp is located in /public, so Vite exposes it
-     * from the application root as /background.webp.
-     *
-     * The left-side gradient keeps the title and supporting text
-     * readable while allowing the artwork to remain visible.
-     */
     background-image:
       linear-gradient(
         90deg,
-        rgba(250, 248, 243, 0.82) 0%,
-        rgba(250, 248, 243, 0.55) 28%,
-        rgba(250, 248, 243, 0.08) 65%,
+        rgba(250, 248, 243, 0.72) 0%,
+        rgba(250, 248, 243, 0.42) 32%,
+        rgba(250, 248, 243, 0.08) 68%,
         rgba(250, 248, 243, 0) 100%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.32) 0%,
-        rgba(255, 255, 255, 0) 45%
       ),
       url("/background.webp");
 
-    background-position: center, center, center;
-
-    background-repeat: no-repeat, no-repeat, no-repeat;
-
-    background-size: cover, cover, cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 
     background-attachment: fixed;
 
@@ -195,37 +178,5 @@
       system-ui,
       -apple-system,
       sans-serif;
-  }
-
-  a {
-    color: inherit;
-    @apply no-underline;
-  }
-
-  /* =========================================================
-     CUSTOM SCROLLBAR
-     ========================================================= */
-
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-primary) transparent;
-  }
-
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--color-primary);
-    border-radius: 9999px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--color-primary-hover);
   }
 }

@@ -1,13 +1,16 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/common/Navbar";
+import Navigation from "../components/common/Navigation";
 
 const AppLayout = () => {
   return (
-    <div className="flex h-screen flex-col">
-      <Navbar />
-      <main className="flex layout-container min-h-0 flex-1">
-        <Outlet />
-      </main>
+    <div className="min-h-screen bg-background">
+      <Navigation />
+
+      <div className="min-h-screen md:pl-64">
+        <main className="layout-container flex min-h-screen min-w-full">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

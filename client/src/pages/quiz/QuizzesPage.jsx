@@ -137,7 +137,7 @@ const QuizzesPage = () => {
   const showInitialLoading = isLoading && items.length === 0;
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex min-h-screen w-full flex-col">
       <AppHeader
         eyebrow="Overview"
         title={isQuizMode ? selectedSubject.name : "Subjects"}
