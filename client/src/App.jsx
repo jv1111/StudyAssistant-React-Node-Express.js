@@ -8,11 +8,7 @@ function App() {
   const { isLoading } = useSessionChecker();
 
   if (isLoading) {
-    return (
-      <div className="App h-screen">
-        <Loading />
-      </div>
-    );
+    return <Loading className="h-screen" />;
   }
 
   return (

@@ -44,9 +44,7 @@ const useItemFetcher = (
       }
 
       try {
-        // Development only: simulate a slow connection.
-        await customDelay(1000);
-
+        await customDelay(500);
         const response = await getDataApi({
           ...queryParams,
           searchVal,

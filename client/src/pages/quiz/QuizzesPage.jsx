@@ -27,7 +27,8 @@ const QuizzesPage = () => {
   const {
     subjects,
     isLoading: isSubjectsLoading,
-    isFetchingFromScrollingDown: isFetchingSubjectsFromScrollingDown,
+    isFetchingFromScrollingDown: isFetchingSubjects,
+    hasMore: hasMoreSubjects,
     searchInput: subjectSearchInput,
     handleSearch: handleSubjectSearch,
     handleScroll: handleSubjectScroll,
@@ -36,20 +37,21 @@ const QuizzesPage = () => {
   const {
     quizzes,
     isLoading: isQuizzesLoading,
-    isFetchingFromScrollingDown: isFetchingQuizzesFromScrollingDown,
+    isFetchingFromScrollingDown: isFetchingQuizzes,
+    hasMore: hasMoreQuizzes,
     searchInput: quizSearchInput,
     handleSearch: handleQuizSearch,
     handleScroll: handleQuizScroll,
     handleStartQuiz,
   } = useQuizzes(selectedSubject?._id);
 
+  const items = isQuizMode ? quizzes : subjects;
+
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
 
-  const isFetchingFromScrollingDown = isQuizMode
-    ? isFetchingQuizzesFromScrollingDown
-    : isFetchingSubjectsFromScrollingDown;
+  const isFetchingMore = isQuizMode ? isFetchingQuizzes : isFetchingSubjects;
 
-  const items = isQuizMode ? quizzes : subjects;
+  const hasMore = isQuizMode ? hasMoreQuizzes : hasMoreSubjects;
 
   const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
 
@@ -162,15 +164,12 @@ const QuizzesPage = () => {
       <div className="mb-5 flex min-h-0 flex-1 flex-col">
         <GlassScrollableList
           onScroll={handleScroll}
-          isLoading={isFetchingFromScrollingDown}
+          isFetchingMore={isFetchingMore}
         >
           {items.length > 0 ? (
             items.map((item) => (
               <li
-                key={
-                  item?._id ||
-                  `${itemConfig.getName(item)}-${itemConfig.getSecondaryContent(item)}`
-                }
+                key={item._id}
                 className="flex w-full items-center justify-center"
               >
                 <QuizItemCard
