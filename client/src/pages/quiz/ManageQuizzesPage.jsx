@@ -32,6 +32,7 @@ const ManageQuizzesPage = () => {
   const {
     subjects,
     isLoading: isSubjectsLoading,
+    isFetchingFromScrollingDown: isFetchingSubjectsFromScrollingDown,
     searchInput: subjectSearchInput,
     handleSearch: handleSubjectSearch,
     handleScroll: handleSubjectScroll,
@@ -42,6 +43,7 @@ const ManageQuizzesPage = () => {
   const {
     quizzes,
     isLoading: isQuizzesLoading,
+    isFetchingFromScrollingDown: isFetchingQuizzesFromScrollingDown,
     searchInput: quizSearchInput,
     handleSearch: handleQuizSearch,
     handleScroll: handleQuizScroll,
@@ -50,6 +52,10 @@ const ManageQuizzesPage = () => {
   } = useQuizzes(selectedSubject?._id);
 
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
+
+  const isFetchingFromScrollingDown = isQuizMode
+    ? isFetchingQuizzesFromScrollingDown
+    : isFetchingSubjectsFromScrollingDown;
 
   const items = isQuizMode ? quizzes : subjects;
 
@@ -218,15 +224,12 @@ const ManageQuizzesPage = () => {
       />
 
       <div className="mb-5 flex min-h-0 flex-1">
-        {isLoading ? (
-          <GlassScrollableList>
-            <li className="flex min-h-full w-full items-center justify-center">
-              <Loading />
-            </li>
-          </GlassScrollableList>
-        ) : hasItems ? (
-          <GlassScrollableList onScroll={handleScroll}>
-            {items.map((item) => (
+        <GlassScrollableList
+          onScroll={handleScroll}
+          isLoading={isFetchingFromScrollingDown}
+        >
+          {hasItems ? (
+            items.map((item) => (
               <li
                 key={
                   item?._id ||
@@ -250,25 +253,29 @@ const ManageQuizzesPage = () => {
                   secondaryContent={itemConfig.getSecondaryContent(item)}
                 />
               </li>
-            ))}
-          </GlassScrollableList>
-        ) : (
-          <div className="flex flex-1 items-center justify-center">
-            <EmptyState
-              icon={Collection}
-              title={isQuizMode ? "No quizzes found" : "No subjects found"}
-              description={
-                isQuizMode
-                  ? quizSearchInput
-                    ? "There are no quizzes matching your search. Try adjusting your query."
-                    : "This subject does not have any quizzes yet."
-                  : subjectSearchInput
-                    ? "There are no subjects matching your search. Try adjusting your query."
-                    : "There are no subjects to manage yet."
-              }
-            />
-          </div>
-        )}
+            ))
+          ) : isLoading ? (
+            <li className="flex min-h-full w-full items-center justify-center">
+              <Loading />
+            </li>
+          ) : (
+            <li className="flex min-h-full w-full items-center justify-center">
+              <EmptyState
+                icon={Collection}
+                title={isQuizMode ? "No quizzes found" : "No subjects found"}
+                description={
+                  isQuizMode
+                    ? quizSearchInput
+                      ? "There are no quizzes matching your search. Try adjusting your query."
+                      : "This subject does not have any quizzes yet."
+                    : subjectSearchInput
+                      ? "There are no subjects matching your search. Try adjusting your query."
+                      : "There are no subjects to manage yet."
+                }
+              />
+            </li>
+          )}
+        </GlassScrollableList>
       </div>
 
       <Panel className="mb-5 flex justify-end gap-3 p-3">

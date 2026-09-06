@@ -8,7 +8,7 @@ const EmptyState = ({
   icon: Icon = Search,
 }) => {
   return (
-    <Panel
+    <div
       className="flex h-full w-full flex-col items-center justify-center px-6 py-16 text-center"
       role="status"
     >
@@ -23,7 +23,7 @@ const EmptyState = ({
           {description}
         </p>
       )}
-    </Panel>
+    </div>
   );
 };
 

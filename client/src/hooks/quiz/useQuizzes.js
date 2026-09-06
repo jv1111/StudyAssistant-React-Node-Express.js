@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
-import useDeferredLoading from "../common/useDeferredLoading";
 import useItemFetcher from "../data/useItemFetcher";
 
 import {
@@ -16,12 +15,14 @@ import infinitScroller from "../../helper/infinitScroller";
 const useQuizzes = (subjectId) => {
   const [quizzes, setQuizzes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [isFetchingFromScrollingDown, setIsFetchingFromScrollingDown] =
+    useState(false);
+  const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
 
   const queryParams = useMemo(() => ({ subjectId }), [subjectId]);
 
-  // Prevent fetching quizzes until a subject is selected.
   const getQuizzesData = useCallback(({ subjectId, searchVal, skipCount }) => {
     if (!subjectId) {
       return [];
@@ -37,20 +38,29 @@ const useQuizzes = (subjectId) => {
     queryParams,
   );
 
-  const showLoading = useDeferredLoading(isLoading);
-
-  // Reset the quiz list when changing subjects.
   useEffect(() => {
     setQuizzes([]);
     setSkipCount(0);
-  }, [subjectId, setSkipCount]);
+    setIsFetchingFromScrollingDown(false);
+    setLoadedSubjectId(null);
+  }, [subjectId, searchVal, setSkipCount]);
+
+  useEffect(() => {
+    if (!isLoading && subjectId) {
+      setLoadedSubjectId(subjectId);
+    }
+  }, [isLoading, subjectId]);
 
   const handleSearch = (event) => {
     setSearchInput(event.target.value);
   };
 
   const handleScroll = (event) => {
-    infinitScroller(event, quizzes, setSkipCount);
+    const isScrollingDown = infinitScroller(event, quizzes, setSkipCount);
+
+    if (isScrollingDown) {
+      setIsFetchingFromScrollingDown(true);
+    }
   };
 
   const handleStartQuiz = async (quizId, quizType, randomizeQuestions) => {
@@ -75,9 +85,12 @@ const useQuizzes = (subjectId) => {
     setQuizzes([]);
   };
 
+  const isSubjectLoading = subjectId && loadedSubjectId !== subjectId;
+
   return {
     quizzes,
-    isLoading: showLoading,
+    isLoading: isLoading || isSubjectLoading,
+    isFetchingFromScrollingDown,
     searchInput,
     handleSearch,
     handleScroll,

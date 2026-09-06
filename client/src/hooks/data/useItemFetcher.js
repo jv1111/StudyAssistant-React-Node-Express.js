@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+// Temporary: simulate a slow server/network.
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 // Shared empty object for hooks that do not need extra query parameters.
 const EMPTY_QUERY_PARAMS = {};
 
@@ -32,6 +35,9 @@ const useItemFetcher = (
     setLoading(true);
 
     try {
+      // Temporary: simulate slow internet/server response.
+      await delay(2000);
+
       const apiResponse = await getDataApi({
         ...queryParams,
         searchVal,
