@@ -64,7 +64,9 @@ const getRecordedSubjects = async (userId, searchQuery, skipCount = 0) => {
       $skip: skip,
     },
     {
-      $limit: limit,
+      // Fetch one extra record so we can determine
+      // whether another page exists.
+      $limit: limit + 1,
     },
     {
       $lookup: {
@@ -103,7 +105,16 @@ const getRecordedSubjects = async (userId, searchQuery, skipCount = 0) => {
     },
   ]);
 
-  return subjects;
+  const hasMore = subjects.length > limit;
+
+  if (hasMore) {
+    subjects.pop();
+  }
+
+  return {
+    items: subjects,
+    hasMore,
+  };
 };
 
 const getRecordsBySubject = async (
@@ -125,10 +136,21 @@ const getRecordsBySubject = async (
 
   const { skip, limit } = getPagination(skipCount);
 
-  return QuizRecord.find(filter)
-    .sort({ completedAt: -1 })
+  const records = await QuizRecord.find(filter)
+    .sort({ completedAt: -1, _id: -1 })
     .skip(skip)
-    .limit(limit);
+    .limit(limit + 1);
+
+  const hasMore = records.length > limit;
+
+  if (hasMore) {
+    records.pop();
+  }
+
+  return {
+    items: records,
+    hasMore,
+  };
 };
 
 const getRecordByRecordId = async (userId, recordId) => {

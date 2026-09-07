@@ -7,6 +7,7 @@ import OptionBox from "../../components/common/OptionBox";
 
 import { updateQuiz } from "../../api/quiz/quiz.api";
 import useUpdateQuizDraft from "../../hooks/quiz/useUpdateQuizDraft";
+import Loading from "../../components/common/Loading";
 
 const UpdateQuizPage = () => {
   const { quizId } = useParams();
@@ -79,15 +80,11 @@ const UpdateQuizPage = () => {
   };
 
   const handleSubmitSuccess = () => {
-    navigate(`/quiz/${subjectId}`);
+    navigate(`/quiz/manage`);
   };
 
   if (isLoadingDraft) {
-    return (
-      <div className="flex w-full items-center justify-center py-16">
-        <p className="text-sm text-muted">Loading quiz...</p>
-      </div>
-    );
+    return <Loading className="h-screen" />;
   }
 
   return (

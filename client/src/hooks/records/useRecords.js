@@ -10,27 +10,27 @@ import infinitScroller from "../../helper/infinitScroller";
 const useRecords = (subjectId) => {
   const [records, setRecords] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [loadedSubjectId, setLoadedSubjectId] = useState(null);
 
   const searchVal = useDebounce(searchInput, 400);
 
-  const queryParams = useMemo(
-    () => ({
-      subjectId,
-    }),
+  const queryParams = useMemo(() => ({ subjectId }), [subjectId]);
+
+  const getRecordsData = useCallback(
+    ({ searchVal, skipCount }) => {
+      if (!subjectId) {
+        return {
+          items: [],
+          hasMore: false,
+        };
+      }
+
+      return getRecordsBySubject(subjectId, searchVal, skipCount);
+    },
     [subjectId],
   );
 
-  const getRecordsData = useCallback(({ subjectId, searchVal, skipCount }) => {
-    if (!subjectId) {
-      return [];
-    }
-
-    return getRecordsBySubject(subjectId, searchVal, skipCount);
-  }, []);
-
-  const { isLoading: isFetching, setSkipCount } = useItemFetcher(
+  const { isLoading, isFetchingMore, setSkipCount } = useItemFetcher(
     setRecords,
     searchVal,
     getRecordsData,
@@ -38,72 +38,51 @@ const useRecords = (subjectId) => {
   );
 
   /*
-   * Clear the previous records when changing subjects.
-   *
-   * loadedSubjectId is intentionally reset so that the returned
-   * loading state becomes true immediately for the new subject.
+   * Mark the current subject as unloaded immediately after
+   * the selected subject changes.
    */
   useEffect(() => {
-    setRecords([]);
-    setSkipCount(0);
     setLoadedSubjectId(null);
-
-    if (subjectId) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
-  }, [subjectId, setSkipCount]);
+  }, [subjectId]);
 
   /*
-   * Keep loading active while fetching.
-   *
-   * Once fetching finishes, keep the loader visible for another
-   * 1.5 seconds before marking this subject as fully loaded.
+   * Mark the subject as loaded once its initial request finishes.
    */
   useEffect(() => {
-    if (!subjectId) {
-      setIsLoading(false);
-      setLoadedSubjectId(null);
-      return;
-    }
-
-    if (isFetching) {
-      setIsLoading(true);
-      return;
-    }
-
-    const timeout = setTimeout(() => {
+    if (!isLoading && subjectId) {
       setLoadedSubjectId(subjectId);
-      setIsLoading(false);
-    }, 200);
+    }
+  }, [isLoading, subjectId]);
 
-    return () => clearTimeout(timeout);
-  }, [subjectId, isFetching]);
-
-  const handleSearch = (event) => {
+  const handleSearch = useCallback((event) => {
     setSearchInput(event.target.value);
-  };
+  }, []);
 
-  const handleScroll = (event) => {
-    infinitScroller(event, records, setSkipCount);
-  };
+  const handleScroll = useCallback(
+    (event) => {
+      if (isFetchingMore) {
+        return;
+      }
+
+      infinitScroller(event, records, setSkipCount);
+    },
+    [isFetchingMore, records, setSkipCount],
+  );
 
   /*
-   * This is the important part.
+   * During the render immediately after selecting a new
+   * subject, loadedSubjectId still contains the previous
+   * subject ID, so this evaluates to true immediately.
    *
-   * When subjectId changes, loadedSubjectId still contains the
-   * previous subject (or null), so this becomes true immediately
-   * during the render that switches into record mode.
-   *
-   * This prevents EmptyState from flashing before useEffect runs.
+   * This prevents EmptyState from being rendered during
+   * the render/effect gap.
    */
   const isSubjectLoading = Boolean(subjectId) && loadedSubjectId !== subjectId;
 
   return {
     records,
-    isLoading:
-      Boolean(subjectId) && (isLoading || isFetching || isSubjectLoading),
+    isLoading: isLoading || isSubjectLoading,
+    isFetchingFromScrollingDown: isFetchingMore,
     searchInput,
     handleSearch,
     handleScroll,

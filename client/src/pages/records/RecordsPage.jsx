@@ -20,24 +20,32 @@ const RecordsPage = () => {
   const isRecordMode = Boolean(selectedSubject);
 
   const {
-    subjects = [],
+    subjects,
     isLoading: isSubjectsLoading,
+    isFetchingFromScrollingDown: isFetchingSubjects,
+    hasMore: hasMoreSubjects,
     searchInput: subjectSearchInput,
     handleSearch: handleSubjectSearch,
     handleScroll: handleSubjectScroll,
   } = useRecordedSubjects();
 
   const {
-    records = [],
+    records,
     isLoading: isRecordsLoading,
+    isFetchingFromScrollingDown: isFetchingRecords,
+    hasMore: hasMoreRecords,
     searchInput: recordSearchInput,
     handleSearch: handleRecordSearch,
     handleScroll: handleRecordScroll,
   } = useRecords(selectedSubject?._id);
 
+  const items = isRecordMode ? records : subjects;
+
   const isLoading = isRecordMode ? isRecordsLoading : isSubjectsLoading;
 
-  const items = isRecordMode ? records : subjects;
+  const isFetchingMore = isRecordMode ? isFetchingRecords : isFetchingSubjects;
+
+  const hasMore = isRecordMode ? hasMoreRecords : hasMoreSubjects;
 
   const searchInput = isRecordMode ? recordSearchInput : subjectSearchInput;
 
@@ -67,13 +75,12 @@ const RecordsPage = () => {
         getName: (item) => item.quizName,
         itemIcon: FileEarmarkText,
         onSelect: handleSelectRecord,
+        hasOption: false,
         getCount: (item) => item.numberOfItems,
         countLabel: "Question",
-        getBadge: (item) => (
+        badge: (
           <Badge variant="primary" shape="pill">
-            {item.quizType === "enumeration"
-              ? "Enumeration"
-              : "Multiple Choice"}
+            Multiple Choice
           </Badge>
         ),
         getDescription: () =>
@@ -87,9 +94,10 @@ const RecordsPage = () => {
         getName: (item) => item.subject,
         itemIcon: JournalBookmark,
         onSelect: handleSelectSubject,
+        hasOption: false,
         getCount: (item) => item.recordCount,
         countLabel: "Record",
-        getBadge: () => (
+        badge: (
           <Badge icon={JournalBookmark} variant="primary" shape="pill">
             Subject
           </Badge>
@@ -100,7 +108,7 @@ const RecordsPage = () => {
       };
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex h-screen w-full flex-col">
       <AppHeader
         eyebrow="Overview"
         title={isRecordMode ? selectedSubject.subject : "Records"}
@@ -118,53 +126,51 @@ const RecordsPage = () => {
         }
       />
 
-      <div className="mb-5 flex min-h-0 flex-1">
-        {isLoading ? (
-          <GlassScrollableList>
-            <li className="flex min-h-full w-full items-center justify-center">
-              <Loading />
-            </li>
-          </GlassScrollableList>
-        ) : items.length > 0 ? (
-          <GlassScrollableList onScroll={handleScroll}>
-            {items.map((item) => (
+      <div className="mb-5 flex min-h-0 flex-1 flex-col">
+        <GlassScrollableList
+          onScroll={handleScroll}
+          isFetchingMore={isFetchingMore}
+        >
+          {items.length > 0 ? (
+            items.map((item) => (
               <li
-                key={
-                  item?._id ||
-                  `${itemConfig.getName(item)}-${itemConfig.getSecondaryContent(item)}`
-                }
+                key={item._id}
                 className="flex w-full items-center justify-center"
               >
                 <QuizItemCard
                   name={itemConfig.getName(item)}
                   itemIcon={itemConfig.itemIcon}
                   onSelect={() => itemConfig.onSelect(item)}
-                  hasOption={false}
+                  hasOption={itemConfig.hasOption}
                   count={itemConfig.getCount(item)}
                   countLabel={itemConfig.countLabel}
-                  badge={itemConfig.getBadge(item)}
+                  badge={itemConfig.badge}
                   description={itemConfig.getDescription(item)}
                   secondaryContent={itemConfig.getSecondaryContent(item)}
                 />
               </li>
-            ))}
-          </GlassScrollableList>
-        ) : (
-          <div className="flex flex-1 items-center justify-center">
-            <EmptyState
-              title={
-                isRecordMode
-                  ? "No quiz records found"
-                  : "No recorded subjects found"
-              }
-              description={
-                isRecordMode
-                  ? "There are no quiz records matching your search."
-                  : "You do not have any quiz records yet."
-              }
-            />
-          </div>
-        )}
+            ))
+          ) : isLoading ? (
+            <li className="flex min-h-full w-full items-center justify-center">
+              <Loading />
+            </li>
+          ) : (
+            <li className="flex min-h-full w-full items-center justify-center">
+              <EmptyState
+                title={
+                  isRecordMode
+                    ? "No quiz records found"
+                    : "No recorded subjects found"
+                }
+                description={
+                  isRecordMode
+                    ? "There are no quiz records matching your search."
+                    : "You do not have any quiz records yet."
+                }
+              />
+            </li>
+          )}
+        </GlassScrollableList>
       </div>
     </div>
   );

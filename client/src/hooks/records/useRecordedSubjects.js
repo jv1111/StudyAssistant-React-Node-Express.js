@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import useDebounce from "../common/useDebounce";
 import useItemFetcher from "../data/useItemFetcher";
@@ -10,45 +10,38 @@ import infinitScroller from "../../helper/infinitScroller";
 const useRecordedSubjects = () => {
   const [subjects, setSubjects] = useState([]);
   const [searchInput, setSearchInput] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
 
   const searchVal = useDebounce(searchInput, 400);
 
-  const getRecordedSubjectsData = useCallback(
-    ({ searchVal, skipCount }) => getRecordedSubjects(searchVal, skipCount),
-    [],
-  );
+  const getRecordedSubjectsData = useCallback(({ searchVal, skipCount }) => {
+    return getRecordedSubjects(searchVal, skipCount);
+  }, []);
 
-  const { isLoading: isFetching, setSkipCount } = useItemFetcher(
+  const { isLoading, isFetchingMore, setSkipCount } = useItemFetcher(
     setSubjects,
     searchVal,
     getRecordedSubjectsData,
   );
 
-  useEffect(() => {
-    if (isFetching) {
-      setIsLoading(true);
-      return;
-    }
-
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 200);
-
-    return () => clearTimeout(timeout);
-  }, [isFetching]);
-
-  const handleSearch = (event) => {
+  const handleSearch = useCallback((event) => {
     setSearchInput(event.target.value);
-  };
+  }, []);
 
-  const handleScroll = (event) => {
-    infinitScroller(event, subjects, setSkipCount);
-  };
+  const handleScroll = useCallback(
+    (event) => {
+      if (isFetchingMore) {
+        return;
+      }
+
+      infinitScroller(event, subjects, setSkipCount);
+    },
+    [isFetchingMore, subjects, setSkipCount],
+  );
 
   return {
     subjects,
     isLoading,
+    isFetchingFromScrollingDown: isFetchingMore,
     searchInput,
     handleSearch,
     handleScroll,
