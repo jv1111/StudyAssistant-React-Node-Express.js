@@ -27,7 +27,7 @@ const ForgotPassPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex items-center justify-center">
       <Card className="max-w-md">
         <ForgotPassForm
           isSent={isSent}
