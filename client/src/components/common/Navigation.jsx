@@ -133,7 +133,7 @@ function Navigation() {
         </div>
       </aside>
 
-      {/* Mobile Header */}
+      {/* Mobile Header (z-50 keeps it on top) */}
       <header className="sticky top-0 z-50 border-b border-border bg-surface md:hidden">
         <div className="flex h-16 items-center justify-between px-4">
           <Link
@@ -165,15 +165,8 @@ function Navigation() {
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-x-0 bottom-0 top-16 z-40 bg-background/80 md:hidden"
-            onClick={closeMenu}
-            aria-hidden="true"
-          />
-
-          {/* Full-height Menu */}
-          <div className="fixed inset-x-0 bottom-0 top-16 z-50 overflow-y-auto border-t border-border bg-surface px-4 py-5 shadow-lg md:hidden">
+          {/* Menu Panel (z-40: slides down from behind the z-50 header) */}
+          <div className="animate-slide-down fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-border bg-surface px-4 py-5 shadow-lg md:hidden">
             <nav className="flex min-h-full flex-col gap-1.5">
               <NavLink to="/" className={navLinkStyles} onClick={closeMenu}>
                 <JournalBookmark size={18} />
