@@ -7,7 +7,6 @@ import RecordsPage from "../pages/records/RecordsPage";
 import RecordPage from "../pages/records/RecordPage";
 import QuizzesPage from "../pages/quiz/QuizzesPage";
 import QuizPage from "../pages/quiz/QuizPage";
-import EnumerationQuizPage from "../pages/quiz/EnumerationQuizPage";
 import VerifyEmailPage from "../pages/auth/VerifyEmailPage";
 
 import ProtectedRoute from "./guards/ProtectedRoute";
@@ -60,7 +59,7 @@ export const appRoutes = {
             },
             {
               path: "session/enumeration/:sessionId",
-              element: <EnumerationQuizPage />,
+              element: <QuizPage />,
             },
           ],
         },

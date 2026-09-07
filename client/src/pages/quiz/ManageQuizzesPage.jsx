@@ -48,10 +48,10 @@ const ManageQuizzesPage = () => {
     handleSearch: handleQuizSearch,
     handleScroll: handleQuizScroll,
     handleDeleteQuiz,
-    handleDeleteAllQuizzes,
   } = useQuizzes(selectedSubject?._id);
 
   const items = isQuizMode ? quizzes : subjects;
+
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
 
   const isFetchingFromScrollingDown = isQuizMode
@@ -123,18 +123,11 @@ const ManageQuizzesPage = () => {
 
   const handleConfirmDeleteAll = async () => {
     try {
-      if (isQuizMode) {
-        await handleDeleteAllQuizzes();
-      } else {
-        await handleDeleteAllSubjects();
-      }
+      await handleDeleteAllSubjects();
 
       handleCloseDeleteAll();
     } catch (error) {
-      console.error(
-        `Failed to delete all ${isQuizMode ? "quizzes" : "subjects"}:`,
-        error,
-      );
+      console.error("Failed to delete all subjects:", error);
     }
   };
 
@@ -183,22 +176,6 @@ const ManageQuizzesPage = () => {
         title: "Delete subject?",
         getDescription: (item) =>
           `Are you sure you want to delete "${item.name}"? This will also delete all quizzes under this subject.`,
-      };
-
-  const deleteAllConfig = isQuizMode
-    ? {
-        eyebrow: "DELETE ALL QUIZZES",
-        title: "Delete all quizzes?",
-        description:
-          "Are you sure you want to delete all quizzes in this subject? This action is permanent and cannot be undone.",
-        label: "Delete All Quizzes",
-      }
-    : {
-        eyebrow: "DELETE ALL SUBJECTS",
-        title: "Delete all subjects?",
-        description:
-          "Are you sure you want to delete all subjects? This will also delete all of your quizzes.",
-        label: "Delete All Subjects",
       };
 
   const emptyStateDescription = isQuizMode
@@ -273,7 +250,7 @@ const ManageQuizzesPage = () => {
       </div>
 
       <Panel className="mb-5 flex justify-end gap-3 p-3">
-        {hasItems && (
+        {!isQuizMode && hasItems && (
           <Button
             variant="danger"
             icon={Trash}
@@ -281,7 +258,7 @@ const ManageQuizzesPage = () => {
             onClick={handleOpenDeleteAll}
             className="w-full sm:w-auto"
           >
-            {deleteAllConfig.label}
+            Delete All Subjects
           </Button>
         )}
 
@@ -318,9 +295,9 @@ const ManageQuizzesPage = () => {
       <OptionBox
         isOpen={showDeleteAllModal}
         onClose={handleCloseDeleteAll}
-        eyebrow={deleteAllConfig.eyebrow}
-        title={deleteAllConfig.title}
-        description={deleteAllConfig.description}
+        eyebrow="DELETE ALL SUBJECTS"
+        title="Delete all subjects?"
+        description="Are you sure you want to delete all subjects? This will also delete all of your quizzes."
         options={[
           {
             label: "Yes",
