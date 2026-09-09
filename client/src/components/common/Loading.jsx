@@ -3,8 +3,8 @@ import { RiseLoader, MoonLoader } from "react-spinners";
 const Loading = ({ className = "", variant = "loading", text = "Loading" }) => {
   if (variant === "fetching") {
     return (
-      <li
-        className={`flex flex-col w-full items-center justify-center gap-2 ${className}`}
+      <div
+        className={`flex w-full flex-col items-center justify-center gap-2 ${className}`}
       >
         <MoonLoader
           color="var(--color-muted)"
@@ -12,13 +12,14 @@ const Loading = ({ className = "", variant = "loading", text = "Loading" }) => {
           speedMultiplier={0.8}
           aria-label={text}
         />
+
         <p className="text-xs font-medium tracking-wide text-muted">{text}</p>
-      </li>
+      </div>
     );
   }
 
   return (
-    <li
+    <div
       className={`flex w-full flex-col items-center justify-center gap-4 ${className}`}
     >
       <RiseLoader
@@ -31,7 +32,7 @@ const Loading = ({ className = "", variant = "loading", text = "Loading" }) => {
       <p className="text-base font-semibold tracking-wide text-primary">
         {text}
       </p>
-    </li>
+    </div>
   );
 };
 

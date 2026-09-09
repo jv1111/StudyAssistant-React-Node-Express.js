@@ -1,5 +1,7 @@
 import { CheckCircle } from "react-bootstrap-icons";
 
+import Button from "./Button";
+
 const SelectableOption = ({
   selected = false,
   disabled = false,
@@ -13,12 +15,13 @@ const SelectableOption = ({
   className = "",
 }) => {
   return (
-    <button
+    <Button
       type="button"
+      variant="unstyled"
       disabled={disabled}
       title={title}
       onClick={onClick}
-      className={`group relative flex items-center gap-3.5 rounded-xl border p-4 text-left transition-all duration-200 ${
+      className={`group relative flex w-full items-center gap-3.5 rounded-xl border p-4 text-left transition-all duration-200 ${
         disabled
           ? "cursor-not-allowed border-border/40 bg-surface/50 opacity-50"
           : selected
@@ -71,7 +74,7 @@ const SelectableOption = ({
           size={18}
         />
       )}
-    </button>
+    </Button>
   );
 };
 
