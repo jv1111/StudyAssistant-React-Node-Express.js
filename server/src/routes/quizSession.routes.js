@@ -14,4 +14,6 @@ router.put("/submit", quizSessionController.submitAnswer);
 
 router.get("/next", quizSessionController.nextQuestion);
 
+router.delete("/delete", quizSessionController.deleteQuizSession);
+
 module.exports = router;

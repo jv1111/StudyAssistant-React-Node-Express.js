@@ -42,4 +42,17 @@ const nextQuestion = async (sessionId, quizType) => {
   return response.data;
 };
 
-export { startQuiz, submitAnswer, nextQuestion };
+const deleteQuizSession = async (sessionId, quizType) => {
+  const payload = {
+    sessionId,
+    quizType,
+  };
+
+  const response = await api.delete("/quiz-session/delete", {
+    data: payload,
+  });
+
+  return response.data;
+};
+
+export { startQuiz, submitAnswer, nextQuestion, deleteQuizSession };

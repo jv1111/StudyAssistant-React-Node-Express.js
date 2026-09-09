@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { submitAnswer, nextQuestion } from "../../api/quiz/quizSession.api";
+import {
+  submitAnswer,
+  nextQuestion,
+  deleteQuizSession,
+} from "../../api/quiz/quizSession.api";
 
 const useQuizSession = () => {
   const { sessionId } = useParams();
@@ -154,15 +158,29 @@ const useQuizSession = () => {
     navigate(-1);
   };
 
-  const handleCancelQuiz = () => {
-    setFeedback({
-      isOpen: true,
-      type: "warning",
-      title: "Cancel Quiz?",
-      message:
-        "Are you sure you want to exit? Your progress will not be saved.",
-      onConfirm: () => navigate("/"),
-    });
+  const handleCancelQuiz = async () => {
+    if (isSubmitting) {
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      await deleteQuizSession(sessionId, quizType);
+
+      navigate("/");
+    } catch (error) {
+      setFeedback({
+        isOpen: true,
+        type: "error",
+        title: "Unable to Cancel Quiz",
+        message:
+          error.response?.data?.message ||
+          "Something went wrong while canceling the quiz.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return {

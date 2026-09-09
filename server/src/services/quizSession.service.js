@@ -197,8 +197,34 @@ const formatQuizItemResponse = (quiz, session, currentQuizItem) => ({
   randomizeQuestions: session.randomizeQuestions,
 });
 
+const deleteQuizSession = async (userId, sessionId, quizType) => {
+  validateQuizType(quizType);
+
+  const session = await QuizSession.findOne({
+    _id: sessionId,
+    userId,
+    quizType,
+  });
+
+  if (!session) {
+    throw new AppError("Quiz session not found", 404);
+  }
+
+  if (!["in_progress", "paused"].includes(session.status)) {
+    throw new AppError("Quiz session cannot be deleted", 400);
+  }
+
+  await session.deleteOne();
+
+  return {
+    sessionId: session._id,
+    message: "Quiz session deleted successfully",
+  };
+};
+
 module.exports = {
   startQuiz,
   submitAnswer,
   nextQuestion,
+  deleteQuizSession,
 };

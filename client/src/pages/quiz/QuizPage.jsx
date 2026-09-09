@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   TrophyFill,
   ArrowRightShort,
@@ -9,6 +10,7 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Badge from "../../components/common/Badge";
 import FeedbackModal from "../../components/common/FeedbackModal";
+import OptionBox from "../../components/common/OptionBox";
 import SelectableOption from "../../components/common/SelectableOption";
 import Loading from "../../components/common/Loading";
 
@@ -30,6 +32,9 @@ const QuizPage = () => {
     handlePauseQuiz,
     handleCancelQuiz,
   } = useQuizSession();
+
+  const [showPauseModal, setShowPauseModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   if (isLoading || !quiz) {
     return <Loading />;
@@ -62,6 +67,16 @@ const QuizPage = () => {
     }
 
     handleSubmitAnswer();
+  };
+
+  const handlePauseConfirmation = () => {
+    setShowPauseModal(false);
+    handlePauseQuiz();
+  };
+
+  const handleCancelConfirmation = () => {
+    setShowCancelModal(false);
+    handleCancelQuiz();
   };
 
   return (
@@ -268,7 +283,7 @@ const QuizPage = () => {
                 <Button
                   variant="secondary"
                   icon={PauseFill}
-                  onClick={handlePauseQuiz}
+                  onClick={() => setShowPauseModal(true)}
                   className="w-full justify-center gap-2"
                 >
                   Pause Quiz
@@ -277,7 +292,7 @@ const QuizPage = () => {
                 <Button
                   variant="danger"
                   icon={XCircle}
-                  onClick={handleCancelQuiz}
+                  onClick={() => setShowCancelModal(true)}
                   className="w-full justify-center gap-2 text-error hover:bg-error/10 hover:text-error"
                 >
                   Cancel Quiz
@@ -295,6 +310,42 @@ const QuizPage = () => {
         title={feedback.title}
         message={feedback.message}
         onConfirm={feedback.onConfirm || handleNextQuestion}
+      />
+
+      <OptionBox
+        isOpen={showPauseModal}
+        onClose={() => setShowPauseModal(false)}
+        eyebrow="PAUSE QUIZ"
+        title="Pause this quiz?"
+        description="Your current quiz progress will be saved. You can resume the quiz later and continue where you left off."
+        options={[
+          {
+            label: "Yes",
+            value: "yes",
+            variant: "secondary",
+          },
+        ]}
+        onSelect={handlePauseConfirmation}
+        closeLabel="No"
+        closeVariant="secondary"
+      />
+
+      <OptionBox
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        eyebrow="CANCEL QUIZ"
+        title="Cancel this quiz?"
+        description="Your current quiz session and progress will be deleted. If you want to take this quiz again, you will need to start over."
+        options={[
+          {
+            label: "Yes",
+            value: "yes",
+            variant: "danger",
+          },
+        ]}
+        onSelect={handleCancelConfirmation}
+        closeLabel="No"
+        closeVariant="secondary"
       />
     </div>
   );

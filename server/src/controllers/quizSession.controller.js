@@ -42,8 +42,21 @@ const nextQuestion = asyncHandler(async (req, res) => {
   successResponse(res, 200, result);
 });
 
+const deleteQuizSession = asyncHandler(async (req, res) => {
+  const { sessionId, quizType } = req.body;
+
+  const result = await quizSessionService.deleteQuizSession(
+    req.user._id,
+    sessionId,
+    quizType,
+  );
+
+  successResponse(res, 200, result);
+});
+
 module.exports = {
   startQuiz,
   submitAnswer,
   nextQuestion,
+  deleteQuizSession,
 };
