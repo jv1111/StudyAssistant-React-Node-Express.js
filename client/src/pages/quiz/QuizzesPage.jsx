@@ -5,6 +5,7 @@ import { Book, Download, JournalBookmark } from "react-bootstrap-icons";
 
 import EmptyState from "../../components/common/EmptyState";
 import OptionBox from "../../components/common/OptionBox";
+import FeedbackModal from "../../components/common/FeedbackModal";
 import QuizItemCard from "../../components/quiz/QuizItemCard";
 import GlassScrollableList from "../../components/common/GlassScrollableList";
 import Badge from "../../components/common/Badge";
@@ -21,6 +22,7 @@ const QuizzesPage = () => {
 
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const isQuizMode = Boolean(selectedSubject);
 
@@ -28,7 +30,6 @@ const QuizzesPage = () => {
     subjects,
     isLoading: isSubjectsLoading,
     isFetchingFromScrollingDown: isFetchingSubjects,
-    hasMore: hasMoreSubjects,
     searchInput: subjectSearchInput,
     handleSearch: handleSubjectSearch,
     handleScroll: handleSubjectScroll,
@@ -38,7 +39,6 @@ const QuizzesPage = () => {
     quizzes,
     isLoading: isQuizzesLoading,
     isFetchingFromScrollingDown: isFetchingQuizzes,
-    hasMore: hasMoreQuizzes,
     searchInput: quizSearchInput,
     handleSearch: handleQuizSearch,
     handleScroll: handleQuizScroll,
@@ -46,17 +46,10 @@ const QuizzesPage = () => {
   } = useQuizzes(selectedSubject?._id);
 
   const items = isQuizMode ? quizzes : subjects;
-
   const isLoading = isQuizMode ? isQuizzesLoading : isSubjectsLoading;
-
   const isFetchingMore = isQuizMode ? isFetchingQuizzes : isFetchingSubjects;
-
-  const hasMore = isQuizMode ? hasMoreQuizzes : hasMoreSubjects;
-
   const searchInput = isQuizMode ? quizSearchInput : subjectSearchInput;
-
   const handleSearch = isQuizMode ? handleQuizSearch : handleSubjectSearch;
-
   const handleScroll = isQuizMode ? handleQuizScroll : handleSubjectScroll;
 
   const handleSelectSubject = (subject) => {
@@ -91,6 +84,8 @@ const QuizzesPage = () => {
 
   const handleDownloadPdf = async (quizId) => {
     try {
+      setIsDownloading(true);
+
       const response = await downloadPdf(quizId);
 
       const contentDisposition = response.headers["content-disposition"];
@@ -101,6 +96,8 @@ const QuizzesPage = () => {
       saveAs(response.data, fileName);
     } catch (error) {
       console.error("Failed to download quiz PDF:", error);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -225,6 +222,22 @@ const QuizzesPage = () => {
           },
         ]}
         onSelect={handleStartQuizMode}
+      />
+
+      <FeedbackModal
+        isOpen={isDownloading}
+        onClose={() => {}}
+        type="info"
+        title="Preparing Download..."
+        message="Your PDF is being generated. This may take a moment. Please wait."
+        options={[
+          {
+            label: "Please wait...",
+            value: "waiting",
+            variant: "secondary",
+            disabled: true,
+          },
+        ]}
       />
     </div>
   );

@@ -2,6 +2,7 @@ import {
   CheckCircleFill,
   ExclamationTriangleFill,
   XCircleFill,
+  ArrowRepeat,
 } from "react-bootstrap-icons";
 import Modal from "./Modal";
 import Button from "./Button";
@@ -36,6 +37,12 @@ const FeedbackModal = ({
     warning: {
       icon: ExclamationTriangleFill,
       iconClass: "text-warning bg-warning/10 border-warning/20",
+      buttonVariant: "secondary",
+    },
+
+    info: {
+      icon: ArrowRepeat,
+      iconClass: "text-primary bg-primary/10 border-primary/20",
       buttonVariant: "secondary",
     },
   }[type] || {
