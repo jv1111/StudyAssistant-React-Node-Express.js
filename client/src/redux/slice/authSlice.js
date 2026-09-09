@@ -5,11 +5,13 @@ export const authSlice = createSlice({
   initialState: {
     loggedIn: false,
     user: {},
+    sessionExpired: false,
   },
   reducers: {
     login: (state, action) => {
       state.loggedIn = true;
       state.user = action.payload;
+      state.sessionExpired = false;
     },
 
     updateUser: (state, action) => {
@@ -22,10 +24,18 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.loggedIn = false;
       state.user = {};
+      state.sessionExpired = false;
+    },
+
+    setSessionExpired: (state, action) => {
+      console.log("[AuthSlice] setSessionExpired:", action.payload);
+
+      state.sessionExpired = action.payload;
     },
   },
 });
 
-export const { login, updateUser, logout } = authSlice.actions;
+export const { login, updateUser, logout, setSessionExpired } =
+  authSlice.actions;
 
 export default authSlice.reducer;
