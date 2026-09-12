@@ -107,7 +107,7 @@ const passwordResetEmail = (token, expirationMinutes) => {
                       "
                     >
                       We received a request to reset the password for your
-                      QuizBuilder account. Click the button below to create
+                      StudyAssistant account. Click the button below to create
                       a new password.
                     </p>
 
@@ -199,7 +199,7 @@ const passwordResetEmail = (token, expirationMinutes) => {
                         text-align: center;
                       "
                     >
-                      © ${new Date().getFullYear()} QuizBuilder
+                      © ${new Date().getFullYear()} StudyAssistant
                     </p>
                   </td>
                 </tr>

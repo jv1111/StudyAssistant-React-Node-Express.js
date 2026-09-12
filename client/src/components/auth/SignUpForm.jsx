@@ -24,7 +24,7 @@ const SignUpForm = ({ onSubmit }) => {
           <AuthFormHeader
             eyebrow="GET STARTED"
             title="Create account"
-            description="Create your QuizBuilder account to start making quizzes."
+            description="Create your StudyAssistant account to start making quizzes."
           />
 
           <div className="flex flex-col gap-4">

@@ -20,7 +20,7 @@ const LoginForm = ({ onSubmit, onSignUp }) => {
           <AuthFormHeader
             eyebrow="WELCOME BACK"
             title="Sign in"
-            description="Sign in to continue to your QuizBuilder account."
+            description="Sign in to continue to your StudyAssistant account."
           />
 
           <div className="flex flex-col gap-4">

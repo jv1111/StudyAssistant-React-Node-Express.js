@@ -102,7 +102,7 @@ const verificationEmail = (code, expirationMinutes) => {
                         color: #aeb8d0;
                       "
                     >
-                      Thanks for creating your QuizBuilder account.
+                      Thanks for creating your StudyAssistant account.
                       Enter the verification code below to confirm your
                       email address.
                     </p>
@@ -210,7 +210,7 @@ const verificationEmail = (code, expirationMinutes) => {
                         text-align: center;
                       "
                     >
-                      © ${new Date().getFullYear()} QuizBuilder
+                      © ${new Date().getFullYear()} StudyAssistant
                     </p>
                   </td>
                 </tr>

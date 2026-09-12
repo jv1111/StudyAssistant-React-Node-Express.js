@@ -43,6 +43,10 @@ configurePassport(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get("/", (req, res) => {
+  res.send("StudyAssistant API is running.");
+});
+
 app.use("/auth", authRoutes);
 app.use("/quiz", quizRoutes);
 app.use("/quiz/draft", quizDraftRoutes);

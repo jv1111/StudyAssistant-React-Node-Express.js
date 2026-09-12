@@ -9,7 +9,7 @@ const testEmail = async () => {
 
   await sendEmail(
     "jeremyviterbo19@gmail.com",
-    "Verify your QuizBuilder email",
+    "Verify your StudyAssistant email",
     html,
   );
 };
