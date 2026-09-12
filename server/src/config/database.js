@@ -1,5 +1,16 @@
+const dns = require("dns");
 const mongoose = require("mongoose");
 const env = require("./env");
+
+if (env.nodeEnv === "development") {
+  dns.setServers(["192.168.1.1"]);
+  console.log("DNS server: 192.168.1.1 (development)");
+} else if (env.nodeEnv === "production") {
+  dns.setServers(["0.0.0.0"]);
+  console.log("DNS server: 0.0.0.0 (production)");
+}
+
+console.log("DNS after:", dns.getServers());
 
 mongoose.set("strictQuery", true);
 
