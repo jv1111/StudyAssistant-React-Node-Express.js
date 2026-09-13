@@ -1,4 +1,6 @@
-const isProduction = import.meta.env.MODE === "production";
+const isProduction = import.meta.env.VITE_APP_MODE === "production";
+
+console.log(`Environment: ${isProduction ? "production" : "development"}`);
 
 const env = {
   appUrl: isProduction

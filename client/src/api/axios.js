@@ -9,6 +9,8 @@ const api = axios.create({
   withCredentials: true,
 });
 
+console.log("API URL:", env.apiUrl);
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
