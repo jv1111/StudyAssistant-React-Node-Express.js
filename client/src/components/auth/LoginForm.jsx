@@ -48,7 +48,7 @@ const LoginForm = ({ onSubmit, onSignUp }) => {
             )}
           </div>
 
-          <div className="flex w-full flex-col gap-4">
+          <div className="flex w-full flex-col gap-4 justify-center items-center">
             <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? "Logging in..." : "Login"}
             </Button>
