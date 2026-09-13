@@ -16,6 +16,9 @@ const savePDF = async (data) => {
 
   const browser = await puppeteer.launch({
     headless: true,
+    ...(process.env.NODE_ENV === "production" && {
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    }),
   });
 
   try {
