@@ -23,6 +23,8 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+console.log("CORS Client URL:", env.clientUrl);
+
 app.use(
   cors({
     origin: env.clientUrl,

@@ -10,13 +10,20 @@ const requiredEnv = (name) => {
   return value;
 };
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const env = {
-  nodeEnv: process.env.NODE_ENV || "development",
+  nodeEnv: requiredEnv("NODE_ENV"),
 
   port: Number(process.env.PORT) || 5000,
 
-  baseUrl: requiredEnv("BASE_URL"),
-  clientUrl: requiredEnv("CLIENT_URL"),
+  baseUrl: isProduction
+    ? requiredEnv("BASE_URL")
+    : requiredEnv("DEVELOPER_BASE_URL"),
+
+  clientUrl: isProduction
+    ? requiredEnv("CLIENT_URL")
+    : requiredEnv("DEVELOPER_CLIENT_URL"),
 
   brevo: {
     smtpHost: requiredEnv("BREVO_SMTP_HOST"),
