@@ -24,9 +24,7 @@ const savePDF = async (data) => {
   try {
     const page = await browser.newPage();
 
-    await page.setContent(pdfTemplate(data), {
-      waitUntil: "networkidle0",
-    });
+    await page.setContent(pdfTemplate(data));
 
     await page.pdf({
       path: pdfFilePath,
