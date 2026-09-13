@@ -60,15 +60,9 @@ const useQuizSession = () => {
     }
 
     setSelectedChoice(choice);
-
-    console.log("Selected choice:", choice);
-    console.log("Selected choice type:", typeof choice);
   };
 
   const handleSubmitAnswer = async (answer = selectedChoice) => {
-    console.log("Submit answer:", answer);
-    console.log("Submit answer type:", typeof answer);
-
     if (!answer || !String(answer).trim() || isSubmitting) {
       return;
     }
@@ -77,9 +71,6 @@ const useQuizSession = () => {
       setIsSubmitting(true);
 
       const trimmedAnswer = String(answer).trim();
-
-      console.log("Sending to API:", trimmedAnswer);
-      console.log("Sending to API type:", typeof trimmedAnswer);
 
       const response = await submitAnswer(sessionId, quizType, trimmedAnswer);
 

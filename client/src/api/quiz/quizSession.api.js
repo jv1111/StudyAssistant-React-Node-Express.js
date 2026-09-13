@@ -13,13 +13,6 @@ const startQuiz = async (quizId, quizType, randomizeQuestions) => {
 };
 
 const submitAnswer = async (sessionId, quizType, answer) => {
-  console.log("API Submit Answer:", {
-    sessionId,
-    quizType,
-    answer,
-    answerType: typeof answer,
-  });
-
   const payload = {
     sessionId,
     quizType,

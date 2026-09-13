@@ -12,15 +12,8 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("[API] Request failed:", error.config?.url);
-    console.log("[API] Status:", error.response?.status);
-
     if (error.response?.status === 401) {
-      console.log("[API] 401 detected - setting sessionExpired");
-
       store.dispatch(setSessionExpired(true));
-
-      console.log("[API] Redux state after dispatch:", store.getState().auth);
     }
 
     return Promise.reject(error);

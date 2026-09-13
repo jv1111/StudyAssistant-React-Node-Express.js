@@ -27,12 +27,10 @@ const VerifyEmailPage = () => {
   ) => {
     try {
       const response = await verifyEmailAPI(values.code);
-      console.log("ver response", response);
       dispatch(updateUser(response.user));
 
       navigate("/profile");
     } catch (error) {
-      console.log("ver error", error);
       setFieldError(
         "code",
         error.response?.data?.message || "Verification failed",

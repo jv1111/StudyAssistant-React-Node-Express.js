@@ -26,8 +26,6 @@ const GoogleSignInButton = () => {
           try {
             const result = await googleLoginAPI(response.credential);
 
-            console.log("Google login successful:", result);
-
             dispatch(login(result.user));
           } catch (error) {
             const message =

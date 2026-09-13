@@ -28,8 +28,6 @@ export const authSlice = createSlice({
     },
 
     setSessionExpired: (state, action) => {
-      console.log("[AuthSlice] setSessionExpired:", action.payload);
-
       state.sessionExpired = action.payload;
     },
   },
