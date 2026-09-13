@@ -46,6 +46,7 @@ const GoogleSignInButton = () => {
         size: "large",
         text: "continue_with",
         shape: "square",
+        with: "100%",
       });
     };
 

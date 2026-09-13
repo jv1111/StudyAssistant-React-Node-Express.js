@@ -48,12 +48,12 @@ const LoginForm = ({ onSubmit, onSignUp }) => {
             )}
           </div>
 
-          <div className="flex flex-col gap-4">
-            <Button type="submit" disabled={isSubmitting}>
+          <div className="flex w-full flex-col gap-4">
+            <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? "Logging in..." : "Login"}
             </Button>
 
-            <div className="my-1 flex items-center gap-4">
+            <div className="my-1 flex w-full items-center gap-4">
               <div className="h-px flex-1 bg-border" />
 
               <span className="text-xs font-bold tracking-wider text-muted/70">
