@@ -60,7 +60,6 @@ const useUpdateQuizDraft = (quizId) => {
     loadQuizData();
   }, [quizId]);
 
-  // Autosave
   useEffect(() => {
     if (isLoadingDraft) {
       return;

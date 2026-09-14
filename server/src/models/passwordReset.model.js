@@ -23,7 +23,6 @@ const passwordResetSchema = new mongoose.Schema(
   },
 );
 
-// Automatically remove expired password reset requests
 passwordResetSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model("PasswordReset", passwordResetSchema);

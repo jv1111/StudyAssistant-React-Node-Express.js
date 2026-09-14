@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// To ensure uniqueness, generate a new ID if the ID is already taken by another collection
 const generateUniqueObjectId = async (defaultId, CollectionModel) => {
   let newId;
   let user = await CollectionModel.findById(defaultId);

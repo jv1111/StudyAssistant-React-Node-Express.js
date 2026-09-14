@@ -2,11 +2,9 @@ import { saveData } from "../api/quiz.api";
 let timeoutId;
 
 const autoSave = (key, data, quizId) => {
-  // Clear the previous save timeout
   clearTimeout(timeoutId);
 
   const newTimeout = setTimeout(() => {
-    // save function here
     saveData(key, data, quizId);
   }, 1000);
   timeoutId = newTimeout;

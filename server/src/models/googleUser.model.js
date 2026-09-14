@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-require("mongoose-type-email"); //type: mongoose.SchemaTypes.Email
+require("mongoose-type-email");
 
 const GoogleUserSchema = mongoose.Schema({
   profileImg: {

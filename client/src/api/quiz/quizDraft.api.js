@@ -1,7 +1,5 @@
 import api from "../axios";
 
-// CREATE QUIZ DRAFT
-
 const getCreateQuizDraft = async () => {
   const response = await api.get("/quiz/draft/create");
 
@@ -24,8 +22,6 @@ const deleteCreateQuizDraft = async () => {
 
   return response.data;
 };
-
-// UPDATE QUIZ DRAFT
 
 const getUpdateQuizDraft = async (quizId) => {
   const response = await api.get("/quiz/draft/update", {

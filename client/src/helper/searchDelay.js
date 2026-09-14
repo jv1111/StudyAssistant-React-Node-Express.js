@@ -1,7 +1,6 @@
 let timeoutId;
 
 const searchDelay = (setData, searchVal) => {
-  // Clear the previous save timeout
   clearTimeout(timeoutId);
 
   const newTimeout = setTimeout(() => {

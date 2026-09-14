@@ -48,7 +48,6 @@ const passwordResetEmail = (token, expirationMinutes) => {
                 "
               >
 
-                <!-- Header -->
                 <tr>
                   <td
                     style="
@@ -69,7 +68,6 @@ const passwordResetEmail = (token, expirationMinutes) => {
                   </td>
                 </tr>
 
-                <!-- Content -->
                 <tr>
                   <td style="padding: 36px 32px 32px;">
 
@@ -111,7 +109,6 @@ const passwordResetEmail = (token, expirationMinutes) => {
                       a new password.
                     </p>
 
-                    <!-- Reset Button -->
                     <table
                       width="100%"
                       cellpadding="0"
@@ -181,7 +178,6 @@ const passwordResetEmail = (token, expirationMinutes) => {
                   </td>
                 </tr>
 
-                <!-- Footer -->
                 <tr>
                   <td
                     style="

@@ -41,7 +41,6 @@ const emailVerificationSchema = new mongoose.Schema(
   },
 );
 
-// Automatically remove expired verification requests
 emailVerificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 module.exports = mongoose.model("EmailVerification", emailVerificationSchema);

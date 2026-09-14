@@ -10,7 +10,7 @@ const useSavedDataFetcher = (
 ) => {
   useEffect(() => {
     const dataFetcher = async () => {
-      const savedData = await getSavedData(key, quizId); //todo add quiz id to params for validation
+      const savedData = await getSavedData(key, quizId);
       if (savedData) {
         const { items, subject, quizName } = savedData.data;
         setItems(items);

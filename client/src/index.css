@@ -3,7 +3,6 @@
 @utility layout-container {
   @apply w-full px-4 sm:px-6 lg:px-8;
 }
-/* --- Reusable Form & UI Utilities --- */
 
 @utility input-base {
   @apply w-full rounded-input border border-border bg-surface/80 backdrop-blur-md text-sm font-medium text-foreground placeholder:text-muted/70 outline-none transition-all duration-200 hover:border-border-hover focus:border-primary focus:ring-3 focus:ring-primary/20;
@@ -17,9 +16,6 @@
   @apply rounded-card border border-border/80 bg-surface/90 backdrop-blur-xl p-6 shadow-(--shadow-card) transition-all duration-300;
 }
 
-/* =========================================================
-   REUSABLE TITLE EFFECTS
-   ========================================================= */
 
 @utility title-3d {
   text-shadow:
@@ -34,19 +30,11 @@
 }
 
 @theme {
-  /* =========================================================
-     BASE COLORS
-     ========================================================= */
-
   --color-background: #fafaf7;
   --color-background-secondary: #f2f1ea;
 
   --color-surface: #ffffff;
   --color-surface-hover: #f5f4ee;
-
-  /* =========================================================
-     BRAND COLORS
-     ========================================================= */
 
   --color-primary: #b8860b;
   --color-primary-hover: #9a6f08;
@@ -55,23 +43,11 @@
   --color-accent: #d4a017;
   --color-accent-soft: rgba(212, 160, 23, 0.08);
 
-  /* =========================================================
-     TYPOGRAPHY
-     ========================================================= */
-
   --color-foreground: #1c1917;
   --color-muted: #78716c;
 
-  /* =========================================================
-     BORDERS & DIVIDERS
-     ========================================================= */
-
   --color-border: #e7e5df;
   --color-border-hover: #b8860b;
-
-  /* =========================================================
-     STATUS COLORS
-     ========================================================= */
 
   --color-danger: #dc2626;
   --color-danger-light: rgba(220, 38, 38, 0.08);
@@ -85,26 +61,14 @@
   --color-warning: #d97706;
   --color-warning-light: rgba(217, 119, 6, 0.08);
 
-  /* =========================================================
-     QUIZ GENERATION COLORS
-     ========================================================= */
-
   --color-ai: #9333ea;
   --color-ai-light: rgba(147, 51, 234, 0.08);
 
   --color-random: #059669;
   --color-random-light: rgba(5, 150, 105, 0.08);
 
-  /* =========================================================
-     NOTICE / LOCKED STATE
-     ========================================================= */
-
   --color-notice: #ea580c;
   --color-notice-light: rgba(234, 88, 12, 0.08);
-
-  /* =========================================================
-     ELEVATION & SHADOWS
-     ========================================================= */
 
   --shadow-gold-glow: 0 0 32px -8px rgba(184, 134, 11, 0.18);
 
@@ -119,10 +83,6 @@
   --shadow-icon-hover: 0 0 18px rgba(184, 134, 11, 0.18);
 
   --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.06);
-
-  /* =========================================================
-     GEOMETRY
-     ========================================================= */
 
   --radius-card: 1.25rem;
   --radius-input: 0.75rem;

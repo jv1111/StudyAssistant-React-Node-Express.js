@@ -335,8 +335,6 @@ const getSubjects = async (userId, searchQuery, skipCount = 0) => {
     },
 
     {
-      // Fetch one extra record so we can determine
-      // whether another page exists.
       $limit: limit + 1,
     },
   ]);

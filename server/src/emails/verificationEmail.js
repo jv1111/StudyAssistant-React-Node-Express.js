@@ -44,7 +44,6 @@ const verificationEmail = (code, expirationMinutes) => {
                 "
               >
 
-                <!-- Header -->
                 <tr>
                   <td
                     style="
@@ -65,7 +64,6 @@ const verificationEmail = (code, expirationMinutes) => {
                   </td>
                 </tr>
 
-                <!-- Content -->
                 <tr>
                   <td style="padding: 36px 32px 32px;">
 
@@ -107,7 +105,6 @@ const verificationEmail = (code, expirationMinutes) => {
                       email address.
                     </p>
 
-                    <!-- Verification Code -->
                     <table
                       width="100%"
                       cellpadding="0"
@@ -192,7 +189,6 @@ const verificationEmail = (code, expirationMinutes) => {
                   </td>
                 </tr>
 
-                <!-- Footer -->
                 <tr>
                   <td
                     style="

@@ -51,7 +51,6 @@ const useItemFetcher = (
           skipCount: currentSkipCount,
         });
 
-        // Ignore responses from outdated requests.
         if (requestId !== requestIdRef.current) {
           return;
         }
@@ -95,8 +94,6 @@ const useItemFetcher = (
     if (queryChanged) {
       previousQueryRef.current = queryKey;
 
-      // Invalidate any request belonging to the
-      // previous query.
       requestIdRef.current += 1;
 
       setItems([]);
@@ -104,27 +101,16 @@ const useItemFetcher = (
       setIsLoading(true);
       setIsFetchingMore(false);
 
-      /*
-       * When the current page is not the first page,
-       * reset pagination first. The resulting render
-       * will trigger the first-page request.
-       */
       if (skipCount !== 0) {
         setSkipCount(0);
         return;
       }
 
-      /*
-       * When already on the first page, fetch immediately.
-       */
       fetchItems(0);
 
       return;
     }
 
-    /*
-     * Fetch subsequent pages when skipCount changes.
-     */
     if (skipCount > 0 && hasMore) {
       fetchItems(skipCount);
     }

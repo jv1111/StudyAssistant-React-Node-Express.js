@@ -64,8 +64,6 @@ const getRecordedSubjects = async (userId, searchQuery, skipCount = 0) => {
       $skip: skip,
     },
     {
-      // Fetch one extra record so we can determine
-      // whether another page exists.
       $limit: limit + 1,
     },
     {

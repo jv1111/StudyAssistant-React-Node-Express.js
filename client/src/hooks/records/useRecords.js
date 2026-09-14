@@ -37,17 +37,10 @@ const useRecords = (subjectId) => {
     queryParams,
   );
 
-  /*
-   * Mark the current subject as unloaded immediately after
-   * the selected subject changes.
-   */
   useEffect(() => {
     setLoadedSubjectId(null);
   }, [subjectId]);
 
-  /*
-   * Mark the subject as loaded once its initial request finishes.
-   */
   useEffect(() => {
     if (!isLoading && subjectId) {
       setLoadedSubjectId(subjectId);
@@ -69,14 +62,6 @@ const useRecords = (subjectId) => {
     [isFetchingMore, records, setSkipCount],
   );
 
-  /*
-   * During the render immediately after selecting a new
-   * subject, loadedSubjectId still contains the previous
-   * subject ID, so this evaluates to true immediately.
-   *
-   * This prevents EmptyState from being rendered during
-   * the render/effect gap.
-   */
   const isSubjectLoading = Boolean(subjectId) && loadedSubjectId !== subjectId;
 
   return {

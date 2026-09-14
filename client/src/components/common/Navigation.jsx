@@ -48,9 +48,7 @@ function Navigation() {
 
   return (
     <>
-      {/* Desktop Sidebar */}
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 border-r border-border bg-surface md:flex md:flex-col">
-        {/* Logo */}
         <div className="flex h-16 shrink-0 items-center border-b border-border px-5">
           <Link
             to="/"
@@ -66,7 +64,6 @@ function Navigation() {
           </Link>
         </div>
 
-        {/* Main Navigation */}
         <div className="flex flex-1 flex-col px-3 py-5">
           <div className="mb-3 px-2 text-xs font-bold uppercase tracking-wider text-muted">
             Navigation
@@ -90,7 +87,6 @@ function Navigation() {
           </nav>
         </div>
 
-        {/* Account Section */}
         <div className="shrink-0 border-t border-border p-3">
           <details ref={accountMenuRef} className="group relative">
             <summary className="flex cursor-pointer list-none select-none items-center gap-3 rounded-xl border border-border bg-background-secondary px-3 py-2.5 text-sm font-semibold text-foreground outline-none transition-all hover:border-border-hover hover:bg-surface focus:outline-none">
@@ -133,7 +129,6 @@ function Navigation() {
         </div>
       </aside>
 
-      {/* Mobile Header (z-50 keeps it on top) */}
       <header className="sticky top-0 z-50 border-b border-border bg-surface md:hidden">
         <div className="flex h-16 items-center justify-between px-4">
           <Link
@@ -162,10 +157,8 @@ function Navigation() {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <>
-          {/* Menu Panel (z-40: slides down from behind the z-50 header) */}
           <div className="animate-slide-down fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto border-t border-border bg-surface px-4 py-5 shadow-lg md:hidden">
             <nav className="flex min-h-full flex-col gap-1.5">
               <NavLink to="/" className={navLinkStyles} onClick={closeMenu}>

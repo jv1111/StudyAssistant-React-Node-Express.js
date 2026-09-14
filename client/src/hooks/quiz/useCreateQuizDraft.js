@@ -30,7 +30,6 @@ const useCreateQuizDraft = (initialIsPreview = false) => {
   const autosaveTimeout = useRef(null);
   const isDirty = useRef(false);
 
-  // Load saved create quiz draft when entering the page
   useEffect(() => {
     const loadDraft = async () => {
       try {
@@ -59,7 +58,6 @@ const useCreateQuizDraft = (initialIsPreview = false) => {
     loadDraft();
   }, []);
 
-  // Autosave only after the user actually changes something
   useEffect(() => {
     if (isLoadingDraft) return;
 
@@ -203,7 +201,6 @@ const useCreateQuizDraft = (initialIsPreview = false) => {
 
       setIsPreview(preview);
 
-      // The current state has now been explicitly saved.
       isDirty.current = false;
     } catch (error) {
       console.error("Failed to save create quiz draft:", error);
@@ -217,7 +214,6 @@ const useCreateQuizDraft = (initialIsPreview = false) => {
       autosaveTimeout.current = null;
     }
 
-    // Reset everything without marking the form as changed.
     isDirty.current = false;
 
     setItems(

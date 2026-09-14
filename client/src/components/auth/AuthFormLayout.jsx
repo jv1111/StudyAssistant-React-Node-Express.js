@@ -1,4 +1,3 @@
-// AuthFormLayout.jsx
 import { Form } from "formik";
 
 const AuthFormLayout = ({ children, asForm = true }) => {

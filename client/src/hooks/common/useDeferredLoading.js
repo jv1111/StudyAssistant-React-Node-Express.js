@@ -7,12 +7,10 @@ const useDeferredLoading = (isLoading, delay = 200) => {
     let timer;
 
     if (isLoading) {
-      // Delay showing the loader
       timer = setTimeout(() => {
         setShowLoading(true);
       }, delay);
     } else {
-      // Immediately hide when loading finishes
       setShowLoading(false);
     }
 

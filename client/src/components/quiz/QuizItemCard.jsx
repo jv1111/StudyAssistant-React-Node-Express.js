@@ -38,9 +38,7 @@ const QuizItemCard = ({
       }}
       className={`group relative flex w-full cursor-pointer flex-col justify-between gap-3 rounded-card border border-border bg-surface p-4 shadow-sm transition-all duration-300 sm:flex-row sm:items-center ${cardHoverStyles}`}
     >
-      {/* Left Section: Icon & Content */}
       <div className="flex min-w-0 flex-1 items-center gap-3.5">
-        {/* Icon Container */}
         {ItemIcon && (
           <div
             className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-light/80 text-primary shadow-xs transition-all duration-300 ${
@@ -53,7 +51,6 @@ const QuizItemCard = ({
           </div>
         )}
 
-        {/* Text Details */}
         <div className="flex min-w-0 flex-col">
           <div className="flex flex-wrap items-center gap-2">
             <h3
@@ -71,10 +68,8 @@ const QuizItemCard = ({
         </div>
       </div>
 
-      {/* Right Section: Stats, Metadata & Actions */}
       <div className="flex w-full items-center justify-between border-t border-border/60 pt-3 sm:w-auto sm:justify-end sm:gap-4 sm:border-0 sm:pt-0">
         <div className="flex items-center gap-3">
-          {/* Compact Count Pill */}
           {count !== undefined && count !== null && (
             <div className="inline-flex items-center gap-1.5 rounded-lg bg-background-secondary/80 px-2.5 py-1 border border-border/40 text-xs font-semibold text-foreground">
               <span className="font-bold text-primary">{count}</span>
@@ -85,7 +80,6 @@ const QuizItemCard = ({
             </div>
           )}
 
-          {/* Secondary Content */}
           {secondaryContent && (
             <span className="hidden text-xs font-medium text-muted/70 lg:inline-block">
               {secondaryContent}
@@ -93,7 +87,6 @@ const QuizItemCard = ({
           )}
         </div>
 
-        {/* Interaction Elements */}
         <div className="flex items-center gap-2">
           {hasOption && OptionIcon && (
             <div
@@ -114,7 +107,6 @@ const QuizItemCard = ({
             </div>
           )}
 
-          {/* Chevron Indicator */}
           <div
             className={`flex h-9 w-9 items-center justify-center rounded-full bg-background-secondary text-muted transition-all duration-300 ${
               showCardHover

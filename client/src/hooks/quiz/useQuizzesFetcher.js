@@ -25,8 +25,8 @@ const useQuizzesFetcher = (
     const getItems = async () => {
       const response = await getQuizzes(subject, searchVal, skipCount);
       if (skipCount !== prevSkipCount)
-        appendNewSetOfData(quizzes, setQuizzes, response, setPrevSkipCount); //append new data if scrolled
-      if (skipCount === prevSkipCount) setQuizzes(response); //set new set of data
+        appendNewSetOfData(quizzes, setQuizzes, response, setPrevSkipCount);
+      if (skipCount === prevSkipCount) setQuizzes(response);
       setLoading(false);
     };
     getItems();

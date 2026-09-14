@@ -226,26 +226,6 @@ const QuizPage = () => {
           </div>
 
           <aside className="flex flex-col gap-4">
-            {/*
-            <Card className="flex flex-col gap-2 border-l-4 border-l-primary">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-muted">
-                  Time Remaining
-                </span>
-
-                <Clock className="text-primary" size={18} />
-              </div>
-
-              <div className="font-mono text-3xl font-extrabold tracking-tight text-foreground">
-                --:--
-              </div>
-
-              <p className="text-xs text-muted">
-                Quiz auto-submits when timer expires.
-              </p>
-            </Card>
-            */}
-
             <Card className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-muted">

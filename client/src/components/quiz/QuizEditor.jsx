@@ -166,10 +166,6 @@ const QuizEditor = ({
         onSubmit={handleFormSubmit}
         className="flex flex-col gap-8"
       >
-        {/* =====================================================
-            Section 1: Quiz Information
-        ====================================================== */}
-
         <Card className="card-base">
           <section aria-labelledby="quiz-info-title">
             <header className="mb-6 border-b border-border pb-4">
@@ -190,10 +186,6 @@ const QuizEditor = ({
             </header>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* =================================================
-                  Subject Field
-              ================================================== */}
-
               <div className="flex flex-col gap-2">
                 <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted">
                   <span>
@@ -283,10 +275,6 @@ const QuizEditor = ({
                 )}
               </div>
 
-              {/* =================================================
-                  Quiz Name Field
-              ================================================== */}
-
               <div className="flex flex-col gap-2">
                 <label className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted">
                   <span>
@@ -357,10 +345,6 @@ const QuizEditor = ({
           </section>
         </Card>
 
-        {/* =====================================================
-            Section 2: Questions Editor
-        ====================================================== */}
-
         <section aria-labelledby="questions-title">
           <Card
             className={`relative card-base transition-all duration-300 ${
@@ -391,10 +375,6 @@ const QuizEditor = ({
                 {items.length} {items.length === 1 ? "Question" : "Questions"}
               </Badge>
             </header>
-
-            {/* =================================================
-                Lock Warning Banner
-            ================================================== */}
 
             {!isInfoConfirmed && (
               <div className="mb-6 flex items-start gap-3 rounded-xl border border-notice/30 bg-notice-light p-4 text-xs font-medium text-notice shadow-xs sm:items-center">
@@ -466,10 +446,6 @@ const QuizEditor = ({
                         </Button>
                       </header>
 
-                      {/* =================================================
-                          Question Prompt and Correct Answer
-                      ================================================== */}
-
                       <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
                         <div className="lg:col-span-3">
                           <AutoAdjustingInput
@@ -495,10 +471,6 @@ const QuizEditor = ({
                           />
                         </div>
                       </div>
-
-                      {/* =================================================
-                          Choice Generation Method
-                      ================================================== */}
 
                       <div className="mt-5 flex flex-col gap-2 rounded-lg border border-border/70 bg-background/40 p-3.5">
                         <div className="flex items-center justify-between">
@@ -549,10 +521,6 @@ const QuizEditor = ({
                             );
                           })}
                         </div>
-
-                        {/* =================================================
-                            Custom Choices
-                        ================================================== */}
 
                         {generationMethod === "custom" && isAnswerFilled && (
                           <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -607,10 +575,6 @@ const QuizEditor = ({
                 )}
               </div>
 
-              {/* =================================================
-                  Add Question
-              ================================================== */}
-
               <div
                 className={`mt-8 flex justify-center border-t border-border pt-6 transition-opacity duration-300 ${
                   !isInfoConfirmed ? "pointer-events-none opacity-40" : ""
@@ -629,10 +593,6 @@ const QuizEditor = ({
             </fieldset>
           </Card>
         </section>
-
-        {/* =====================================================
-            Floating Action Footer
-        ====================================================== */}
 
         <footer className="sticky bottom-6 flex items-center justify-between gap-4 rounded-card border border-border bg-surface/90 p-4 shadow-lg backdrop-blur-md">
           {!isInfoConfirmed ? (
