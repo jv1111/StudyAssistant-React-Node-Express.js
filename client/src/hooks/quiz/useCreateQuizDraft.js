@@ -9,7 +9,7 @@ import {
 const DEFAULT_ITEM = {
   question: "",
   answer: "",
-  generationMethod: "random",
+  generationMethod: "ai",
   choices: ["", "", "", ""],
 };
 

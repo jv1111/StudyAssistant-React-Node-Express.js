@@ -113,7 +113,7 @@ const useUpdateQuizDraft = (quizId) => {
       {
         question: "",
         answer: "",
-        generationMethod: "random",
+        generationMethod: "ai",
         choices: ["", "", "", ""],
       },
     ]);
