@@ -63,7 +63,6 @@ const QuizEditorForm = ({
     }
 
     onUpdateItem(editingIndex, editBuffer);
-
     handleCancelEdit();
   };
 
@@ -167,15 +166,17 @@ const QuizEditorForm = ({
           </Card>
         </section>
 
-        <footer className="sticky bottom-6 flex items-center justify-between gap-4 rounded-card border border-border bg-surface/90 p-4 shadow-lg backdrop-blur-md">
-          <span className="text-xs text-muted">{description}</span>
+        <footer className="sticky bottom-6 flex flex-col gap-4 rounded-card border border-border bg-surface/90 p-4 shadow-lg backdrop-blur-md sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-center text-xs text-muted sm:text-left">
+            {description}
+          </span>
 
           <Button
             type="button"
             fit
             onClick={handleSubmit}
             disabled={editingIndex !== null || isSubmitting}
-            className="ml-auto inline-flex items-center gap-2 px-8 font-semibold shadow-(--shadow-button)"
+            className="inline-flex w-full items-center justify-center gap-2 px-8 font-semibold shadow-(--shadow-button) sm:ml-auto sm:w-auto"
           >
             <Save size={16} />
             {isSubmitting ? submittingLabel : submitLabel}

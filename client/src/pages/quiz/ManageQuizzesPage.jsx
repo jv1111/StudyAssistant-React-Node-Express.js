@@ -249,7 +249,7 @@ const ManageQuizzesPage = () => {
         </GlassScrollableList>
       </div>
 
-      <Panel className="mb-5 flex justify-end gap-3 p-3">
+      <Panel className="mb-5 flex flex-col gap-3 p-3 sm:flex-row sm:justify-end">
         {!isQuizMode && hasItems && (
           <Button
             variant="danger"

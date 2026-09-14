@@ -69,15 +69,15 @@ const QuizEditorItem = ({
 
   return (
     <article
-      className={`rounded-xl border p-5 transition-all duration-200 ${
+      className={`rounded-xl border p-4 transition-all duration-200 sm:p-5 ${
         isEditing
           ? "border-primary bg-primary-light/10 shadow-sm"
           : "border-border bg-surface-hover hover:border-border-hover"
       }`}
     >
-      <header className="mb-4 flex items-center justify-between gap-3 border-b border-border/60 pb-3">
+      <header className="mb-4 flex flex-col gap-3 border-b border-border/60 pb-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
             {index + 1}
           </span>
 
@@ -86,7 +86,7 @@ const QuizEditorItem = ({
           </Badge>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-2 self-end sm:self-auto">
           {isEditing ? (
             <>
               <Button
@@ -132,7 +132,7 @@ const QuizEditorItem = ({
       </header>
 
       {isEditing && editBuffer ? (
-        <div className="flex flex-col gap-4 animate-in fade-in duration-200">
+        <div className="flex animate-in flex-col gap-4 fade-in duration-200">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
             <div className="lg:col-span-3">
               <AutoAdjustingInput

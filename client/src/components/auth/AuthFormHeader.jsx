@@ -1,12 +1,11 @@
-// AuthFormHeader.jsx
 import Eyebrow from "../common/Eyebrow";
 
 const AuthFormHeader = ({ eyebrow, title, description }) => {
   return (
-    <div className="text-center flex flex-col items-center">
+    <div className="flex flex-col items-center text-center">
       <Eyebrow>{eyebrow}</Eyebrow>
 
-      <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground">
+      <h2 className="mt-3v font-bold sm:font-extrabold tracking-tight text-foreground text-3xl">
         {title}
       </h2>
 

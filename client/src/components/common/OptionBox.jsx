@@ -25,7 +25,7 @@ const OptionBox = ({
           description={description}
         />
 
-        <div className="mt-7 flex gap-3">
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
           {options.map((option) => (
             <Button
               key={option.value}
@@ -33,13 +33,19 @@ const OptionBox = ({
               variant={option.variant}
               onClick={() => onSelect(option.value)}
               disabled={option.disabled}
+              className="w-full sm:flex-1"
             >
               {option.label}
             </Button>
           ))}
 
           {showCancel && (
-            <Button type="button" variant={closeVariant} onClick={onClose}>
+            <Button
+              type="button"
+              variant={closeVariant}
+              onClick={onClose}
+              className="w-full sm:flex-1"
+            >
               {closeLabel}
             </Button>
           )}
