@@ -1,7 +1,7 @@
 import AuthFormHeader from "../auth/AuthFormHeader";
 import Button from "./Button";
 import Card from "./Card";
-import Modal from "./Modal";
+import ModalContainer from "./ModalContainer";
 
 const OptionBox = ({
   isOpen,
@@ -17,7 +17,7 @@ const OptionBox = ({
   cardClassName = "max-w-md",
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <ModalContainer isOpen={isOpen} onClose={onClose}>
       <Card className={cardClassName}>
         <AuthFormHeader
           eyebrow={eyebrow}
@@ -45,7 +45,7 @@ const OptionBox = ({
           )}
         </div>
       </Card>
-    </Modal>
+    </ModalContainer>
   );
 };
 

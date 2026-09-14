@@ -1,7 +1,7 @@
 import { X } from "react-bootstrap-icons";
-import Button from "../common/Button";
+import Button from "./Button";
 
-const Modal = ({ isOpen, onClose, children }) => {
+const ModalContainer = ({ isOpen, onClose, children }) => {
   if (!isOpen) {
     return null;
   }
@@ -32,4 +32,4 @@ const Modal = ({ isOpen, onClose, children }) => {
   );
 };
 
-export default Modal;
+export default ModalContainer;

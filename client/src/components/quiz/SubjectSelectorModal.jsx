@@ -1,6 +1,6 @@
 import { ChevronRight } from "react-bootstrap-icons";
 import EmptyState from "../common/EmptyState";
-import Modal from "../common/Modal";
+import ModalContainer from "../common/ModalContainer";
 import Card from "../common/Card";
 import Input from "../common/Input";
 
@@ -17,7 +17,7 @@ const SubjectSelectorModal = ({ isOpen, onClose, onSelect }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <ModalContainer isOpen={isOpen} onClose={onClose}>
       <Card className="w-[min(90vw,600px)]">
         <div className="flex flex-col gap-5">
           <header className="border-b border-border/60 pb-3">
@@ -90,7 +90,7 @@ const SubjectSelectorModal = ({ isOpen, onClose, onSelect }) => {
           </div>
         </div>
       </Card>
-    </Modal>
+    </ModalContainer>
   );
 };
 

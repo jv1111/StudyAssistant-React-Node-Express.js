@@ -4,7 +4,7 @@ import {
   XCircleFill,
   ArrowRepeat,
 } from "react-bootstrap-icons";
-import Modal from "./Modal";
+import ModalContainer from "./ModalContainer";
 import Button from "./Button";
 
 const FeedbackModal = ({
@@ -54,7 +54,7 @@ const FeedbackModal = ({
   const IconComponent = config.icon;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <ModalContainer isOpen={isOpen} onClose={onClose}>
       <div className="rounded-2xl border border-border bg-surface p-6 shadow-xl">
         <div className="flex flex-col items-center text-center">
           <div
@@ -94,7 +94,7 @@ const FeedbackModal = ({
           </div>
         </div>
       </div>
-    </Modal>
+    </ModalContainer>
   );
 };
 

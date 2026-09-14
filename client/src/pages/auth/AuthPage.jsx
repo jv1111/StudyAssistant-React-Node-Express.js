@@ -10,7 +10,7 @@ import {
 import Card from "../../components/common/Card";
 import LoginForm from "../../components/auth/LoginForm";
 import SignUpForm from "../../components/auth/SignUpForm";
-import Modal from "../../components/common/Modal";
+import ModalContainer from "../../components/common/ModalContainer";
 import Eyebrow from "../../components/common/Eyebrow";
 
 import { loginAPI, signUpAPI } from "../../api/auth/auth.api";
@@ -151,11 +151,14 @@ const AuthPage = () => {
         </section>
       </div>
 
-      <Modal isOpen={isSignUpOpen} onClose={() => setIsSignUpOpen(false)}>
+      <ModalContainer
+        isOpen={isSignUpOpen}
+        onClose={() => setIsSignUpOpen(false)}
+      >
         <Card className="w-full max-w-md">
           <SignUpForm onSubmit={handleSignUp} />
         </Card>
-      </Modal>
+      </ModalContainer>
     </>
   );
 };
